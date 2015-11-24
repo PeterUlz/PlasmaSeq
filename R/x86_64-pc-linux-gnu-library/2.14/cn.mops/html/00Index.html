@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: cn.mops - Mixture of Poissons for CNV detection in NGS data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+<h1> cn.mops - Mixture of Poissons for CNV detection in NGS data
+<img class="toplogo" src="../../../doc/html/logo.jpg" alt="[R logo]">
+</h1>
+<hr>
+<div align="center">
+<a href="../../../doc/html/packages.html"><img src="../../../doc/html/left.jpg" alt="[Up]" width="30" height="30" border="0"></a>
+<a href="../../../doc/html/index.html"><img src="../../../doc/html/up.jpg" alt="[Top]" width="30" height="30" border="0"></a>
+</div><h2>Documentation for package &lsquo;cn.mops&rsquo; version 1.0.7</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">Overview of user guides and package vignettes</a>; browse <a href="../doc">directory</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table width="100%">
+<tr><td width="25%"><a href="cn.mops.html">cn.mops</a></td>
+<td>Performs the cn.mops algorithm for copy number detection in NGS data.</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">CNVDetectionResult</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">CnvDetectionResult</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">cnvdetectionresult</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">CNVDetectionResult-class</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="cnvr.html">cnvr</a></td>
+<td>These generic function returns CNV regions of a CNV detection method stored in an instance of 'CNVDetectionResult-class'.</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">cnvr-method</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="CNVRanges.html">CNVRanges</a></td>
+<td>Genomic locations and indices of the simulated CNVs.</td></tr>
+<tr><td width="25%"><a href="cnvs.html">cnvs</a></td>
+<td>These generic function returns CNVs of a CNV detection method stored in an instance of 'CNVDetectionResult-class'.</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">cnvs-method</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="getReadCountsFromBAM.html">getReadCountsFromBAM</a></td>
+<td>Generates the read counts from BAM Files. These counts are necessary for CNV detection methods based on depth of coverage information. Note that the function is much faster, if the BAM files have an index file. The index file is assumed to be in the same folder and have an identical file name except that ".bai" is appended.</td></tr>
+<tr><td width="25%"><a href="getSegmentReadCountsFromBAM.html">getSegmentReadCountsFromBAM</a></td>
+<td>Generates the read counts from BAM Files for predefined segments. This is the appropiate choice for exome sequencing data, where the bait regions, target regions or exons are the predefined segments. These counts are necessary for CNV detection methods based on depth of coverage information. Note that the function is much faster, if the BAM files have an index file. The index file is assumed to be in the same folder and have an identical file name except that ".bai" is appended.</td></tr>
+<tr><td width="25%"><a href="individualCall.html">individualCall</a></td>
+<td>These generic function returns the individual calls of a CNV detection method stored in an instance of 'CNVDetectionResult-class'.</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">individualCall-method</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="iniCall.html">iniCall</a></td>
+<td>These generic function returns the informative/non-informative call of a CNV detection method stored in an instance of 'CNVDetectionResult-class'.  The I/NI call is a measure for a genomic segment across all samples, whether this segment is a CNV region (informative) or a normal genomic region (non-informative).</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">iniCall-method</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="integerCopyNumber.html">integerCopyNumber</a></td>
+<td>These generic function returns the integer copy numbers of a CNV detection method stored in an instance of 'CNVDetectionResult-class'.</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">integerCopyNumber-method</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="localAssessments.html">localAssessments</a></td>
+<td>These generic function returns the local assessments, i.e. signed individual informative/non-informative calls, of a CNV detection method stored in an instance of 'CNVDetectionResult-class'. For other CNV detection methods this can be (log-) ratios or z-scores.</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">localAssessments-method</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="normalizeChromosomes.html">normalizeChromosomes</a></td>
+<td>Normalize quantitative NGS data in order to make counts comparable over samples. Scales each samples' reads such that the coverage is even for all samples after normalization.</td></tr>
+<tr><td width="25%"><a href="normalizedData.html">normalizedData</a></td>
+<td>These generic function returns the normalized data of a CNV detection method stored in an instance of 'CNVDetectionResult-class'.</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">normalizedData-method</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="normalizeGenome.html">normalizeGenome</a></td>
+<td>Normalize quantitative NGS data in order to make counts comparable over samples. Scales each samples' reads such that the coverage is even for all samples after normalization.</td></tr>
+<tr><td width="25%"><a href="params.html">params</a></td>
+<td>These generic function returns the parameters of a CNV detection method stored in an instance of 'CNVDetectionResult-class'.</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">params-method</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="plot.html">plot-method</a></td>
+<td>Plots a CNVDetectionResult</td></tr>
+<tr><td width="25%"><a href="plot.html">plot-methods</a></td>
+<td>Plots a CNVDetectionResult</td></tr>
+<tr><td width="25%"><a href="posteriorProbs.html">posteriorProbs</a></td>
+<td>These generic function returns the posterior probabilities of a CNV detection method stored in an instance of 'CNVDetectionResult-class'. The posterior probabilities are represented as a three dimensional array, where the three dimensions are segment, copy number and individual.</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">posteriorProbs-method</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="segment.html">segment</a></td>
+<td>Performs a fast segmentation algorithm based on the cyber t test and the t statistics.</td></tr>
+<tr><td width="25%"><a href="segmentation.html">segmentation</a></td>
+<td>These generic function returns segmentation of a CNV detection method stored in an instance of 'CNVDetectionResult-class'.</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">segmentation-method</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="segplot.html">segplot</a></td>
+<td>Plots the log normalized read counts and the detected segments for one sample on one reference sequence.</td></tr>
+<tr><td width="25%"><a href="CNVDetectionResult.html">segplot-method</a></td>
+<td>Class "CNVDetectionResult"</td></tr>
+<tr><td width="25%"><a href="show.html">show-method</a></td>
+<td>Displays the result object of a copy number detection method.</td></tr>
+<tr><td width="25%"><a href="show.html">show-methods</a></td>
+<td>Displays the result object of a copy number detection method.</td></tr>
+<tr><td width="25%"><a href="X.html">X</a></td>
+<td>A simulated data set for CNV detection from NGS data.</td></tr>
+<tr><td width="25%"><a href="XRanges.html">XRanges</a></td>
+<td>A simulated data set for CNV detection from NGS data.</td></tr>
+</table>
+</body></html>

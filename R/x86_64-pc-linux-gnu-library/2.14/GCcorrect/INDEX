@@ -1,0 +1,19 @@
+GCcorrect-package       Estimation and correction of GC bias in
+                        short-read DNA sequencing
+basicPlots              Plots of reads
+binReads                Count reads in each bin.
+compDataRefPlots        Exploratory Plots Comparing Reads and
+                        Chromosome
+condMeanAndPredict      Estimates the GC bias, and create a prediction
+                        vector
+findLongZeros           Find Long Zeros
+getCondMean             Conditional Mean
+makeGCLens              Simultanously estimate GC curves for multiple
+                        GC windows
+meanLine                Return Mean for each Bin
+prepareChrom            Prepare Chromosome Information Structure
+prepareGCChrom          Calculate Line of GCs of moving window
+prepareReads            Prepare Read Structure
+sampleChrom             Create sample of chromosome positions for
+                        estimating GC effect.
+unEvenBin               Calculate Sum for Uneven Bins

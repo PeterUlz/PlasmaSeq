@@ -1,0 +1,23 @@
+GRanges-class           GRanges objects
+GRangesList-class       GRangesList objects
+GappedAlignments-class
+                        GappedAlignments objects
+GenomicRanges-comparison
+                        Ordering and comparing genomic ranges
+GenomicRangesList-class
+                        GenomicRangesList objects
+Seqinfo-class           Seqinfo objects
+SummarizedExperiment-class
+                        SummarizedExperiment instances
+cigar-utils             CIGAR utility functions
+countGenomicOverlaps    Count Read Hits in Genomic Features
+coverage-methods        GRanges, GRangesList and GappedAlignments
+                        coverage
+findOverlaps-methods    GRanges, GRangesList and GappedAlignments
+                        Interval Overlaps
+keepSeqlevels           seqlevels utility functions
+seqinfo                 Accessing sequence information
+setops-methods          Set operations on
+                        GRanges/GRangesList/GappedAlignments objects
+strand                  Accessing strand information
+summarizeOverlaps       Count reads that map to genomic features

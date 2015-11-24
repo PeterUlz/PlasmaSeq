@@ -1,0 +1,11 @@
+Package: ABSOLUTE
+Title: ABSOLUTE
+Description: Absolute Quantification of Somatic DNA Alterations in Human Cancer
+Version: 1.0.6
+Author: Scott L Carter
+Maintainer: Jeff Gentry <jgentry@broadinstitute.org>
+Depends: numDeriv
+License: file LICENSE
+LazyLoad: yes
+Packaged: 2012-12-04 16:29:18 UTC; jgentry
+Built: R 2.14.1; ; 2014-10-14 06:52:54 UTC; unix

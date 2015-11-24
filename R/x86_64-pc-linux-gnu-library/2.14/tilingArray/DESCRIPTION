@@ -1,0 +1,37 @@
+Package: tilingArray
+Version: 1.32.0
+Date: 2010-5-19
+Title: Transcript mapping with high-density oligonucleotide tiling
+        arrays
+Author: Wolfgang Huber, Zhenyu Xu, Joern Toedling with contributions from Matt Ritchie
+Maintainer: Zhenyu Xu <zhenyu@ebi.ac.uk>
+Depends: R (>= 2.11.0), Biobase, methods, pixmap
+Imports: strucchange, affy, vsn, genefilter, RColorBrewer, grid
+Suggests:
+Description: The package provides functionality that can be
+	useful for the analysis of high-density tiling microarray data (such
+	as from Affymetrix genechips) for measuring transcript abundance and
+	architecture. The main functionalities of the package are: 1. the class
+	'segmentation' for representing partitionings of a linear series of
+	data; 2. the function 'segment' for fitting piecewise constant models
+	using a dynamic programming algorithm that is both fast and exact; 3.
+	the function 'confint' for calculating confidence intervals using the
+	strucchange package; 4. the function 'plotAlongChrom' for generating
+	pretty plots; 5. the function 'normalizeByReference' for probe-sequence
+	dependent response adjustment from a (set of) reference
+	hybridizations.
+Reference: Huber W, Toedling J, Steinmetz, L. Transcript mapping with
+        high-density oligonucleotide tiling arrays. Bioinformatics 22,
+        1963-1970 (2006).
+License: Artistic-2.0
+Collate: AllClasses.R AllGenerics.R normalizeByReference.R posMin.R
+        otherStrand.R qcPlots.R comparisonPlot.R plotAlongChromLegend.R
+        readCel2eSet.R confint.segmentation.R plotAlongChrom.R
+        sampleStep.R costMatrix.R plotPenLL.R segChrom.R findsegments.R
+        grid.image.R raster.image.R plotSegmentationDots.R
+        plotSegmentationHeatmap.R PMindex.R methods-segmentation.R
+        zzz.R
+LazyLoad: Yes
+biocViews: Microarray, OneChannel, Preprocessing, Visualization
+Packaged: 2011-11-01 04:46:06 UTC; biocbuild
+Built: R 2.14.1; x86_64-pc-linux-gnu; 2012-10-16 11:17:47 UTC; unix

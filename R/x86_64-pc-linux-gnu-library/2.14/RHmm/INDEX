@@ -1,0 +1,27 @@
+HMMFit                  Fit an Hidden Markov Model
+HMMGraphicDiag          Graphic diagnostic of the HMM estimation
+HMMPlotSerie            Plot univariates series in each estimated
+                        states
+HMMSet                  Set the parameters for the hidden Markov models
+HMMSim                  Simulation of an Hidden Markov Model
+asymptoticCov           Asymptotic covariance matrix of the HMM
+                        parameters
+asymptoticIterSimCovMat
+                        Compute the asymptotic covariance matrix of a
+                        fitted HMM by simulation
+computeScoreAndInformation
+                        Score and Information matrix of the HMM
+                        parameters
+data_mixture            Simulated univariate mixture of 3 gausssian
+                        distributions
+distributionSet         Set the parameters for the distributions of
+                        observations
+forwardBackward         forward-backward function
+obs_n1d_3s              A 3 states HMM with univariate gaussian
+                        distribution data set
+obs_n3d_2s              A 2 states HMM with 3D gaussian distribution
+                        data set
+setAsymptoticCovMat     Set the asymptotic covariance matrix of a
+                        fitted HMM
+viterbi                 Viterbi algorithm
+weather                 Simulated discrete HMM

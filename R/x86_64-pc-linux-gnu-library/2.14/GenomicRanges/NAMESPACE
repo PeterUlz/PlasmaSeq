@@ -1,0 +1,69 @@
+useDynLib(GenomicRanges)
+
+import(methods)
+import(IRanges)
+
+exportClasses(
+    Seqinfo,
+    GenomicRanges, GenomicRangesORmissing, GRanges, GRangesList,
+    GappedAlignments, SummarizedExperiment, GenomicRangesORGRangesList,
+    GenomicRangesList, SimpleGenomicRangesList
+)
+
+export(
+    validCigar, cigarOpTable,
+    cigarToQWidth, cigarToWidth, cigarQNarrow, cigarNarrow,
+    cigarToIRanges, cigarToIRangesListByAlignment, cigarToIRangesListByRName,
+    queryLoc2refLoc, queryLocs2refLocs,
+    splitCigar, cigarToRleList, cigarToCigarTable, summarizeCigarTable,
+
+    seqinfo, "seqinfo<-",
+    seqnames, "seqnames<-",
+    seqlevels, "seqlevels<-",
+    seqlengths, "seqlengths<-",
+    isCircular, "isCircular<-", isCircularWithKnownLength,
+    genome, "genome<-",
+    Seqinfo,
+    strand, "strand<-",
+    GRanges, GRangesList, GenomicRangesList,
+    makeGRangesListFromFeatureFragments,
+    rname, "rname<-", cigar, qwidth, grglist, granges, grg, rglist, qnarrow,
+    readGappedAlignments, GappedAlignments,
+    SummarizedExperiment,
+    assays, "assays<-", assay, "assay<-", rowData, "rowData<-",
+    colData, "colData<-", exptData, "exptData<-",
+    Union, IntersectionNotEmpty, IntersectionStrict
+)
+
+exportMethods(
+    length,
+    names, "names<-",
+    seqinfo, "seqinfo<-",
+    seqnames, "seqnames<-",
+    seqlevels, "seqlevels<-",
+    seqlengths, "seqlengths<-",
+    isCircular, "isCircular<-", isCircularWithKnownLength,
+    genome, "genome<-",
+    merge,
+    coerce, as.data.frame, unlist,
+    ranges, strand, elementMetadata,
+    "ranges<-", "strand<-", "elementMetadata<-",
+    start, end, width, "start<-", "end<-", "width<-",
+    "[", "[<-", c, seqselect, "seqselect<-",
+    split, window,
+    flank, resize, shift,
+    disjoin, gaps, range, reduce, isDisjoint,
+    distance,
+    duplicated, unique, order, sort, rank, "==", "<=", ">=", "<", ">",
+    coverage,
+    union, intersect, setdiff,
+    punion, pintersect, psetdiff, pgap,
+    findOverlaps, countOverlaps, match, "%in%",
+    show,
+    rname, "rname<-", cigar, qwidth, grglist, granges, rglist, ngap,
+    qnarrow,
+    dimnames, "dimnames<-", precede, follow,
+    countGenomicOverlaps, keepSeqlevels, renameSeqlevels,
+    summarizeOverlaps 
+)
+

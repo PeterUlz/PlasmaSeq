@@ -1,0 +1,24 @@
+Package: aCGH
+Title: Classes and functions for Array Comparative Genomic
+        Hybridization data.
+Version: 1.32.0
+Date: 2010-04-15
+Depends: R (>= 1.8.0), cluster, survival, multtest
+Imports: Biobase, cluster, grDevices, graphics, methods, multtest,
+        stats, survival, splines, utils
+Author: Jane Fridlyand <jfridlyand@cc.ucsf.edu>, Peter Dimitrov
+        <dimitrov@stat.Berkeley.EDU>
+Description: Functions for reading aCGH data from image analysis
+        output files and clone information files, creation of aCGH S3
+        objects for storing these data. Basic methods for
+        accessing/replacing, subsetting, printing and plotting aCGH
+        objects.
+Maintainer: Peter Dimitrov <dimitrov@stat.Berkeley.EDU>
+License: GPL-2
+Collate: aCGH.R aCGH.plotting.R aCGH.read.R aCGH.test.R clusterGenome.R
+        funcs.dataplot.R heatmap.R hmm.R human.chrom.info.Jul03.R
+        human.chrom.info.May04.R mergeLevels.R
+LazyLoad: yes
+biocViews: CopyNumberVariants, DataImport, Genetics
+Packaged: 2011-11-01 04:38:20 UTC; biocbuild
+Built: R 2.14.1; x86_64-pc-linux-gnu; 2012-10-16 11:17:27 UTC; unix

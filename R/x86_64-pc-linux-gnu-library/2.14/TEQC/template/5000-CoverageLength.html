@@ -1,0 +1,16 @@
+<p> &nbsp;
+
+<p>
+  <b>Coverage vs Target Length</b>
+</p>
+<p>
+With the following graphs it can be checked whether larger targets are covered by more reads, as expected, since for larger target regions there should also be more 
+hybridization capture probes ("baits"). Or you might ask whether quite small targets have worse coverage, because the bait tiling might not be as good as
+for larger targets. The graphs are useful for targets of very different lengths.
+</p>
+<pre>
+  > coverage.targetlength.plot(targetcov, plotcolumn="nReads")
+  > coverage.targetlength.plot(targetcov, plotcolumn="avgCoverage")
+</pre>
+@COV_TARGLEN@
+

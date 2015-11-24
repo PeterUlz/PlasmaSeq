@@ -1,0 +1,68 @@
+# Font mappings for GDD
+#-----------------------
+# Fonts files specified here will be used by the GDD device. The
+# supported entries are "base.norm" for regular base font, "base.bold"
+# for bold base font, "base.ital" for italic base font and "base.bita"
+# for bold, italic base font. Since 0.1-8 you can also specify the
+# symbol font using "symbol" entry.
+#
+# This file is processed in greedy manner, i.e. if the file specified
+# in the entry matches, then that font file will be used. Once all
+# necessary font types are matched, the loading stops.
+
+# Note: since 0.1-6 it is possible to look up the path via fontconfig.
+#       use <Font> instead of the path, e.g. <Arial:bold>
+
+# If fontconfig is installed and gd is 2.0.29 or higher, then the following
+# should match in any case
+base.norm:<Helvetica>
+base.bold:<Helvetica:bold>
+base.ital:<Helvetica:italic>
+base.bita:<Helvetica:bold:italic>
+# On MacOS X fontconfig finds the incorrect font, so let's try the
+# system Symbol font first
+symbol:/System/Library/Fonts/Symbol.dfont
+# only then try fontconfig
+symbol:<Symbol>
+
+# the next entries work for Debian systems with msttcorefonts
+# installed (may work with other Linux distros if they use the same
+# location for MS core fonts)
+base.norm:/usr/share/fonts/truetype/msttcorefonts/arial.ttf
+base.bold:/usr/share/fonts/truetype/msttcorefonts/arialbd.ttf
+base.ital:/usr/share/fonts/truetype/msttcorefonts/ariali.ttf
+base.bita:/usr/share/fonts/truetype/msttcorefonts/arialbi.ttf
+
+#--- add your section here if you have some nice TTFs ---
+#base.norm:
+#base.ital:
+#base.bold:
+#base.bita:
+
+# Windows fallback - %xxx% are expanded to environment variables
+# WINDOWSFONTS env variable is set to the system's font folder
+# (usually c:/windows/fonts) whenever possible [Win32 only!]
+
+# first we try Verdana, then Arial (adjust as you please)
+base.norm:%WINDOWSFONTS%/verdana.ttf
+base.ital:%WINDOWSFONTS%/verdanai.ttf
+base.bold:%WINDOWSFONTS%/verdanab.ttf
+base.bita:%WINDOWSFONTS%/verdanaz.ttf
+
+base.norm:%WINDOWSFONTS%/arial.ttf
+base.ital:%WINDOWSFONTS%/ariali.ttf
+base.bold:%WINDOWSFONTS%/arialbd.ttf
+base.bita:%WINDOWSFONTS%/arialbi.ttf
+
+# we also attempt to set the symbol font
+symbol:%WINDOWSFONTS%/symbol.ttf
+
+# this is the ultimate fallback - supplied free fonts
+# there is no italic versions and regular font is used if bold cannot
+# be found
+base.norm:blue_highway_free.ttf
+base.bold:blue_highway_free bold.ttf
+base.bold:blue_highway_free.ttf
+base.ital:blue_highway_free.ttf
+base.bita:blue_highway_free bold.ttf
+base.bita:blue_highway_free.ttf

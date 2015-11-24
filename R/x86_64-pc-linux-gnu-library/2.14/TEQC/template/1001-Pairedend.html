@@ -1,0 +1,35 @@
+<p> &nbsp;
+<h2>Paired-end Data</h2>
+
+<p> When reads are paired, in order to perform statistics on pairs rather than
+    on single reads, the read pairs have to be matched together. 
+    Reads without matching pair, or whose read mate aligns to a different chromosome, are excluded.   
+    The genomic positions given in the resulting table
+    are equivalent to the respective actual DNA molecule that was sequenced from both ends. 
+</p>
+<p>
+   The chromosome bar plot, specificity, enrichment and duplicate analysis (if selected) will be based on read pairs rather than on single reads.
+</p>
+<pre>
+  > readpairs <- reads2pairs(reads)
+</pre>
+
+<p>
+  Number of read pairs: @NPAIRS@
+</p>
+<p>
+  Number of reads without matching second read, or whose second read aligns to a different chromosome: @NSINGLES@
+</p>
+<p> &nbsp;
+<p>
+  <b>Insert size histogram</b>
+</p>
+<p>
+   Visualization of read pair insert sizes, i.e. the distances from the start of read 1 to the end of read 2, respectively.
+</p>
+<pre>
+  > insert.size.hist(readpairs)
+</pre> 
+@ISIZEHIST@
+
+

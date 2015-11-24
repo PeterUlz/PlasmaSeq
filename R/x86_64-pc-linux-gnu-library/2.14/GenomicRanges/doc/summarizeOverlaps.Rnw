@@ -1,0 +1,366 @@
+%\VignetteIndexEntry{Overview of summarizeOverlaps}
+%\VignetteDepends{}
+%\VignetteKeywords{sequence, sequencing, alignments}
+%\VignettePackage{GenomicRanges}
+\documentclass[10pt]{article}
+
+\usepackage{times}
+\usepackage{hyperref}
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textsf{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Rcode}[1]{{\texttt{#1}}}
+
+\newcommand{\software}[1]{\textsf{#1}}
+\newcommand{\R}{\software{R}}
+\newcommand{\Bioconductor}{\software{Bioconductor}}
+\newcommand{\GenomicRanges}{\Rpackage{GenomicRanges}}
+
+\SweaveOpts{keep.source=TRUE}
+
+\title{Counting with \Rfunction{summarizeOverlaps}}
+\author{Valerie Obenchain}
+\date{Edited: October 2011; Compiled: \today}
+
+\begin{document}
+
+\maketitle
+
+<<options,echo=FALSE>>=
+options(width=72)
+@
+\tableofcontents
+
+\section{Introduction}
+
+This vignette illustrates how reads mapped to a genome can be counted with 
+\Rfunction{summarizeOverlaps}. Different "modes" of counting are provided to 
+resolve reads that overlap multiple features. The built-in count modes are 
+fashioned after the "Union", "IntersectionStrict", and "IntersectionNotEmpty" 
+methods found in the HTSeq package by Simon Anders (see references). 
+
+
+\section{A First Example}
+
+In this example reads are counted from a list of BAM files and returned in
+a \Robject{matrix} for use in further analysis such as those offered in 
+\Rpackage{DESeq} and \Rpackage{edgeR}. 
+<<firstExample, eval=TRUE, keep.source=TRUE>>=
+library(Rsamtools)
+library(DESeq)
+library(edgeR)
+
+fls = list.files(system.file("extdata",package="GenomicRanges"),
+    recursive=TRUE, pattern="*bam$", full=TRUE)
+bfl <- BamFileList(fls)
+
+features <- GRanges(
+    seqnames = Rle(c("chr2L", "chr2R", "chr2L", "chr2R", "chr2L", "chr2R",
+        "chr2L", "chr2R", "chr2R", "chr3L", "chr3L")),
+    strand = strand(rep("+", 11)),
+    ranges = IRanges(start=c(1000, 2000, 3000, 3600, 7000, 7500, 4000, 4000, 
+        3000, 5000, 5400), width=c(500, 900, 500, 300, 600, 300, 500, 900, 500, 
+        500, 500))
+)
+
+olap <- summarizeOverlaps(features, bfl)
+
+deseq <- newCountDataSet(countData=assays(olap)$counts,  
+                           conditions=rownames(colData(olap)))
+
+edger <- DGEList(counts=assays(olap)$counts, group=rownames(colData(olap)))
+@
+
+\section{Counting Modes}
+
+The modes of "Union", "IntersectionStrict" and "IntersectionNotEmpty" 
+provide different approaches to resolving reads that overlap multiple 
+features. Figure~\ref{fig-summarizeOverlaps-modes} illustrates how both simple and 
+gapped reads are handled by the modes. Note that a read is counted a
+maximum of once; there is no double counting. These methods do not 
+currently handle paired-end reads. For additional detail on the
+counting modes see the \Rfunction{summarizeOverlaps} man page.
+
+\begin{figure}[!h]
+\begin{center}
+\includegraphics{summarizeOverlaps-modes.pdf}
+\caption{Counting Modes}
+\label{fig-summarizeOverlaps-modes}
+\end{center}
+\end{figure}
+
+\newpage
+
+\section{Counting Features}
+
+Features can be exons, transcripts, genes or any region of interest. 
+The number of ranges that define a single feature is specified in the 
+\Rcode{features} argument. 
+
+When annotation regions of interest are defined by a single range a
+\Rclass{GRanges} should be used as the \Rcode{features} argument. With 
+a \Rclass{GRanges} it is assumed that each row (i.e., each range) represents 
+a distinct feature. If \Rcode{features} was a \Rclass{GRanges} of exons, 
+the result would be counts per exon. 
+
+When the region of interest is defined by one or more ranges the
+\Rcode{features} argument should be a \Rclass{GRangesList}. In practice 
+this could be a list of exons by gene or transcripts by gene or other 
+similar relationships. The count result will be the same length as the 
+\Rclass{GRangesList}. For a list of exons by genes, the result would be 
+counts per gene.
+
+The combination of defining the features as either\Rclass{GRanges} or
+\Rclass{GRangesList} and choosing a counting mode controls how 
+\Rfunction{summarizeOverlaps} assigns hits. Reguardless of the mode chosen, 
+each read is assigned to at most a single feature. These options are intended 
+to provide flexibility in defining different biological problems.
+
+This next example demonstrates how the same read can be counted differently
+depending on how the \Rcode{features} argument is specified. We use a single 
+read that overlaps two ranges, gr1 and gr2.
+<<simple>>=
+rd <- GappedAlignments("a", rname = Rle("chr1"), pos = as.integer(100),
+    cigar = "300M", strand = strand("+"))
+
+gr1 <- GRanges("chr1", IRanges(start=50, width=150), strand="+")
+gr2 <- GRanges("chr1", IRanges(start=350, width=150), strand="+")
+@
+
+\noindent
+When provided as a \Rclass{GRanges} both gr1 and gr2 are considered 
+distinct features. In this case none of the modes count the read as
+a hit. Mode \Rcode{Union} discards the read becasue more than 1 feature
+is overlapped. \Rcode{IntersectionStrict} requires the read to
+fall completely within a feature which is not the case for either gr1 
+or gr2. \Rcode{IntersetctionNotEmpty} requires the read to overlap a 
+single unique disjoint region of the \Rcode{features}. In this case 
+gr1 and gr2 do not overlap so each range is considered a unique disjoint 
+region. However, the read overlaps both gr1 and gr2 so a decision
+cannot be made and the read is discarded.
+<<simpleGRanges>>=
+gr <- c(gr1, gr2)
+data.frame(union = assays(summarizeOverlaps(gr, rd))$counts,
+           intStrict = assays(summarizeOverlaps(gr, rd,
+               mode="IntersectionStrict"))$counts,
+           intNotEmpty = assays(summarizeOverlaps(gr, rd,
+               mode="IntersectionNotEmpty"))$counts)
+@
+
+\noindent
+Next we count with \Rcode{features} as a \Rclass{GRangesList}; this is list of 
+length 1 with 2 elements. Modes \Rcode{Union} and \Rcode{IntersectionNotEmpty} 
+both count the read for the single feature.
+<<simpleGRangesList>>=
+grl <- GRangesList(c(gr1, gr2))
+data.frame(union = assays(summarizeOverlaps(grl, rd))$counts,
+           intStrict = assays(summarizeOverlaps(grl, rd,
+               mode="IntersectionStrict"))$counts,
+           intNotEmpty = assays(summarizeOverlaps(grl, rd,
+               mode="IntersectionNotEmpty"))$counts)
+@
+
+\newpage
+In this more complicated example we have 7 reads, 5 are simple and 
+2 have gaps in the CIGAR. There are 12 ranges that will serve as the
+\Robject{features}. 
+<<data>>=
+group_id <- c("A", "B", "C", "C", "D", "D", "E", "F", "G", "G", "H", "H")
+features <- GRanges(
+    seqnames = Rle(c("chr1", "chr2", "chr1", "chr1", "chr2", "chr2",
+        "chr1", "chr1", "chr2", "chr2", "chr1", "chr1")),
+    strand = strand(rep("+", length(group_id))),
+    ranges = IRanges(
+        start=c(1000, 2000, 3000, 3600, 7000, 7500, 4000, 4000, 3000, 3350, 5000, 5400),
+        width=c(500, 900, 500, 300, 600, 300, 500, 900, 150, 200, 500, 500)),
+   DataFrame(group_id)
+)
+
+reads <- GappedAlignments(
+    names = c("a","b","c","d","e","f","g"),
+    rname = Rle(c(rep(c("chr1", "chr2"), 3), "chr1")),
+    pos = as.integer(c(1400, 2700, 3400, 7100, 4000, 3100, 5200)),
+    cigar = c("500M", "100M", "300M", "500M", "300M", "50M200N50M", "50M150N50M"),
+    strand = strand(rep.int("+", 7L)))
+
+@
+
+\noindent
+Using a \Rclass{GRanges} as the \Rcode{features} all 12 ranges
+are considered to be different features and counts are produced
+for each row,
+<<GRanges>>=
+data.frame(union = assays(summarizeOverlaps(features, reads))$counts,
+           intStrict = assays(summarizeOverlaps(features, reads,
+               mode="IntersectionStrict"))$counts,
+           intNotEmpty = assays(summarizeOverlaps(features, reads,
+               mode="IntersectionNotEmpty"))$counts)
+@
+
+\noindent
+When the data are split by group to create a \Rclass{GRangesList} 
+the highest list-levels are treated as different features
+and the multiple list elements are considered part of the same 
+features. Counts are returned for each group. 
+<<lst>>=
+lst <- split(features, values(features)[["group_id"]])
+length(lst)
+@
+<<GRangesList>>=
+data.frame(union = assays(summarizeOverlaps(lst, reads))$counts,
+           intStrict = assays(summarizeOverlaps(lst, reads,
+               mode="IntersectionStrict"))$counts,
+           intNotEmpty = assays(summarizeOverlaps(lst, reads,
+               mode="IntersectionNotEmpty"))$counts)
+@
+
+If desired, users can supply their own counting function as the \Rcode{mode}
+argument and take advantage of the infrastructure for counting over multiple 
+BAM files and parsing the results into a \Rclass{SummarizedExperiment}.
+See \Rcode{?'BamViews-class' or ?'BamFile-class'} in \Rpackage{Rsamtools}.
+
+\section{\Rcode{pasilla} Data}
+In this excercise we use the \Rpackage{pasilla} data to create an 
+\Rclass{ExonCountSet} and \Rclass{CountDataSet} similar to those available 
+in the \Rpackage{pasilla} data package. These objects can be used in 
+differential expression methods offered in the \Rpackage{DESeq} or 
+\Rpackage{DEXSeq} packages. Details of read alignment and the creation 
+of the annotaion file are available in the \Rpackage{pasilla} package vignette. 
+
+\subsection{source files}
+BAM files were downloaded from \url{http://www.embl.de/~reyes/Graveley/bam}.
+Of the seven files available, 3 are single-reads and 4 are paired-end.
+\Rfunction{summarizeOverlaps} does not currently handle paired-end reads so 
+in this example we use the following 3 single-read files,
+\begin{itemize}
+\item treated1.bam
+\item untreated1.bam
+\item untreated2.bam
+\end{itemize}
+
+We use the Dmel.BDGP5.25.62.DEXSeq.chr.gff annotation file created by 
+the \Rpackage{pasilla} authors and stored in the \Rcode{/extdata} directory 
+of the package. This file contains non-overlapping exon regions identified as 
+"exonic\_part" and a collective range for the exons identified as 
+"aggregate\_gene". The "exonic\_part" ranges will be used to create the 
+\Rclass{ExonCountSet} and the "aggregate\_gene" ranges to create the
+\Rclass{CountDataSet}. 
+
+<<pasilla_features>>=
+library(pasilla)
+library(rtracklayer)
+library(Rsamtools)
+
+gff <- import(system.file("extdata", "Dmel.BDGP5.25.62.DEXSeq.chr.gff",
+    package = "pasilla"), "gff1")
+features <- as(gff, "GRanges")
+head(features[,1])
+@
+
+\subsection{Exon counts}
+For counting exons we retain the ranges marked as "exonic\_part". The exon and 
+gene id's are extracted from the 'group' metadata column for later use.
+<<pasilla_exons>>=
+exons <- features[values(features)[["type"]] == "exonic_part"]
+
+st <- strsplit(gsub("\"", "", values(exons)[["group"]]), ";") 
+exonID <- do.call(c,
+              lapply(st, function(x) {
+                 gsub("[^0-9]", "", x[2])}))
+
+geneID <- do.call(c,
+              lapply(st, function(x) {
+                 gsub(" gene_id ", "", x[3])}))
+@
+
+The \Rcode{params} argument can be used to subset the reads in the bam file
+on characteristics such as position, unmapped or paired-end reads. Quality 
+scores or the "NH" tag, which identifies reads with multiple mappings, can be
+included as metadata columns for further subsetting. See \Rcode{?ScanBamParam} 
+for details about specifying the \Rcode{param} argument.
+
+<<pasilla_param>>=
+param <- ScanBamParam(
+             what='qual',
+             which=GRanges("chr2L", IRanges(1, 1e+6)),
+             flag=scanBamFlag(isUnmappedQuery=FALSE, isPaired=NA))
+bamTag(param) <- "NH" 
+@
+
+We use \Rfunction{summarizeOverlaps} to count with the default mode of "Union".
+If a \Rcode{param} argument is not included all reads from the BAM file are
+counted. 
+<<pasilla_count, eval=FALSE>>=
+fls <- c("treated1.bam", "untreated1.bam", "untreated2.bam") 
+path <- "pathToBAMFiles"
+bamFiles <- BamFileList(file.path(paste(path, fls, sep=""))) 
+se_exons <- summarizeOverlaps(exons, bamFiles, mode="Union")
+@
+
+\noindent
+An \Rcode{ExonCountSet} is constructed from the counts and experiment
+data in \Rclass{pasilla}.
+<<pasilla_exoncountset, eval=FALSE>>=
+library(DEXSeq)
+expdata = new("MIAME",
+              name="pasilla knockdown",
+              lab="Genetics and Developmental Biology, University of 
+                  Connecticut Health Center",
+              contact="Dr. Brenton Graveley",
+              title="modENCODE Drosophila pasilla RNA Binding Protein RNAi 
+                  knockdown RNA-Seq Studies",
+              url="http://www.ncbi.nlm.nih.gov/projects/geo/query/acc.cgi?acc=GSE18508",
+              abstract="RNA-seq of 3 biological replicates of from the Drosophila
+                  melanogaster S2-DRSC cells that have been RNAi depleted of mRNAs 
+                  encoding pasilla, a mRNA binding protein and 4 biological replicates 
+                  of the the untreated cell line.")
+              pubMedIds(expdata) <- "20921232"
+
+design <- data.frame(
+              condition=c("treated", "untreated", "untreated"),
+              replicate=c(1,1,2),
+              type=rep("single-read", 3),
+              countfiles=colData(se_exons)[,1], stringsAsFactors=TRUE)
+
+pasillaECS <- newExonCountSet(
+                  countData=assays(se_exons)$counts,
+                  design=design,
+                  exonIDs=factor(exonID), 
+                  geneIDs=factor(geneID))
+
+experimentData(pasillaECS) <- expdata
+sampleNames(pasillaECS) = colnames(se_exons)
+@
+
+\subsection{Gene counts}
+The \Rclass{CountDataSet} will hold counts for the aggregate gene 
+regions. The counts can be obtained by summing the exon hits by gene id
+using \Robject{geneCountTable} in \Rpackage{DEXSeq},
+<<pasilla_bingenes, eval=FALSE>>=
+genetable = geneCountTable(pasillaECS)
+pasillaCDS = newCountDataSet(countData=genetable, conditions=design)
+experimentData(pasillaCDS) = expdata
+@
+
+If the primary interest was in counts per gene and counts per exon were not
+needed an alternative approach could be taken. The annotation file could 
+be subset on "aggregate\_gene" ranges and then counted. 
+<<pasilla_genes, eval=FALSE>>=
+genes <- features[values(features)[["type"]] == "aggregate_gene"]
+se_genes <- summarizeOverlaps(genes, bamFiles, mode="Union")
+
+pasillaCDS_alt <- newCountDataSet(countData=assays(se_genes)$counts,
+    conditions=design) 
+experimentData(pasillaCDS_alt) = expdata
+@
+
+\section{Refererences}
+
+\url{http://www-huber.embl.de/users/anders/HTSeq/doc/overview.html} 
+\noindent\url{http://www-huber.embl.de/users/anders/HTSeq/doc/count.html}
+
+\end{document}

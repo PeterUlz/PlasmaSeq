@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Segmentation, normalisation and processing of aCGH data.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+<h1> Segmentation, normalisation and processing of aCGH data.
+<img class="toplogo" src="../../../doc/html/logo.jpg" alt="[R logo]">
+</h1>
+<hr>
+<div align="center">
+<a href="../../../doc/html/packages.html"><img src="../../../doc/html/left.jpg" alt="[Up]" width="30" height="30" border="0"></a>
+<a href="../../../doc/html/index.html"><img src="../../../doc/html/up.jpg" alt="[Top]" width="30" height="30" border="0"></a>
+</div><h2>Documentation for package &lsquo;snapCGH&rsquo; version 1.24.0</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">Overview of user guides and package vignettes</a>; browse <a href="../doc">directory</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table width="100%">
+<tr><td width="25%"><a href="cbind.html">cbind.SegList</a></td>
+<td>Combine SegList Objects</td></tr>
+<tr><td width="25%"><a href="chrominfo.Mb.html">chrominfo.Mb</a></td>
+<td>Basic Chromosomal Information for UCSC Human Genome Assembly July 2003 freeze</td></tr>
+<tr><td width="25%"><a href="mergeStates.html">combine.func</a></td>
+<td>Function to merge states based on their state means</td></tr>
+<tr><td width="25%"><a href="compareSegmentations.html">compareBreakPoints</a></td>
+<td>Function for comparing segmentation methods to a known truth</td></tr>
+<tr><td width="25%"><a href="compareSegmentations.html">compareSegmentations</a></td>
+<td>Function for comparing segmentation methods to a known truth</td></tr>
+<tr><td width="25%"><a href="convert.output.html">convert.output</a></td>
+<td>Converts the output from the simulation to a format which can be used by segmentation schemes available within R</td></tr>
+<tr><td width="25%"><a href="dim.html">dim</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or SegList Object</td></tr>
+<tr><td width="25%"><a href="dim.html">dim-method</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or SegList Object</td></tr>
+<tr><td width="25%"><a href="dim.html">dim.MAList</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or SegList Object</td></tr>
+<tr><td width="25%"><a href="dim.html">dim.RGList</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or SegList Object</td></tr>
+<tr><td width="25%"><a href="dim.html">dim.SegList</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or SegList Object</td></tr>
+<tr><td width="25%"><a href="dimnames.html">dimnames</a></td>
+<td>Retrieve the Dimension Names of an RGList, MAList or SegList Object</td></tr>
+<tr><td width="25%"><a href="dimnames.html">dimnames-method</a></td>
+<td>Retrieve the Dimension Names of an RGList, MAList or SegList Object</td></tr>
+<tr><td width="25%"><a href="dimnames.html">dimnames.SegList</a></td>
+<td>Retrieve the Dimension Names of an RGList, MAList or SegList Object</td></tr>
+<tr><td width="25%"><a href="filter.html">filterClones</a></td>
+<td>Filter clones from sample</td></tr>
+<tr><td width="25%"><a href="find.param.five.html">find.param.five</a></td>
+<td>Yields the output in a model with five underlying states</td></tr>
+<tr><td width="25%"><a href="find.param.four.html">find.param.four</a></td>
+<td>Yields output when there are 4 underlying states</td></tr>
+<tr><td width="25%"><a href="find.param.one.html">find.param.one</a></td>
+<td>Yields output when there is 1 underlying states</td></tr>
+<tr><td width="25%"><a href="find.param.three.html">find.param.three</a></td>
+<td>Yields output when there are 3 underlying states</td></tr>
+<tr><td width="25%"><a href="find.param.two.html">find.param.two</a></td>
+<td>Yields output when there are 2 underlying states</td></tr>
+<tr><td width="25%"><a href="findBreakPoints.html">findBreakPoints</a></td>
+<td>Returns the start and end of segments.</td></tr>
+<tr><td width="25%"><a href="fit.model.html">fit.model</a></td>
+<td>Fitting a heterogeneous HMM to the log2 ratios on a particular chromosome.</td></tr>
+<tr><td width="25%"><a href="heatmapGenome.html">floor.func</a></td>
+<td>clustering and heatmap</td></tr>
+<tr><td width="25%"><a href="sim.structure.html">generate.data</a></td>
+<td>A function for simulating aCGH data and the corresponding clone layout</td></tr>
+<tr><td width="25%"><a href="genomePlot.html">genomePlot</a></td>
+<td>Plots the genome</td></tr>
+<tr><td width="25%"><a href="heatmapGenome.html">heatmapGenome</a></td>
+<td>clustering and heatmap</td></tr>
+<tr><td width="25%"><a href="IDProbes.html">IDProbes</a></td>
+<td>Interactive version of genomePlot</td></tr>
+<tr><td width="25%"><a href="imputeMissingValues.html">imputeMissingValues</a></td>
+<td>Imputing log2 ratios</td></tr>
+<tr><td width="25%"><a href="LargeDataObject.html">LargeDataObject-class</a></td>
+<td>Large Data Object - class</td></tr>
+<tr><td width="25%"><a href="dim.html">length</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or SegList Object</td></tr>
+<tr><td width="25%"><a href="dim.html">length-method</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or SegList Object</td></tr>
+<tr><td width="25%"><a href="dim.html">length.MAList</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or SegList Object</td></tr>
+<tr><td width="25%"><a href="dim.html">length.RGList</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or SegList Object</td></tr>
+<tr><td width="25%"><a href="dim.html">length.SegList</a></td>
+<td>Retrieve the Dimensions of an RGList, MAList or SegList Object</td></tr>
+<tr><td width="25%"><a href="log2ratios.html">log2ratios</a></td>
+<td>Extracting log2 ratios</td></tr>
+<tr><td width="25%"><a href="heatmapGenome.html">maPalette</a></td>
+<td>clustering and heatmap</td></tr>
+<tr><td width="25%"><a href="mergeStates.html">MergeLevels.new</a></td>
+<td>Function to merge states based on their state means</td></tr>
+<tr><td width="25%"><a href="mergeStates.html">MergeLevels.old</a></td>
+<td>Function to merge states based on their state means</td></tr>
+<tr><td width="25%"><a href="mergeStates.html">mergeStates</a></td>
+<td>Function to merge states based on their state means</td></tr>
+<tr><td width="25%"><a href="non.zero.length.distr.non.tiled.html">non.zero.length.distr.non.tiled</a></td>
+<td>Empirical distribution of segment lengths in non-tiled regions with copy number gains or losses</td></tr>
+<tr><td width="25%"><a href="non.zero.length.distr.tiled.html">non.zero.length.distr.tiled</a></td>
+<td>Empirical distribution of segment lengths in tiled regions with copy number gains or losses</td></tr>
+<tr><td width="25%"><a href="heatmapGenome.html">plotChrom</a></td>
+<td>clustering and heatmap</td></tr>
+<tr><td width="25%"><a href="plotSegmentedGenome.html">plotSegmentedGenome</a></td>
+<td>Plots the genome</td></tr>
+<tr><td width="25%"><a href="heatmapGenome.html">plotValChrom</a></td>
+<td>clustering and heatmap</td></tr>
+<tr><td width="25%"><a href="heatmapGenome.html">plotvalChrom.func</a></td>
+<td>clustering and heatmap</td></tr>
+<tr><td width="25%"><a href="heatmapGenome.html">plotValGenome</a></td>
+<td>clustering and heatmap</td></tr>
+<tr><td width="25%"><a href="SegList.html">print.SegList</a></td>
+<td>Segmentation States - class</td></tr>
+<tr><td width="25%"><a href="processCGH.html">processCGH</a></td>
+<td>Process data in an MAList</td></tr>
+<tr><td width="25%"><a href="processCGH.html">prop.na</a></td>
+<td>Process data in an MAList</td></tr>
+<tr><td width="25%"><a href="cbind.html">rbind.SegList</a></td>
+<td>Combine SegList Objects</td></tr>
+<tr><td width="25%"><a href="read.clonesinfo.html">read.clonesinfo</a></td>
+<td>Reading chromsome and positional information about each clone.</td></tr>
+<tr><td width="25%"><a href="readPositionalInfo.html">readPositionalInfo</a></td>
+<td>readPositionalInfo</td></tr>
+<tr><td width="25%"><a href="removeByWeights.html">removeByWeights</a></td>
+<td>Remove clones based on a weights matrix</td></tr>
+<tr><td width="25%"><a href="fit.model.html">run.nelder</a></td>
+<td>Fitting a heterogeneous HMM to the log2 ratios on a particular chromosome.</td></tr>
+<tr><td width="25%"><a href="runBioHMM.html">runBioHMM</a></td>
+<td>This function implements the BioHMM</td></tr>
+<tr><td width="25%"><a href="runDNAcopy.html">runDNAcopy</a></td>
+<td>Results of segmenting an MAList data object using the DNAcopy library</td></tr>
+<tr><td width="25%"><a href="runGLAD.html">runGLAD</a></td>
+<td>Results of segmenting an aCGHList data object using the GLAD library</td></tr>
+<tr><td width="25%"><a href="runHMM.html">runHomHMM</a></td>
+<td>A function to fit unsupervised Hidden Markov model</td></tr>
+<tr><td width="25%"><a href="runTilingArray.html">runTilingArray</a></td>
+<td>Results of segmenting an MAList data object using the Picard et al algorithm found in the tilingArray library</td></tr>
+<tr><td width="25%"><a href="genomePlot.html">sample.names</a></td>
+<td>Plots the genome</td></tr>
+<tr><td width="25%"><a href="SegList.html">SegList-class</a></td>
+<td>Segmentation States - class</td></tr>
+<tr><td width="25%"><a href="LargeDataObject.html">show-method</a></td>
+<td>Large Data Object - class</td></tr>
+<tr><td width="25%"><a href="SegList.html">show-method</a></td>
+<td>Segmentation States - class</td></tr>
+<tr><td width="25%"><a href="sim.structure.html">simulateData</a></td>
+<td>A function for simulating aCGH data and the corresponding clone layout</td></tr>
+<tr><td width="25%"><a href="runHMM.html">states.hmm.func</a></td>
+<td>A function to fit unsupervised Hidden Markov model</td></tr>
+<tr><td width="25%"><a href="Viterbi.five.html">Viterbi.five</a></td>
+<td>A scaled Viterbi algorithm for allocating clones to one of five underlying states.</td></tr>
+<tr><td width="25%"><a href="Viterbi.four.html">Viterbi.four</a></td>
+<td>A scaled Viterbi algorithm for allocating clones to one of four underlying states.</td></tr>
+<tr><td width="25%"><a href="Viterbi.three.html">Viterbi.three</a></td>
+<td>A scaled Viterbi algorithm for allocating clones to one of two underlying states.</td></tr>
+<tr><td width="25%"><a href="Viterbi.two.html">Viterbi.two</a></td>
+<td>A scaled Viterbi algorithm for allocating clones to one of two underlying states.</td></tr>
+<tr><td width="25%"><a href="zero.length.distr.non.tiled.html">zero.length.distr.non.tiled</a></td>
+<td>Empirical distribution of segment lengths in non-tiled regions with no copy number gains or losses</td></tr>
+<tr><td width="25%"><a href="zero.length.distr.tiled.html">zero.length.distr.tiled</a></td>
+<td>Empirical distribution of segment lengths in tiled regions with no copy number gains or losses</td></tr>
+<tr><td width="25%"><a href="zoomChromosome.html">zoomChromosome</a></td>
+<td>Interactive plot of a single chromsome</td></tr>
+<tr><td width="25%"><a href="zoomGenome.html">zoomGenome</a></td>
+<td>Interactive plot of the whole genome</td></tr>
+<tr><td width="25%"><a href="SegList.html">[.SegList</a></td>
+<td>Segmentation States - class</td></tr>
+</table>
+</body></html>

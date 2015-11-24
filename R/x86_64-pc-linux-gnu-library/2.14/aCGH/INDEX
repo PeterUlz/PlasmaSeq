@@ -1,0 +1,42 @@
+aCGH                    Class aCGH
+aCGH.process            Process data in aCGH object
+aCGH.read.Sprocs        Create object of class "aCGH" from Sproc files
+aCGH.test               Testing association of aCGH clones with
+                        censored or continuous outcomes
+clusterGenome           clustering and heatmap
+colorectal              Colorectal array CGH dataset
+computeSD.func          Function to estimate experimental variability
+                        of a sample
+fga.func                Function to compute fraction of genome altered
+                        for each sample
+find.genomic.events     Finds the genomic events associated with each
+                        of the array CGH samples
+find.hmm.states         Determines states of the clones
+findAber.func           Function to determines focal aberrations
+findAmplif.func         Function to determine high level amplifications
+findOutliers.func       Function to identify outlier clones
+findTrans.func          Funtion identifying the transitions
+gainLoss                Function to compute proportion of gains and
+                        losses for each clones
+heatmap                 Creates heatmap array CGH objects
+human.chrom.info.Jul03
+                        Basic Chromosomal Information for UCSC Human
+                        Genome Assembly July 2003 freeze
+human.chrom.info.May04
+                        Basic Chromosomal Information for UCSC Human
+                        Genome Assembly May 2004 freeze
+impute.HMM              Imputing log2 ratios using HMM
+impute.lowess           Imputing log2 ratios
+mergeFunc               Funtion to merge states based on their state
+                        means
+mergeLevels             mergeLevels
+plotFreqStat            frequency plots and significance analysis
+plotGenome              Plots the genome
+plotHmmStates           Plotting the estimated hmm states and log2
+                        ratios for each sample.
+plotSummaryProfile      plotSummaryProfile
+states.hmm.func         A function to fit unsupervised Hidden Markov
+                        model
+summarize.clones        Extracting summary information for all clones
+threshold.func          Function to indicate gain or loss for each
+                        clone for each sample

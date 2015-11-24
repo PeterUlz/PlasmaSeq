@@ -1,0 +1,14 @@
+You need the GNU Scientific Library (GSL) for the GLAD package. Make sure it is installed on your machine if you want to use GLAD. GSL is free and can be downloaded at http://www.gnu.org/software/gsl/ for unix distributions and at http://gnuwin32.sourceforge.net/packages/gsl.htm for Windows. 
+
+Windows users
+=============
+
+To install a pre-built binary of GLAD and to load the package successfully you need to tell R where to link GSL. You can do that by adding /path/to/libgsl.dll to the Path environment variable. To add this you may right click on "My Computer", choose "Properties", select the "Advanced" tab, and click the button "Environment Variables". In the dialog box that opens, click "Path" in the variable list, and then click "Edit". Add /path/to/libgsl.dll to the Variable value field. It is important that the file path does not contain any space characters; to avoid this you may simply use the short forms (8.3 DOS file names) found by typing "dir /x" at the Windows command line. For example, I added the following on my Windows machine:
+C:/PROGRA~1/GNUWIN32/bin
+and used ";" to separate it from existing paths.
+
+To build the GLAD package from source (using Rtools), in addition to adding /path/to/libgsl.dll to Path, you need to tell GLAD where your GSL library and header files are. You can do that by setting up two environment variables GSL_LIB and GSL_INC with the correct path to the library files and header files respectively. You can do this by going to the "Environment Variables" dialog box as instructed above and then clicking the "New" button. Enter "GSL_LIB" in the Variable name field, and /path/to/your/gsl/lib/directory in the Variable value field. Likewise, do this for GSL_INC and /path/to/your/gsl/include/directory. Remember to use "/" instead of "\" as the directory delimiter.
+
+You can download Rtools at http://www.murdoch-sutherland.com/Rtools/ which provides the resources for building R and R packages. You should add to the Path variable the paths to the various components of Rtools. Please read the "Windows Toolset" appendix at http://cran.r-project.org/doc/manuals/R-admin.html#The-Windows-toolset for more details.
+
+

@@ -1,0 +1,19 @@
+citHeader("To cite vsn in publications use:")
+
+citEntry(entry="article",  
+  title  = paste("Variance Stabilization Applied to Microarray Data",
+           "Calibration and to the Quantification of Differential Expression"),
+  author = paste("Wolfgang Huber and Anja von Heydebreck and Holger",
+           "Sueltmann and Annemarie Poustka and Martin Vingron"),
+  journal = "Bioinformatics",
+  year = "2002",
+  volume = "18 Suppl. 1",
+  pages = "S96-S104",
+  textVersion = paste("Huber W, von Heydebreck A, Sueltmann H, Poustka A,",
+    "Vingron M. Variance Stabilization Applied to Microarray Data",
+    "Calibration and to the Quantification of Differential Expression.",
+    "Bioinformatics 18, S96-S104 (2002)."))
+
+citFooter("We have invested a lot of time and effort in creating vsn,",
+          "please cite it when using it for data analysis.")
+

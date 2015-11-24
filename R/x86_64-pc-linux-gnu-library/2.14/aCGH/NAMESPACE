@@ -1,0 +1,36 @@
+useDynLib(aCGH)
+
+importMethodsFrom(Biobase, sampleNames)
+
+importMethodsFrom(multtest, as.list, plot, summary, update)
+
+importFrom(cluster, volume)
+
+importFrom(graphics, abline, axis, boxplot, close.screen, frame, image,
+           layout, lines, mtext, par, points, screen, split.screen,
+           title)
+
+importFrom(grDevices, col2rgb, dev.off, pdf, postscript, rainbow,
+           replayPlot, rgb)
+
+importFrom(methods, slot, slotNames)
+
+importFrom(multtest, mt.maxT)
+
+importFrom(splines, splineKnots, splineOrder)
+
+importFrom(stats, ansari.test, approx, as.dendrogram, as.dist, as.ts,
+           coef, cor, dendrapply, deviance, dist, dnorm, end, formula,
+           frequency, hclust, IQR, is.leaf, kmeans, knots,
+           kruskal.test, lm, lowess, mad, median, na.omit, naprint,
+           order.dendrogram, p.adjust, pchisq, pf, pnorm, print.anova,
+           printCoefmat, pt, qnorm, quantile, reformulate, reorder,
+           residuals, sd, start, summary.glm, symnum, terms, time, ts,
+           tsp, var, vcov, wilcox.test, write.ftable)
+
+importFrom(utils, browseURL, menu, read.table, str, toBibtex,
+           zip.file.extract)
+
+importFrom(survival, coxph, cluster, survdiff, survreg.distributions)
+
+exportPattern("^[^\\.]")

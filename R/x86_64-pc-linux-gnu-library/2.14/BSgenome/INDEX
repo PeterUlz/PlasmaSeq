@@ -1,0 +1,16 @@
+BSParams-class          Class "BSParams"
+BSgenome-class          BSgenome objects
+BSgenome-utils          BSgenome utilities
+BSgenomeForge           The BSgenomeForge functions
+GenomeData-class        Data on the genome
+GenomeDataList-class    List of GenomeData objects
+GenomeDescription-class
+                        GenomeDescription objects
+available.genomes       Find available/installed genomes
+bsapply                 bsapply
+gdapply                 Applies a function to elements of a GenomeData
+gdreduce                Reduces arguments to a single GenomeData
+                        instance
+getSeq,BSgenome-method
+                        getSeq method for BSgenome objects
+injectSNPs              SNP injection

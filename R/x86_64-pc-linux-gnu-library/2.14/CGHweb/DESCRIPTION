@@ -1,0 +1,12 @@
+Package: CGHweb
+Type: Package
+Title: analyzing array_CGH data with multiple algorithms
+Version: 1.0
+Date: 2008-05-01
+Author: Weil Lai
+Depends: waveslim,quantreg,snapCGH,cghFLasso,FASeg,GDD,gplots,GLAD
+Maintainer: vidhu <vidhu.choudhary@gmail.com>
+Description: Tool that applies a number of popular algorithms to a single array CGH profile entered by the user. It generates a heatmap panel of the segmented profiles for each method as well as a consensus profile. The clickable heatmap can be moved along the chromosome and zoomed in or out. It also displays the time that each algorithm took and provides numerical values of the segmented profiles for download
+License: GPL-2
+Packaged: Tue Jun 10 11:40:02 2008; Administrator
+Built: R 2.14.1; x86_64-pc-linux-gnu; 2012-11-12 13:14:38 UTC; unix

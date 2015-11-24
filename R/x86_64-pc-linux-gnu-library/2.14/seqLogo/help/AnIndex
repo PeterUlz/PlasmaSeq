@@ -1,0 +1,7 @@
+makePWM	makePWM
+plot,pwm-method	pwm-class
+print,pwm-method	pwm-class
+pwm-class	pwm-class
+seqLogo	seqLogo
+show,pwm-method	pwm-class
+summary,pwm-method	pwm-class

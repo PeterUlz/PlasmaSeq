@@ -1,0 +1,26 @@
+import(IRanges, Rsamtools, hwriter)
+
+importFrom(Biobase, addVigs2WinMenu, copySubstitute)
+#importFrom(hwriter, hwrite, hwriteImage)
+
+export(chrom.barplot,
+	coverage.correlation,
+	coverage.density, 
+	coverage.hist,
+	coverage.GC, 
+	coverage.plot, 
+	coverage.target, 
+	coverage.targetlength.plot, 
+	coverage.uniformity, 
+	covered.k, 
+	duplicates.barplot, 
+	fraction.reads.target, 
+	fraction.target, 
+	get.baits,
+	get.reads, 
+	get.targets, 
+	insert.size.hist,
+	make.wigfiles, 
+	reads2pairs,
+	readsPerTarget,
+	TEQCreport)

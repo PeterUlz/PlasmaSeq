@@ -1,0 +1,98 @@
+useDynLib(rtracklayer, .registration = TRUE)
+
+import(zlibbioc)
+
+import(RCurl, XML)
+
+importFrom("stats", offset)
+
+importClassesFrom("IRanges", file, connection,
+                  RangedData, RangedDataList, DataTable,
+                  Annotated, Vector, List, DataTableORNULL, characterORNULL,
+                  RangedSelection, SimpleList, DataFrame)
+
+importFrom("IRanges", DataFrame, IRanges, RangedDataList, RangedData,
+           RangesList, Rle, RangedSelection, RleList, isSingleString,
+           recycleIntegerArg, recycleNumericArg,
+           isTRUEorFALSE, isSingleNumberOrNA)
+
+importMethodsFrom("IRanges", elementLengths, window,
+                  start, end, width, range,
+                  "start<-", "end<-", "width<-",
+                  split, lapply, unlist, unique,
+                  as.vector, as.list, as.data.frame,
+                  rbind, cbind, colnames,  rownames,
+                  "colnames<-","rownames<-",
+                  ranges, values, score,
+                  "ranges<-", "values<-", "score<-",
+                  space, universe, metadata,
+                  "universe<-", "metadata<-",
+                  isDisjoint, queryHits, findOverlaps, reduce, nrow, summary,
+                  resize, elementMetadata)
+
+importClassesFrom("GenomicRanges", GenomicRanges, GRanges, GRangesList)
+
+importFrom("GenomicRanges", GRanges, GRangesList, Seqinfo, genome, "genome<-")
+
+importMethodsFrom("GenomicRanges", seqnames, seqlengths, strand,  "strand<-",
+                  seqinfo, "seqinfo<-")
+
+importFrom("Biostrings", get_xsbasetypes_conversion_lookup, masks)
+
+importFrom("BSgenome", installed.genomes, releaseDate, organism,
+           providerVersion, provider)
+
+importFrom("tools", file_path_as_absolute)
+
+exportClasses(BrowserSession, BrowserView, BrowserViewList,
+              UCSCSession, UCSCView,
+              UCSCData, TrackLine, BasicTrackLine, GraphTrackLine,
+              Bed15TrackLine, UCSCTrackModes, BigWigSelection, BigWigFile,
+              UCSCSchema, TwoBitFile, Quickload, QuickloadGenome)
+
+exportMethods(activeView, "activeView<-", blocks, browseGenome,
+              browserSession, "browserSession<-",
+              browserView, browserViews,
+              close, export, export.bed, export.bed15,
+              export.bedGraph, export.gff, export.gff1, export.gff2,
+              export.gff3, export.ucsc, export.wig, export.bw, export.2bit,
+              import, import.bed, import.bed15, import.bedGraph,
+              import.gff, import.gff1, import.gff2, import.gff3,
+              import.ucsc, import.wig, import.bw, import.chain, import.2bit,
+              "sequence<-", "track<-",
+              track, trackNames, "trackNames<-", getTable,
+              tableNames, trackName, "trackName<-",
+              tableName, "tableName<-",
+              ucscTrackModes, "ucscTrackModes<-",
+              ucscSchema,
+              coerce, initialize,
+              show, summary, "[", ucscTableQuery,
+              genome, "genome<-", chrom, "chrom<-", range, "range<-",
+              visible, "visible<-",
+              liftOver, offset, reversed,
+              nrow, formatDescription,
+              referenceSequence, "referenceSequence<-",
+              asBED,
+              ## path, (if we export this, Rsamtools must import it)
+              ## from IRanges
+              start, end, "start<-", "end<-",
+              score, "score<-",
+              as.data.frame, space, elementMetadata,
+              ## from GenomicRanges
+              strand, seqinfo, "seqinfo<-",
+              ## from BSgenome
+              organism, releaseDate
+              )
+
+export(genomeBrowsers, start, end, strand, "start<-", "end<-", width, "width<-",
+       ranges, values, GenomicData, GenomicSelection,
+       score, "score<-", as.data.frame, space,
+       ucscGenomes, BigWigSelection, GRangesForUCSCGenome,
+       GRangesForBSGenome, BigWigFile, summary, seqinfo, genome, "genome<-",
+       TwoBitFile, path, uri, Quickload, quickload, QuickloadGenome,
+       organism, releaseDate, elementMetadata)
+
+## the S4-connection compatibility layer
+exportClasses(connection,
+              file, url, gzfile, unz, pipe, sockconn, terminal, textConnection,
+              characterORconnection)

@@ -1,0 +1,5 @@
+CreateReviewObject      A function to summarize multiple ABSOLUTE runs
+ExtractReviewedResults
+                        A function to extracted called ABSOLUTE data
+RunAbsolute             ABSOLUTE: Absolute Quantification of Somatic
+                        DNA Alterations in Human Cancer

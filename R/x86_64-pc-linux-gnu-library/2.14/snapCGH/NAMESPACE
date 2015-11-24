@@ -1,0 +1,29 @@
+useDynLib(snapCGH)
+
+import(methods)
+
+importMethodsFrom(tilingArray, logLik)
+
+importFrom(aCGH, clones.info, combine.func, maPalette, states.hmm.func)
+
+importFrom(cluster, clara)
+
+importFrom(DNAcopy, CNA, smooth.CNA)
+
+importFrom(GLAD, glad)
+
+importFrom(graphics, abline, close.screen, identify, image, locator,
+           mtext, par, plot, points, rect, screen, segments,
+           split.screen, title)
+
+importFrom(grDevices, rainbow)
+
+importFrom(limma, MA.RG, printHead, readGenericHeader)
+
+importFrom(stats, ansari.test, approx, dist, dnorm, hclust, lowess,
+           median, rnorm, runif)
+
+importFrom(utils, read.table)
+
+export(findBreakPoints, genomePlot, plotSegmentedGenome, processCGH, runBioHMM, runGLAD, runTilingArray, compareSegmentations, zoomChromosome, zoomGenome,read.clonesinfo,runHomHMM,mergeStates,runDNAcopy,simulateData,dim.SegList,length.SegList,dimnames.SegList,cbind.SegList,rbind.SegList,convert.output,filterClones,removeByWeights,find.param.five,find.param.four,find.param.three,find.param.two,find.param.one,fit.model,run.nelder,IDProbes,MergeLevels.new,MergeLevels.old,heatmapGenome,prop.na,imputeMissingValues,readPositionalInfo,generate.data,Viterbi.five,Viterbi.four,Viterbi.three,Viterbi.two,log2ratios)
+exportClasses(SegList)

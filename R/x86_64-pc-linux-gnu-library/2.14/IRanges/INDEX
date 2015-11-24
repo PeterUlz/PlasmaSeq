@@ -1,0 +1,61 @@
+Annotated-class         Annotated class
+AtomicList-class        Lists of Atomic Vectors in Natural and Rle Form
+DataFrame-class         External Data Frame
+DataFrameList-class     List of DataFrames
+DataTable-API           The DataTable API
+DataTable-stats         Statistical modeling with DataTable
+FilterRules-class       Collection of Filter Rules
+GappedRanges-class      GappedRanges objects
+Grouping-class          Grouping objects
+IRanges-class           IRanges and NormalIRanges objects
+IRanges-constructor     The IRanges constructor and supporting
+                        functions
+IRanges-setops          Set operations on IRanges objects
+IRanges-utils           IRanges utility functions
+IRangesList-class       List of IRanges and NormalIRanges
+IntervalTree-class      Interval Search Trees
+List-class              List objects
+MaskCollection-class    MaskCollection objects
+RangedData-class        Data on ranges
+RangedData-utils        RangedData utility functions
+RangedDataList-class    Lists of RangedData
+RangedSelection-class   Selection of ranges and columns
+Ranges-class            Ranges objects
+Ranges-comparison       Ranges comparison
+Ranges-utils            Ranges utility functions
+RangesList-class        List of Ranges
+RangesList-utils        RangesList utility functions
+RangesMatching-class    Matchings between Ranges
+RangesMatchingList-class
+                        List of Matchings between Ranges
+Rle-class               Rle objects
+RleViews-class          The RleViews class
+RleViewsList-class      List of RleViews
+SimpleList-class        Simple and Compressed List Classes
+Vector-class            Vector objects
+Views-class             Views objects
+Views-utils             Utility functions and numeric summary of Views
+                        of numerics
+ViewsList-class         List of Views
+XDoubleViews-class      The XDoubleViews class
+XIntegerViews-class     The XIntegerViews class
+XRawList-class          XRawList objects
+XVector-class           XVector objects
+XVectorList-class       XVectorList objects
+compact                 Object compaction
+coverage                Coverage across a set of ranges
+disjoin                 Making Ranges disjoint
+endoapply               Endomorphisms via application of a function
+                        over an object's elements
+isConstant              Test if an atomic vector or array is constant
+nearest                 Nearest neighbor finding
+rdapply                 Applying over spaces
+read.Mask               Read a mask from a file
+reverse                 reverse
+runstat                 Fixed width running window summaries across
+                        vector-like objects
+safeExplode             Low-level string utilities
+score                   Score accessor and setter
+seqapply                Apply function and cast to Vector
+updateObject            Update an IRanges object from BioC 2.4 to
+                        current version

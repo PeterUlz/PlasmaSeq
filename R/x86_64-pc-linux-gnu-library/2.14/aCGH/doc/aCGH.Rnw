@@ -1,0 +1,461 @@
+% -*- mode: noweb;noweb-font-lock-mode: R-mode; -*-
+%
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+% \VignetteIndexEntry{aCGH Overview}
+% \VignetteDepends{tools, aCGH}
+% \VignetteKeywords{DNA Copy Number Analysis}
+% \VignettePackage{aCGH}
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,fullpage}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+\SweaveOpts{echo=FALSE}
+\usepackage{a4wide}
+
+\parindent 0in
+
+\bibliographystyle{abbrvnat}
+
+\begin{document}
+
+\title{\bf Bioconductor's aCGH package}
+
+\author{Jane Fridlyand$^1$ and Peter Dimitrov$^2$}
+
+\maketitle
+
+\begin{center}
+1. Department of Epidemiology and Biostatistics, and Comprehensive Cancer Center, University of California, San Francisco, {\tt jfridlyand@cc.ucsf.edu}\\
+2. Division of Biostatistics, University of California, Berkeley, {\tt dimitrov@stat.berkeley.edu}
+\end{center}
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Overview}
+
+This document presents an overview of the {\tt aCGH} package, which provides wide basic functions for reading, analyzing and plotting array Comparative Genomic Hybridization data (\cite{Snijdersetal01}). Specific example for reading data in is using output of the custom freely available programs, SPOT and SPROC (\cite{Jainetal02}). These programs provide image quantification and pre-processing.  Outputs of all the other image processing software need to be combined into a single file containing observed values for each clone and samples and then read in as a matrix. 
+
+\section{Data}
+
+The data used in the example was generated in in lab of Dr. Fred Waldman at UCSF Comprehensive Cancer Center (\cite{Nakaoetal04}).Array CGH has been done on 125 colorectal fresh-frozen primary tumors and the associations with various phenotypes were analyzed. To reduce running time, only 40 samples are used in the 
+examples.
+
+\section{Examples}
+
+\subsection{Creating aCGH object from log2.ratios and clone info
+files}
+
+Each array CGH object has to contain the log2ratios representing
+relative copy number along with the mapping information including but
+not limited to clone name, chromosome and kb relative to the
+chromosome. Optionally there may be phenotypes associated with each
+sample.
+
+<<echo=TRUE,print=FALSE>>=
+library(aCGH)
+
+datadir <- system.file(package = "aCGH")
+datadir <- paste(datadir, "/examples", sep="")
+
+clones.info <-
+      read.table(file = file.path(datadir, "clones.info.ex.txt"),
+                 header = T, sep = "\t", quote="", comment.char="")
+log2.ratios <-
+      read.table(file = file.path(datadir, "log2.ratios.ex.txt"),
+                 header = T, sep = "\t", quote="", comment.char="")
+pheno.type <-
+      read.table(file = file.path(datadir, "pheno.type.ex.txt"),
+                 header = T, sep = "\t", quote="", comment.char="")
+ex.acgh <- create.aCGH(log2.ratios, clones.info, pheno.type)
+@
+
+Note that when working with your own data, you will need to specify absolute path to those files ot the path relative to your working folder. For instance, if you are working in the folder {\em Project1} your data files are placed in the subfolder {\em Project1/Data}, then {\em datadir = "Data"} if you are using relative path.
+
+\subsection{Filtering and imputation for objects of class aCGH}
+
+Here we remove unmapped clones and clones mapping to Y chromosome, screen out clones missing in more than 25% of the samples, leave duplicate clones in, and reorder data according to the mapping position. The samples that have than 40% os clones missing are marked.
+
+<<echo=TRUE,print=FALSE>>=
+ex.acgh <-
+    aCGH.process(ex.acgh, chrom.remove.threshold = 23, prop.missing = .25, sample.quality.threshold = .4, unmapScreen=TRUE, dupRemove = FALSE)
+@
+
+Here we impute missing observations using lowess approach. Note that occasionally, majority of the observations on chromosome Y may be missing causing imputing function to fail. Therefore, by default, the largest chromosome to be imputed is indexed as maxChrom=23 (X). Here we specify imputation for all chromosomes ; however, in this example there are no data on chromosome Y.
+
+<<echo=TRUE,print=FALSE>>=
+log2.ratios.imputed(ex.acgh) <- impute.lowess(ex.acgh, maxChrom=24)
+@
+
+\subsection{Printing, summary and basic plotting
+(fig. \ref{cap:Plot-frequency-samples}) for objects of class aCGH}
+
+<<echo=TRUE,print=FALSE>>=
+data(colorectal)
+colorectal
+summary(colorectal)
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<fig=TRUE,echo=TRUE>>=
+plot(colorectal)
+@
+\end{center}
+\caption{Basic Frequency Plot}
+\label{cap:Plot-frequency-samples}
+\end{figure}
+\pagebreak
+
+<<echo=TRUE,print=FALSE>>=
+sample.names(colorectal)
+phenotype(colorectal)[1:4,]
+@
+
+\subsection{Reading Sproc files}
+
+Here we demonstrate reading of the sproc files and combining them into
+one array CGH object. Sproc file format is specific to the custom
+SPROC processing software at UCSF Cancer Center.
+
+<<echo=TRUE,print=FALSE>>=
+datadir <- system.file("examples", package = "aCGH")
+latest.mapping.file <-
+	file.path(datadir, "human.clones.info.Jul03.txt")
+ex.acgh <-
+	aCGH.read.Sprocs(dir(path = datadir,pattern = "sproc",
+			full.names = TRUE), latest.mapping.file,
+			chrom.remove.threshold = 23)
+ex.acgh
+@
+
+\subsection{Basic plot for batch of aCGH Sproc
+files. (fig. \ref{cap:Basic-plot})}
+
+\begin{figure}[ht]
+\begin{center}
+<<fig=TRUE,echo=TRUE>>=
+plot(ex.acgh)
+@
+\end{center}
+\caption{Basic plot for batch of aCGH Sproc files}
+\label{cap:Basic-plot}
+\end{figure}
+\pagebreak
+
+\subsection{Subsetting example}
+
+<<echo=TRUE,print=FALSE>>=
+cr <- colorectal[ ,1:3]
+@
+
+\pagebreak
+\subsection{Basic plot for the ordered log2 ratios along the genome}
+
+The relative copy number is plotted along the genome with clones
+placed in the genomic order. We are plotting sample 2 here.
+(fig. \ref{cap:Basic-plot-ordered-log2-ratios}). Chromosome Y is explicitely
+excluded.
+
+\begin{figure}[ht]
+\begin{center}
+<<fig=TRUE,echo=TRUE>>=
+plotGenome(ex.acgh, samples=2, Y = FALSE)
+@
+\end{center}
+\caption{Basic plot for the ordered log2 ratios along the genome}
+\label{cap:Basic-plot-ordered-log2-ratios}
+\end{figure}
+\pagebreak
+
+\subsection{Computing and plotting hmm states}
+
+Unsupervised hidden markov model is repeatedly fitted to each chromosome for varying number of states (2 , ..., 5). The number of states is determined after all fits are done usingmodel selection criterion such as AIC, BIC or delta-BIC. The model with minimal penalized negative log-likelihood is chosen for each selection criterion. Note, that some of the model fits are going to fail and are not going to be used in the final selection. Meanwhile , error message warning of the model fit failing will be printed during hmm runs. The user shoulld ignore those particular messages and related warnings.
+
+For a given sample, each chromosome is plotted on a separate page
+along with its smoothed
+values(fig. \ref{cap:Plotting-hmm-states}). The genomic events
+such as transitions, focal aberrations and amplifications are
+indicated. The outliers are also marked.
+
+<<echo=TRUE,print=FALSE>>=
+## Determining hmm states of the clones. In the interest of time, 
+##we have commented this step out and used pre-computed results. 
+
+##hmm(ex.acgh) <- find.hmm.states(ex.acgh)
+hmm(ex.acgh) <- ex.acgh.hmm
+
+## Merging hmm states
+
+hmm.merged(ex.acgh) <-
+   mergeHmmStates(ex.acgh, model.use = 1, minDiff = .25)
+
+## Calculating the standard deviations for each array. Standard error is 
+##calculated for each region and then averaged across regions. The final 
+##SDs for each samples are contained in sd.samples(exa.acgh)$madGenome.
+
+sd.samples(ex.acgh) <- computeSD.Samples(ex.acgh)
+
+## Finding the genomic events associated with each sample using 
+##results of the partitioning into the states.
+
+genomic.events(ex.acgh) <- find.genomic.events(ex.acgh)
+
+## Plotting and printing the hmm states either to the screen or into the 
+##postscript file. Each chromosome for each sample is plotted on a separate
+##page
+
+##postscript("hmm.states.temp.ps");plotHmmStates(ex.acgh, sample.ind=1);dev.off()
+@
+
+
+\begin{figure}[ht]
+\begin{center}
+<<fig=TRUE,echo=TRUE>>=
+plotHmmStates(colorectal, sample.ind = 1, chr = 1)
+@
+\end{center}
+\caption{Plotting the hmm states found for colorectal data set.}
+\label{cap:Plotting-hmm-states}
+\end{figure}
+\pagebreak
+
+\subsection{Plotting summary of the tumor
+profiles}
+% (fig. \ref{cap:Plotting-summary-tumor-profiles})}
+Here the distribution of various genomic events as well as their
+frequency by location is displayed. Run the function plotSummaryProfile(colorectal) which produces multi-page figure. Necessary to write out as ps or pdf files.
+
+%\begin{figure}[ht]
+%\begin{center}
+%<<fig=TRUE,echo=TRUE>>=
+%plotSummaryProfile(colorectal)	
+%@
+%\end{center}
+%\caption{Plotting summary of the tumor profiles}
+%\label{cap:Plotting-summary-tumor-profiles}
+%\end{figure}
+
+\subsection{Overall frequency plot
+(fig. \ref{cap:Overall-frequency-plot})}
+
+\begin{figure}[ht]
+\begin{center}
+<<fig=TRUE,echo=TRUE>>=
+plotFreqStat(colorectal, all = T)
+@
+\end{center}
+\caption{Overall frequency plot of the tumor profiles}
+\label{cap:Overall-frequency-plot}
+\end{figure}
+\pagebreak
+
+summarize.clones() function is the text equivalent of plotFreqStat() -
+it summarizes the frequencies of changes for each clone across
+tumors and includes results of statistical comparisons for each clone when 
+available.
+
+<<echo=TRUE,print=FALSE>>=
+summarize.clones(colorectal)[1:10 ,]
+@
+
+threshold.func() function gives the clone by sample matrix of gains and 
+losses. "1" indicates gain and "-1" indicates loss.
+
+<<echo=TRUE,print=FALSE>>=
+factor <- 3
+tbl <- threshold.func(log2.ratios(colorectal),
+            posThres=factor*(sd.samples(colorectal)$madGenome))
+rownames(tbl) <- clone.names(colorectal)
+colnames(tbl) <- sample.names(colorectal)
+tbl[1:5,1:5]
+@
+
+fga.func() function gives the fraction of genome altered for each sample.
+
+<<echo=TRUE,print=FALSE>>=
+col.fga <- fga.func(colorectal, factor=3,chrominfo=human.chrom.info.Jul03)
+cbind(gainP=col.fga$gainP,lossP=col.fga$lossP)[1:5,]
+@
+
+%TkWidgets - later!!!
+
+\pagebreak
+\subsection{Testing association of clones with categorical, censored
+or continuous outcomes.}
+
+Use mt.maxT function from multtest package to
+test differences in group means for each clone grouped by sex. Plot
+the result along the genome displaying the frequencies of gains and losses
+as well well as height of the statistic correponsding to each
+clone(figs. 6 and 7.). The p-value can be adjusted and the horizontal
+lines indicate chosen level of significance.
+
+<<echo=TRUE,print=FALSE>>=
+colnames(phenotype(colorectal))
+sex <- phenotype(colorectal)$sex
+sex.na <- !is.na(sex)
+index.clones.use <- which(clones.info(colorectal)$Chrom < 23)
+colorectal.na <- colorectal[ index.clones.use,sex.na , keep=TRUE]
+dat <- log2.ratios.imputed(colorectal.na)
+resT.sex <- mt.maxT(dat, sex[sex.na], test = "t.equalvar", B = 1000)
+@
+
+\pagebreak
+\begin{figure}[ht]
+\begin{center}
+<<fig=TRUE,echo=TRUE>>=
+plotFreqStat(colorectal.na, resT.sex, sex[sex.na], factor=3, titles =
+             c("Female", "Male"), X = FALSE, Y = FALSE)
+@
+\end{center}
+\caption{Frequency plots of the samples with respect to the sex groups}
+\end{figure}
+\pagebreak
+
+\pagebreak
+\begin{figure}[ht]
+\begin{center}
+<<fig=TRUE,echo=TRUE>>=
+plotSummaryProfile(colorectal, response = sex,
+                   titles = c("Female", "Male"),
+                   X = FALSE, Y = FALSE, maxChrom = 22)
+@
+\end{center}
+\caption{Plotting summary of the tumor profiles}
+\end{figure}
+\pagebreak
+
+
+\pagebreak
+Testing association of clones with categorical outcome for autosomal clones that are gained or lost in at least 10\% of the samples. Note that the same dataset should be provided for creating {\em resT} object and for plotting. Pay attention that HMM-related objects including sample variability do not get subsetted at the moment. Note that currently two-stage subsetting does not work for HMM slots, i.e. two conditions (change and autosomal) need to be done in one iteration.
+
+<<echo=TRUE,print=FALSE>>=
+factor <- 3
+minChanged <- 0.1
+gainloss <- gainLoss(log2.ratios(colorectal)[,sex.na], cols=1:length(which(sex.na)), thres=(factor*(sd.samples(colorectal)$madGenome))[sex.na])
+ind.clones.use <- which(gainloss$gainP >= minChanged | gainloss$lossP>= minChanged & clones.info(colorectal)$Chrom < 23)
+colorectal.na <- colorectal[ind.clones.use,sex.na, keep=TRUE]
+dat <- log2.ratios.imputed(colorectal.na)
+resT.sex <- mt.maxT(dat, sex[sex.na],test = "t.equalvar", B = 1000)
+
+@
+\pagebreak
+
+\begin{figure}[ht]
+\begin{center}
+<<fig=TRUE,echo=TRUE>>=
+plotFreqStat(colorectal.na, resT.sex, sex[sex.na],factor=factor,titles = c("Male", "Female"))
+@
+\end{center}
+\caption{Frequency plots of the samples with respect to the sex groups for clones gained or lost in at least 10\% of the samples}
+\end{figure}
+\pagebreak
+
+
+Testing association of clones with censored outcomes.Since there was no survival data available, we simulate data for a simple example to demonstrate creation and usage of basic survival object. We create an object equivalent to resT object that was created earlier. In the figure the samples are seprated into dead and alive/censored groups for ease of visualization. Nevertheless, statistic is computed and assessed for significance using proper survival object.
+
+<<echo=TRUE,print=FALSE>>=
+time <- rexp(ncol(colorectal), rate = 1 / 12)
+events <- rbinom(ncol(colorectal), size = 1, prob = .5)
+surv.obj <- Surv(time, 	events)
+surv.obj
+stat.coxph <-
+  aCGH.test(colorectal, surv.obj, test = "coxph",
+	p.adjust.method = "fdr")
+stat.coxph[1:10 ,]
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<fig=TRUE,echo=TRUE>>=
+plotFreqStat(colorectal, stat.coxph, events, titles =
+             c("Survived/Censored", "Dead"), X = FALSE, Y = FALSE)
+@
+\end{center}
+\caption{Frequency plots of the samples with respect to survival.}
+\end{figure}
+\pagebreak
+
+Deriving statistics and p-values for testing the linear association
+of age with the log2 ratios of each clone along the tumors. Here we repeat above two examples but using  significance of linear regression coeffecient as a mesuare of association between genomic variable and continious outcome.
+
+<<echo=TRUE,print=FALSE>>=
+age <- phenotype(colorectal)$age
+age.na <- which(!is.na(age))
+age <- age[age.na]
+colorectal.na <- colorectal[, age.na]
+stat.age <-
+  aCGH.test(colorectal.na, age, test = "linear.regression",
+            p.adjust.method = "fdr")
+stat.age[1:10 ,]
+@
+
+\begin{figure}[ht]
+\begin{center}
+<<fig=TRUE,echo=TRUE>>=
+plotFreqStat(colorectal.na, stat.age, ifelse(age < 70, 0, 1), titles =
+             c("Young", "Old"), X = FALSE, Y = FALSE)
+@
+\end{center}
+\caption{Frequency plots of the samples with respect to age.}
+\end{figure}
+
+Here we show example of how to create a table of results which can be later exported into other programs via {\em write.table}. First, Males vs Females:
+
+<<echo=TRUE,print=FALSE>>=
+sex <- phenotype(colorectal)$sex
+sex.na <- !is.na(sex)
+index.clones.use <- which(clones.info(colorectal.na)$Chrom < 23)
+colorectal.na <- colorectal[ index.clones.use,sex.na , keep=TRUE]
+dat <- log2.ratios.imputed(colorectal.na)
+resT.sex <- mt.maxT(dat, sex[sex.na], test = "t.equalvar", B = 1000)
+
+sex.tbl <- summarize.clones(colorectal.na, resT.sex, sex[sex.na], titles = c("Male", "Female"))
+sex.tbl[1:5,]
+@
+
+
+
+
+\pagebreak
+\subsection{Clustering samples}
+
+Here we cluster samples while displaying phenotypes as well as within phenotypes using chromosomes 4,
+8 and 9 and display the phenotype labels, in this case, sex. We also indicate high level amplifications and 2-copy deletions with yellow and blue colors.
+(fig. \ref{cap:Clustering-samples-sex}).
+
+
+
+\begin{figure}[ht]
+\begin{center}
+<<fig=TRUE,echo=TRUE>>=
+par(mfrow=c(2,1))
+clusterGenome(colorectal.na, response = sex[sex.na],
+		titles = c("Female", "Male"),
+		byclass = FALSE, showaber = TRUE, vecchrom = c(4,8,9),
+		dendPlot = FALSE, imp = FALSE)
+clusterGenome(colorectal.na, response = sex[sex.na],
+		titles = c("Female", "Male"),
+		byclass = TRUE, showaber = TRUE, vecchrom = c(4,8,9),
+		dendPlot = FALSE, imp = FALSE)
+
+@
+\end{center}
+\caption{Clustering of the samples by sex}
+\label{cap:Clustering-samples-sex}
+\end{figure}
+\pagebreak
+
+%%\SweaveOpts{echo=true}
+
+\section{Acknowledgements}
+
+The authors would like to express their gratitude to Drs. Fred Waldman and Kshama Mehta for sharing the data and to Dr. Taku Tokuyasu for quantifying the images. This work would not be possible without generous support and advice of Drs. Donna Albertson, Dan Pinkel and Ajay Jain. Antoine Snijders has played an integral role in developing ideas leading to the algorithms implemented in this package.Many thanks to Ritu Roydasgupta for assistance in debugging.
+
+\bibliography{aCGH}
+
+\end{document}

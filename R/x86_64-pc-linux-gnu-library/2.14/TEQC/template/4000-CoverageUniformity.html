@@ -1,0 +1,18 @@
+<p> &nbsp;
+
+<p>
+  <b>Coverage Uniformity</b>
+</p>
+<p>
+The coverage uniformity plot corresponds
+more or less to the cumulative line in the coverage histogram. However, 'coverage.uniformity()' calculates normalized coverages, i.e. the per-base coverages
+divided by the average coverage over all target bases. The normalized coverage
+is not dependent on the absolute quantity of sequenced reads and is hence
+better comparable between different samples or even different experiments. The x-axis in the figure is truncated at 1, which corresponds to the average normalized coverage. The steeper the curve is falling, the less uniform is
+the coverage.
+</p>
+<pre>
+  > coverage.uniformity(Coverage)
+</pre>
+@COV_UNIFORM@
+

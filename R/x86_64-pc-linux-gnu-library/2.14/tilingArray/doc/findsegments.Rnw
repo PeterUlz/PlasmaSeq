@@ -1,0 +1,201 @@
+%\VignetteIndexEntry{Introduction to using the segment function to fit a piecewise constant curve}
+%\VignetteDepends{tilingArray}
+%\VignetteKeywords{Expression Analysis}
+%\VignettePackage{tilingArray}
+
+\documentclass[11pt]{article}
+\usepackage{color}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.75}
+
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rpackage}[1]{\textit{#1}}
+\newcommand{\Rfunction}[1]{\textit{#1}}
+\newcommand{\Rclass}[1]{\textit{#1}}
+
+\newcommand{\myincfig}[3]{%
+  \begin{figure}[htbp]
+    \begin{center}
+      \includegraphics[width=#2]{#1}
+      \caption{\label{#1}#3}
+    \end{center}
+  \end{figure}
+}
+
+\begin{document}
+
+
+%------------------------------------------------------------
+\title{The \Rfunction{segment} function to fit a piecewise constant curve}
+%------------------------------------------------------------
+\author{Wolfgang Huber}
+\maketitle
+\tableofcontents
+
+%--------------------------------------------------
+\section{A simple example}
+%--------------------------------------------------
+
+The problem of segmenting a series of numbers into piecewise constant 
+segments occurs in multiple application areas. Two examples are
+\begin{itemize}
+\item arrayCGH data, where the segments correspond to regions of copy number
+  gain, loss, or no change.
+\item tiling microarray data for transcription profiling, where the segments
+  correspond to transcripts. Here we assume that the probe effects (which lead
+  to different fluorescence intensities even for the same mRNA abundance) have
+  been normalized away, so that all probes for the same unique target sequence
+  have approximately, and in expectation, the same fluorescence.
+\end{itemize}
+
+To demonstrate the algorithm, let us generate simulated data:
+%
+<<defGenData>>=
+genData = function(lenx, nrSeg, nrRep=1, stddev=0.1) {
+  x  = matrix(as.numeric(NA), nrow=lenx, ncol=nrRep)
+  cp = sort(sample(1:floor(lenx/15), nrSeg-1) * 15)
+  cpb = c(1, cp, lenx+1)
+  s  = 0
+  for (j in 2:length(cpb)) {
+    sel = cpb[j-1]:(cpb[j]-1)
+    s = (.5+runif(1))*sign(rnorm(1))+s
+    x[sel, ] = rnorm(length(sel)*nrRep, mean=s, sd=stddev)
+  }
+  return(list(x=x, cp=cp))
+}
+@ 
+<<plotData,fig=TRUE,include=FALSE>>=
+set.seed(4711)
+lenx = 1000
+nrSeg = 10
+gd = genData(lenx, nrSeg)
+plot(gd$x, pch=".")
+abline(v=gd$cp, col="blue")
+@ 
+%
+\myincfig{findsegments-plotData}{0.6\textwidth}{%
+A simulated data example with \Sexpr{nrSeg} segments.
+Their estimated locations are shown with blue vertical lines}
+%
+The result is shown in Figure~\ref{findsegments-plotData}.
+We can use the function \Rfunction{segment} to reconstruct the
+change-points from the data in \Robject{gd\$x} alone.
+%
+<<loadlib, results=hide>>=
+library("tilingArray")
+@ 
+<<findSegments>>=
+maxseg = 12
+maxk = 500
+seg  = segment(gd$x, maxk=maxk, maxseg=maxseg)
+seg
+seg@breakpoints[nrSeg+(-1:1)]
+gd$cp
+@ 
+%
+<<checkClaim, echo=FALSE>>=
+stopifnot(all(gd$cp==seg@breakpoints[[nrSeg]]))
+@ 
+%
+We see that the \Sexpr{nrSeg}-th element of the list \Robject{seg\@breakpoints} 
+exactly reconstructs the change-points \Robject{gd\$cp} that were 
+used in the simulation.
+
+The parameters \Robject{maxseg} and \Robject{maxk} are the maximum
+number of segments and the maximum length per segment. The algorithm
+finds for each value of $k$ from \Robject{1} to \Robject{maxseg} the
+best segmentation under the restriction that no individual segment be
+longer than \Robject{maxk}.  In the paper of Picard et
+al.~\cite{Picard} and in their software, \Robject{maxk} is implicitely
+set to the number of data points \Robject{length(x)}. I have
+introduced this parameter to reduce the algorithm's complexity. The
+complexity of Picard's software is \Robject{length(x)*length(x)} in
+memory and \Robject{length(x)*length(x)*maxcp} in time, the complexity
+of the \Rfunction{segment} function is \Robject{length(x)*maxk} in
+memory and \Robject{length(x)*maxk*maxcp} in time. As I am applying it
+to data with \Robject{length(x)} $\approx 10^5$ and \Robject{maxk}
+$\approx 250$, the difference can be substantial.
+
+%-----------------------------------------------------------------------------------------
+\section{More testing of the change-point estimates on simulated data}
+%-----------------------------------------------------------------------------------------
+Here is a little for-loop that generates data using random parameters 
+and checks whether \Rfunction{segment} can reconstruct them. 
+%
+<<testCP>>=
+for(i in 1:20){
+  gd  = genData(lenx, nrSeg)
+  seg = segment(gd$x, maxk=maxk, maxseg=maxseg)
+  stopifnot(seg@breakpoints[[nrSeg]][, "estimate"] == gd$cp)
+}
+@ 
+
+%-----------------------------------------------------------------------------------------
+\section{Model selection on simulated data}
+%-----------------------------------------------------------------------------------------
+In this section we show that the BIC works pretty well for finding the
+correct number of segments (parameter $S$ in the paper) \emph{if} the
+data are generated by the model.
+%
+<<modelSelect1>>=
+nrSeg = 22
+gd = genData(lenx, nrSeg, nrRep=2, stddev=1/3)
+s = segment(gd$x, maxk=lenx, maxseg=as.integer(nrSeg * 2.5))
+@ 
+%
+Plot the segmented data (Figure~\ref{fig:penLLsim}a)
+%
+<<plotSimSeg,fig=TRUE,include=FALSE,width=5,height=5>>=
+par(mai=c(1,1,0.1,0.01))
+plot(row(gd$x), gd$x, pch=".")
+@ 
+%
+and the log likelihoods and the penalized log likelihoods.
+This is similar to what is done in the segmentation.Rnw vignette for \emph{real} data.
+%
+and call it it:
+<<penLLsim,fig=TRUE,include=FALSE,width=5,height=5>>=
+par(mai=c(1,1,0.1,0.01))
+plotPenLL(s)
+@ 
+%
+The result is shown in Figure~\ref{fig:penLLsim}b.
+%
+<<printMaxima>>=
+which.max(logLik(s, penalty="AIC"))
+which.max(logLik(s, penalty="BIC"))
+@ 
+%  
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.5\textwidth]{findsegments-plotSimSeg}
+\includegraphics[width=0.5\textwidth]{findsegments-penLLsim}
+
+\caption{\label{fig:penLLsim}%
+a) simulated data example with \Robject{nrSeg=}\Sexpr{nrSeg}
+segments and vertical lines representing the fitted model with
+$S=$\Sexpr{which.max(logLik(s, penalty="BIC"))}, 
+selected by maximum $\log L_{\mbox{\scriptsize BIC}}$.  
+b) log-likelihood $\log L$, penalized
+likelihoods $\log\tilde{L}_{\mbox{\scriptsize AIC}}$ and 
+$\log\tilde{L}_{\mbox{\scriptsize BIC}}$.}
+\end{center}
+\end{figure}
+
+
+%--------------------------------------------------
+\begin{thebibliography}{10}
+%--------------------------------------------------
+
+\bibitem{Picard}
+A statistical approach for CGH microarray data analysis.
+\newblock Franck Picard, Stephane Robin, Marc Lavielle, Christian Vaisse,
+  Gilles Celeux, Jean-Jacques Daudin.
+\newblock Rapport de recherche No. 5139, Mars 2004,
+  \textit{Institut National de Recherche en Informatique et en Automatique (INRIA)},
+  ISSN 0249-6399.
+  http://www.inapg.fr/ens\_rech/mathinfo/recherche/mathematique/outil.html
+
+\end{thebibliography}
+\end{document}
+
+

@@ -1,0 +1,5 @@
+hmakeTag                HTML/XML tag formatter
+hwrite                  HTML writer
+hwriteImage             Insert an HTML image
+hwriter                 HTML writer
+openPage                HTML document/page management

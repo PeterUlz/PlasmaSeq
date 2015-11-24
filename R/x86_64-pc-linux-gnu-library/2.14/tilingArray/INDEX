@@ -1,0 +1,41 @@
+PMindex                 Find the index of the exact match (PM) or
+                        background probes from a probeAnno environment
+comparisonPlot          Plot a vertical layout of panels for the
+                        comparison of different along-chromosome
+                        profiles.
+costMatrix              Segmentation cost matrix
+findSegments            Fit a piecewise constant curve to a sequence of
+                        numbers - OBSOLETE, please use function segment
+                        instead.
+gffSub                  Example of a genomic feature object
+normalizeByReference    Probe-specific normalization of hybridization
+                        intensities from an oligonucleotide microarray
+otherStrand             Return the name of the opposite strand
+plotAlongChrom          Plot signals and segmentation for a region of a
+                        chromosome
+plotAlongChromLegend    Plot a legend for genomic features
+plotFeatures            Plot genomic features for a region along a
+                        chromosome
+plotPenLL               Plot the log-likelihood and penalized
+                        log-likelihoods (AIC, BIC)
+plotSegmentationDots    Plot points for a region along a chromosome
+plotSegmentationHeatmap
+                        Plot a heatmap diagram for a region along a
+                        chromosome
+posMin                  Find the smallest positive number in a vector
+qcPlots                 Generate simple diagnostic plots for Affymetrix
+                        tiling array data
+readCel2eSet            Read celfiles into an ExpressionSet object.
+residuals.breakpointsPretend
+                        Accessor methods for breakpointsPretend objects
+                        - not to be called by the user.
+sampleStep              Sampling of ascending numbers to ensure minimal
+                        spacing.
+segChrom                Fit a piecewise constant curve to along
+                        chromosome data (wrapper function)
+segment                 Fit a piecewise constant curve: segmentation by
+                        dynamic programming
+segmentation-class      The class segmentation represents a
+                        segmentation result.
+segnf                   Example of a segmentation output object
+tilingArray-package     tilingArray package overview

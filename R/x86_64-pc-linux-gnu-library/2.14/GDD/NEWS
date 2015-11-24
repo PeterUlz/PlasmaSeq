@@ -1,0 +1,17 @@
+0.1-13	2008-10-17
+    *	adapt to changes in R-devel (2.9.0-to-be)
+
+0.1-12	2008-04-03
+    *	adapt to more GD changes in R 2.7
+
+0.1-11	2008-03-14
+    *	adapt to GD changes in R-devel
+
+    *	add proper unicode and symbol support
+
+0.1-10
+    *	adapt to const char* CHARs in R-devel
+
+    *	respect bg parameter
+
+

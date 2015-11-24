@@ -1,0 +1,4 @@
+makePWM                 Constructing a pwm object
+pwm-class               Class "pwm"
+seqLogo                 Plot a sequence logo for a given position
+                        weight matrix

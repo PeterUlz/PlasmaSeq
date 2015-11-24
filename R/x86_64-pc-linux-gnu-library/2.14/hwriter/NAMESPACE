@@ -1,0 +1,8 @@
+export('hwrite', 'openPage', 'closePage', 'hwriteImage',
+       'hmakeTag')
+
+S3method(hwrite, character)
+S3method(hwrite, numeric)
+S3method(hwrite, matrix)
+S3method(hwrite, array)
+S3method(hwrite, data.frame)

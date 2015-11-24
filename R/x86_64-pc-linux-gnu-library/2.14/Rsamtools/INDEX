@@ -1,0 +1,36 @@
+BamFile                 Maintain SAM and BAM files
+BamViews                Views into a set of BAM files
+BcfFile                 Manipulate BCF or VCF files.
+FaFile                  Manipulate indexed fasta files.
+PileupFiles             Represent BAM files for pileup summaries.
+PileupParam             Parameters for creating pileups from BAM files
+Rsamtools-package       'samtools' aligned sequence utilities interface
+RsamtoolsFile-class     A base class for managing file references in
+                        Rsamtools
+RsamtoolsFileList       A base class for managing lists of Rsamtools
+                        file references
+ScanBamParam            Parameters for scanning BAM files
+ScanBcfParam-class      Parameters for scanning VCF / BCF files
+TabixFile               Manipulate tabix indexed tab-delimited files.
+applyPileups            Create summary pile-up statistics across
+                        multiple BAM files.
+bgzipTabix              File compression for tabix (bgzip) and fasta
+                        (razip) files.
+headerTabix             Retrieve sequence names defined in a tabix
+                        file.
+indexFa                 Operations on indexed 'fasta' files.
+indexTabix              Compress and index tabix-compatible files.
+readBamGappedAlignments
+                        Reading GappedAlignments or GappedReads objects
+                        from a BAM file
+readPileup              Import samtools 'pileup' files.
+scanBam                 Import, count, index, and other operations on
+                        'BAM' (binary alignment) files.
+scanBcfHeader           Operations on 'VCF' or 'BCF' (variant call)
+                        files.
+scanTabix               Operations on 'tabix' (indexed, tab-delimited)
+                        files.
+seqnamesTabix           Retrieve sequence names defined in a tabix
+                        file.
+yieldTabix              Yield records from a stream of records
+                        contained in a tabix file.

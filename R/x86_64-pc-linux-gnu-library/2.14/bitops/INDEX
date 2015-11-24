@@ -1,0 +1,4 @@
+bitAnd                  Bitwise And, Or and Xor Operations
+bitFlip                 Binary Flip (Not) Operator
+bitShiftL               Bitwise Shift Operator (to the Left or Right)
+cksum                   Compute Check Sum

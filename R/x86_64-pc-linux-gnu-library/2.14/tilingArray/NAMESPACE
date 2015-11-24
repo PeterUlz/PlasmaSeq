@@ -1,0 +1,29 @@
+useDynLib("tilingArray")
+
+import("methods")
+import("grid")
+importFrom("graphics", "plot")
+importFrom("stats", "confint", "logLik", "residuals")
+importFrom("strucchange", "breakpoints")
+importFrom("vsn", "vsnMatrix")
+importFrom("RColorBrewer", "brewer.pal")
+importFrom("genefilter", "shorth")
+importFrom("affy", "ReadAffy", "intensity")
+
+export("normalizeByReference", "segment", "costMatrix", 
+       "findSegments", ## this is for backward compatibility, should be deprecated
+       "sampleStep", "readCel2eSet",
+       "posMin", "otherStrand",
+       "plotAlongChrom", "plotAlongChromLegend", "plotSegmentationHeatmap",
+       "plotSegmentationDots", "plotFeatures", "comparisonPlot", "plotPenLL",
+       "qcPlots", "PMindex", "BGindex", "segChrom")
+
+S3method("residuals", "breakpointsPretend")
+S3method("breakpoints", "breakpointsPretend")
+
+export("residuals.breakpointsPretend",
+       "breakpoints.breakpointsPretend")
+       
+exportClasses("segmentation")
+exportMethods("plot", "show", "confint", "logLik")
+

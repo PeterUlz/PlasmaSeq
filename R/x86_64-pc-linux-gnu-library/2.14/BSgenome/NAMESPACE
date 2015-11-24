@@ -1,0 +1,59 @@
+import(methods)
+import(IRanges)
+import(GenomicRanges)
+import(Biostrings)
+
+exportClasses(
+    GenomeDescription,
+    InjectSNPsHandler,
+    BSgenome,
+    GenomeData, GenomeDataList,
+
+    ## BSgenomeForge classes:
+    BSgenomeDataPkgSeed
+)
+
+export(
+    ## Non-generic functions:
+    installed.genomes, available.genomes,
+    BSgenome,
+    installed.SNPs, available.SNPs,
+    bsapply,
+    GenomeData, GenomeDataList, gdreduce,
+
+    ## Generic functions:
+    organism, species, provider, providerVersion,
+    releaseDate, releaseName, bsgenomeName,
+    sourceUrl,
+    SNPlocs_pkgname, SNPcount, SNPlocs,
+    mseqnames,
+    masknames,
+    injectSNPs,
+    gdapply, gdApply,
+
+    ## BSgenomeForge functions:
+    forgeSeqlengthsFile,
+    forgeSeqFiles,
+    forgeMasksFiles,
+    forgeBSgenomeDataPkg
+)
+
+exportMethods(
+    ## Methods for generics defined elsewhere:
+    names, show, length, "[[", "$", score,
+    getSeq, matchPWM, countPWM, vmatchPattern, vcountPattern,
+
+    ## Methods for generics defined in this package:
+    organism, species, provider, providerVersion,
+    releaseDate, releaseName, bsgenomeName,
+    sourceUrl,
+    SNPlocs_pkgname, SNPcount, SNPlocs,
+    seqinfo, mseqnames,
+    masknames,
+    injectSNPs,
+    gdapply,
+
+    ## BSgenomeForge methods:
+    forgeBSgenomeDataPkg
+)
+

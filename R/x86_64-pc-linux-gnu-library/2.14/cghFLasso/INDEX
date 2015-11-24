@@ -1,0 +1,7 @@
+cghFLasso         A function to call alteration on one CGH array at a given FDR level using fused 
+lasso regression.
+cghFLasso.ref     A function to process reference CGH arrays using the fused lasso regression.
+plot.cghFLasso    A function to plot gain/loss calls on CGH arrays.
+summary.cghFLasso    Summarizing gain/loss calls by CGH.FusedLasso.
+print.summary.cghFLasso A function to print summary results by summary.CGH.FusedLasso.
+output.cghFLasso  Output gain/loss calls by CGH.FusedLasso.

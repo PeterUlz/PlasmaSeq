@@ -1,0 +1,89 @@
+CNVDetectionResult-class
+                        Class "CNVDetectionResult"
+CNVRanges               Genomic locations and indices of the simulated
+                        CNVs.
+X                       A simulated data set for CNV detection from NGS
+                        data.
+XRanges                 A simulated data set for CNV detection from NGS
+                        data.
+cn.mops                 Performs the cn.mops algorithm for copy number
+                        detection in NGS data.
+cnvr                    These generic function returns CNV regions of a
+                        CNV detection method stored in an instance of
+                        'CNVDetectionResult-class'.
+cnvs                    These generic function returns CNVs of a CNV
+                        detection method stored in an instance of
+                        'CNVDetectionResult-class'.
+getReadCountsFromBAM    Generates the read counts from BAM Files. These
+                        counts are necessary for CNV detection methods
+                        based on depth of coverage information. Note
+                        that the function is much faster, if the BAM
+                        files have an index file. The index file is
+                        assumed to be in the same folder and have an
+                        identical file name except that ".bai" is
+                        appended.
+getSegmentReadCountsFromBAM
+                        Generates the read counts from BAM Files for
+                        predefined segments. This is the appropiate
+                        choice for exome sequencing data, where the
+                        bait regions, target regions or exons are the
+                        predefined segments. These counts are necessary
+                        for CNV detection methods based on depth of
+                        coverage information. Note that the function is
+                        much faster, if the BAM files have an index
+                        file. The index file is assumed to be in the
+                        same folder and have an identical file name
+                        except that ".bai" is appended.
+individualCall          These generic function returns the individual
+                        calls of a CNV detection method stored in an
+                        instance of 'CNVDetectionResult-class'.
+iniCall                 These generic function returns the
+                        informative/non-informative call of a CNV
+                        detection method stored in an instance of
+                        'CNVDetectionResult-class'.  The I/NI call is a
+                        measure for a genomic segment across all
+                        samples, whether this segment is a CNV region
+                        (informative) or a normal genomic region
+                        (non-informative).
+integerCopyNumber       These generic function returns the integer copy
+                        numbers of a CNV detection method stored in an
+                        instance of 'CNVDetectionResult-class'.
+localAssessments        These generic function returns the local
+                        assessments, i.e. signed individual
+                        informative/non-informative calls, of a CNV
+                        detection method stored in an instance of
+                        'CNVDetectionResult-class'. For other CNV
+                        detection methods this can be (log-) ratios or
+                        z-scores.
+normalizeChromosomes    Normalize quantitative NGS data in order to
+                        make counts comparable over samples. Scales
+                        each samples' reads such that the coverage is
+                        even for all samples after normalization.
+normalizeGenome         Normalize quantitative NGS data in order to
+                        make counts comparable over samples. Scales
+                        each samples' reads such that the coverage is
+                        even for all samples after normalization.
+normalizedData          These generic function returns the normalized
+                        data of a CNV detection method stored in an
+                        instance of 'CNVDetectionResult-class'.
+params                  These generic function returns the parameters
+                        of a CNV detection method stored in an instance
+                        of 'CNVDetectionResult-class'.
+plot-methods            Plots a CNVDetectionResult
+posteriorProbs          These generic function returns the posterior
+                        probabilities of a CNV detection method stored
+                        in an instance of 'CNVDetectionResult-class'.
+                        The posterior probabilities are represented as
+                        a three dimensional array, where the three
+                        dimensions are segment, copy number and
+                        individual.
+segment                 Performs a fast segmentation algorithm based on
+                        the cyber t test and the t statistics.
+segmentation            These generic function returns segmentation of
+                        a CNV detection method stored in an instance of
+                        'CNVDetectionResult-class'.
+segplot                 Plots the log normalized read counts and the
+                        detected segments for one sample on one
+                        reference sequence.
+show-methods            Displays the result object of a copy number
+                        detection method.

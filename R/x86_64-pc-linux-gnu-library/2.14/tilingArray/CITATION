@@ -1,0 +1,16 @@
+citHeader("To cite tilingArray in publications use:")
+
+citEntry(entry="article",  
+   author="Wolfgang Huber and Joern Toedling and Lars M. Steinmetz",
+   title="Transcript mapping with high-density oligonucleotide tiling arrays",
+   journal="Bioinformatics",
+   year="2006",
+   volume="22",
+   pages="1963-1970",
+   textVersion = paste("Wolfgang Huber and Joern Toedling and Lars M. Steinmetz",
+    "Transcript mapping with high-density oligonucleotide tiling arrays.",
+    "Bioinformatics 22, 1963-1970 (2006)."))
+
+citFooter("We have invested a lot of time and effort in creating the tilingArray package,",
+          "please cite it when using it for data analysis.")
+

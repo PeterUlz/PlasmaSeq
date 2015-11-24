@@ -1,0 +1,37 @@
+import("stats")
+
+export(acf, acf.bspec, acf.default, bspec, bspec.default, cosinewindow,
+       dposterior, dposterior.bspec, dprior, dprior.bspec, empiricalSpectrum,
+       expectation, expectation.bspec, expectation.bspecACF, hammingwindow,
+       hannwindow, is.bspec, is.bspecACF, kaiserwindow, likelihood,
+       likelihood.bspec, marglikelihood, marglikelihood.bspec, matchedfilter,
+       one.sided, one.sided.bspec, plot.bspec, plot.bspecACF, ppsample,
+       ppsample.bspec, print.bspec, print.bspecACF, quantile.bspec, sample,
+       sample.bspec, sample.default, snr, squarewindow, studenttfilter, temper,
+       temperature, temperature.bspec, temper.bspec, trianglewindow,
+       tukeywindow, two.sided, two.sided.bspec, variance, variance.bspec,
+       variance.bspecACF, welchPSD, welchwindow)
+
+S3method(acf, bspec)
+S3method(acf, default)
+S3method(bspec, default)
+S3method(dposterior, bspec)
+S3method(dprior, bspec)
+S3method(expectation, bspec)
+S3method(expectation, bspecACF)
+S3method(likelihood, bspec)
+S3method(marglikelihood, bspec)
+S3method(one.sided, bspec)
+S3method(plot, bspec)
+S3method(plot, bspecACF)
+S3method(ppsample, bspec)
+S3method(print, bspec)
+S3method(print, bspecACF)
+S3method(quantile, bspec)
+S3method(sample, bspec)
+S3method(sample, default)
+S3method(temperature, bspec)
+S3method(temper, bspec)
+S3method(two.sided, bspec)
+S3method(variance, bspec)
+S3method(variance, bspecACF)

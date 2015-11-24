@@ -1,0 +1,6 @@
+SpotType	ID	Name	Chr	Color
+CTD-	*	CTD-*	*	blue
+CTA-	*	CTA-*	*	red
+Chrom8	*	*	8	green
+Chrom3	*	*	3	cyan
+Chrom1	*	*	1	pink

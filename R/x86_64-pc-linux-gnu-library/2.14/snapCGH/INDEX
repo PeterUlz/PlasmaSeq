@@ -1,0 +1,77 @@
+IDProbes                Interactive version of genomePlot
+LargeDataObject-class   Large Data Object - class
+SegList-class           Segmentation States - class
+Viterbi.five            A scaled Viterbi algorithm for allocating
+                        clones to one of five underlying states.
+Viterbi.four            A scaled Viterbi algorithm for allocating
+                        clones to one of four underlying states.
+Viterbi.three           A scaled Viterbi algorithm for allocating
+                        clones to one of two underlying states.
+Viterbi.two             A scaled Viterbi algorithm for allocating
+                        clones to one of two underlying states.
+cbind.SegList           Combine SegList Objects
+chrominfo.Mb            Basic Chromosomal Information for UCSC Human
+                        Genome Assembly July 2003 freeze
+compareSegmentations    Function for comparing segmentation methods to
+                        a known truth
+convert.output          Converts the output from the simulation to a
+                        format which can be used by segmentation
+                        schemes available within R
+dim                     Retrieve the Dimensions of an RGList, MAList or
+                        SegList Object
+dimnames                Retrieve the Dimension Names of an RGList,
+                        MAList or SegList Object
+filterClones            Filter clones from sample
+find.param.five         Yields the output in a model with five
+                        underlying states
+find.param.four         Yields output when there are 4 underlying
+                        states
+find.param.one          Yields output when there is 1 underlying states
+find.param.three        Yields output when there are 3 underlying
+                        states
+find.param.two          Yields output when there are 2 underlying
+                        states
+findBreakPoints         Returns the start and end of segments.
+fit.model               Fitting a heterogeneous HMM to the log2 ratios
+                        on a particular chromosome.
+genomePlot              Plots the genome
+heatmapGenome           clustering and heatmap
+imputeMissingValues     Imputing log2 ratios
+log2ratios              Extracting log2 ratios
+mergeStates             Function to merge states based on their state
+                        means
+non.zero.length.distr.non.tiled
+                        Empirical distribution of segment lengths in
+                        non-tiled regions with copy number gains or
+                        losses
+non.zero.length.distr.tiled
+                        Empirical distribution of segment lengths in
+                        tiled regions with copy number gains or losses
+plotSegmentedGenome     Plots the genome
+processCGH              Process data in an MAList
+read.clonesinfo         Reading chromsome and positional information
+                        about each clone.
+readPositionalInfo      readPositionalInfo
+removeByWeights         Remove clones based on a weights matrix
+runBioHMM               This function implements the BioHMM
+runDNAcopy              Results of segmenting an MAList data object
+                        using the DNAcopy library
+runGLAD                 Results of segmenting an aCGHList data object
+                        using the GLAD library
+runHomHMM               A function to fit unsupervised Hidden Markov
+                        model
+runTilingArray          Results of segmenting an MAList data object
+                        using the Picard et al algorithm found in the
+                        tilingArray library
+simulateData            A function for simulating aCGH data and the
+                        corresponding clone layout
+zero.length.distr.non.tiled
+                        Empirical distribution of segment lengths in
+                        non-tiled regions with no copy number gains or
+                        losses
+zero.length.distr.tiled
+                        Empirical distribution of segment lengths in
+                        tiled regions with no copy number gains or
+                        losses
+zoomChromosome          Interactive plot of a single chromsome
+zoomGenome              Interactive plot of the whole genome

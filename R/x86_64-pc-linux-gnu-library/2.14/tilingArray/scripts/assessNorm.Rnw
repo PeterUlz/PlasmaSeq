@@ -1,0 +1,477 @@
+%\VignetteIndexEntry{Normalisation with the normalizeByReference function in the tilingArray package}
+%\VignetteDepends{tilingArray,vsn,davidTiling,Scerevisiaetilingprobe,RColorBrewer,Biostrings}
+%\VignettePackage{tilingArray}
+
+\documentclass[11pt,a4wide]{article}
+\usepackage[margin=2cm,nohead]{geometry}
+\usepackage{color}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.75}
+\usepackage[%
+baseurl={http://www.bioconductor.org},%
+pdftitle={Assessing signal/noise ratio before and after normalization},%
+pdfauthor={Wolfgang Huber},%
+pdfsubject={tilingArray},%
+pdfkeywords={Bioconductor},%
+pagebackref,bookmarks,colorlinks,linkcolor=darkblue,citecolor=darkblue,%
+pagecolor=darkblue,raiselinks,plainpages,pdftex]{hyperref}
+
+\SweaveOpts{keep.source=TRUE,eps=FALSE,include=FALSE,width=5,height=5} 
+
+%------------------------------------------------------------
+% newcommand
+%------------------------------------------------------------
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rpackage}[1]{\textit{#1}}
+\newcommand{\Rclass}[1]{\textit{#1}}
+\newcommand{\Rfunction}[1]{{\small\texttt{#1}}}
+\newcommand{\mbs}[1]{{\mbox{\scriptsize #1}}}
+
+\newcommand{\myincfig}[3]{%
+  \begin{figure}[htbp]
+    \begin{center}
+      \includegraphics[width=#2]{#1}
+      \caption{\label{#1}#3}
+    \end{center}
+  \end{figure}
+}
+
+\begin{document}
+
+%------------------------------------------------------------
+\title{Normalisation with the normalizeByReference function
+in the tilingArray package}
+%------------------------------------------------------------
+\author{Wolfgang Huber}
+\maketitle
+\tableofcontents
+
+%----------------------------------------
+\section{Introduction}
+%----------------------------------------
+The purpose of this vignette is to demonstrate the probe-response
+normalization provided by the function
+\Rfunction{normalizeByReference} in the \Rpackage{tilingArray}
+package, and to assess its performance.  We use the example data from
+our paper \cite{David2006}; the data are provided in the
+\Rpackage{davidTiling} package.  Note that some of the computations in
+this vignette will take several minutes and require Gigabytes of RAM.
+%
+<<load, results=hide>>=
+library("tilingArray")
+library("Scerevisiaetilingprobe")
+library("davidTiling")
+library("vsn")
+library("RColorBrewer")
+library("Biostrings")
+@ 
+<<errorReporting, echo=FALSE>>=
+options(error=recover, warn=0, digits=3)
+@ 
+<<showDavidTilingData>>=
+data("davidTiling")
+class(davidTiling)
+dim(exprs(davidTiling))
+sampleNames(davidTiling)
+@
+%
+\Robject{davidTiling} contains \Sexpr{nrow(pData(davidTiling))} arrays with
+\Sexpr{nrow(exprs(davidTiling))} features each. Three of them were hybridized to
+genomic DNA, which will use as a reference for the normalization, and
+five to RNA.
+%
+%-----------------------------------------------------------
+\section{Selection of perfect match and background features}
+%-----------------------------------------------------------
+The design of the chip includes about 3 Mio \emph{perfect match
+probes}, about 3 Mio \emph{mismatch probes}, and a few thousand
+controls. The \Robject{probeAnno} object contains annotations for each
+probe. It was obtained by aligning the probe sequence to the genomic
+sequence of S. cerevisiae in August 2005. Please see its manual page
+and the script \texttt{makeProbeAnno.R} in the \Rpackage{davidTiling}
+package for details.
+%
+<<probeAnno>>=
+data("probeAnno")
+@ 
+%
+We define two vectors: \Robject{whPM} contains indices of probes that
+have a unique perfect match anywhere in the genome, \Robject{whBG}
+contains a subset of \Robject{whPM} with probes whose match is outside
+any annotated feature on either strand.  In the package
+\Rpackage{davidTiling}, we have already provided two functions
+\Rfunction{PMindex} and \Rfunction{BGindex} that extract these index
+vectors from the \Robject{probeAnno} environment. If you would like to
+transfer this analysis to another array type, you will need to compute
+these sets yourself, essentially by aligning the microarray probes to
+the target genome and transcriptome.
+%
+<<whPM>>=
+whPM = PMindex(probeAnno)
+whBG = BGindex(probeAnno)
+@
+<<table>>=
+length(whPM)
+length(whBG)
+all(whBG %in% whPM)
+@ 
+%
+There are \Sexpr{nrow(exprs(davidTiling))} $-$
+\Sexpr{length(whPM)} $=$
+\Sexpr{nrow(exprs(davidTiling))-length(whPM)} probes that are not in
+\Robject{whPM}. We will not try
+to normalize their signal, since we only have meaningful reference
+intensities for the perfect match probes.  
+For the background estimation, we will use the \Sexpr{length(whBG)}
+features for which we expect no specific signal. Some of them will
+indeed have specific signal, due to new transcripts that were not yet
+annotated in SGD in August 2005; but this is not a concern, since we
+will only use statistical properties of the signal distribution that are
+insensitive to a small set of outliers. Alternatively, as we show
+below, we could also use the signal from the MM probes for background
+estimation.
+
+%----------------------------------------
+\section{Normalization}
+We select the 5 arrays that had RNA hybridized to them and the 3
+arrays that had DNA hybridized to them. We want to normalize the
+intensity readings from the former by using the latter as a reference.
+%
+<<selectArrays>>=
+isRNA = davidTiling$nucleicAcid %in% c("poly(A) RNA","total RNA")
+isDNA = davidTiling$nucleicAcid %in% "genomic DNA"
+stopifnot(sum(isRNA)==5, sum(isDNA)==3)
+@ 
+
+<<normalizeByReference>>=
+pfn = sprintf("assessNorm-normalize%d.pdf", seq(along=which(isRNA)))
+xn2 = normalizeByReference(davidTiling[,isRNA], davidTiling[,isDNA], 
+  pm=whPM, background=whBG, plotFileNames=pfn)
+@
+ 
+%----------------------------------------
+\section{Alternative normalization methods}
+\subsection{Without dropping the worst 5\% probes}
+For comparison, we also compare to the situation in which 
+we do not throw out the weakest features, by setting 
+\Robject{cutoffQuantile=0}.
+<<normalizeWithoutThrowout>>=
+xn1 = normalizeByReference(davidTiling[,isRNA], davidTiling[,isDNA], 
+  pm=whPM, background=whBG, cutoffQuantile=0)
+@ 
+%
+
+\subsection{Background correction by MM}
+\label{sec:bgPM}
+Instead of the background correction based on ``similar'' no-target
+probes that is done in \Rfunction{normalizeByReference}, we can also
+consider background correction by MM probes.
+
+There is a slight complication: the set of probes that we are
+considering as PM in this document is somewhat different from those
+that went into the design of PM/MM pairs on the array, since different
+versions of the yeast genome sequence were used. We take the
+intersection. For this, we determine the indices of the designed PM/MM
+pairs. The array has 2560 rows and 2560 columns. If we count the rows
+and columns from 0 to 2559, then the linear indices of the features
+(e.\,g.\, in the expression matrix of the \Rclass{eSet}
+\Robject{davidTiling}) are given by r*2560+c. The PM features lie in
+rows $1, 3, \ldots, 2557$, their corresponding MM features in rows $2,
+4, \ldots, 2558$. We are going to use this information, as well as the
+probe sequences that are provided in the
+\Rpackage{Scerevisiaetilingprobe} package.
+%
+<<PMMMpairs>>=
+nc = as.integer(2560)
+stopifnot(nc*nc==nrow(davidTiling), nc*nc==length(Scerevisiaetilingprobe$sequence))
+
+ipm = rep(as.integer(seq(1, nc-3, by=2)), each=nc) * nc + seq_len(nc)
+seqPM = Scerevisiaetilingprobe$sequence[ipm]
+seqMM = Scerevisiaetilingprobe$sequence[ipm+nc]
+haveSeq = which(! (is.na(seqPM) | is.na(seqMM)) ) 
+seqPM = DNAStringSet( seqPM[haveSeq] )  ## DNAStringSet does not like NAs
+seqMM = DNAStringSet( seqMM[haveSeq] )
+ipm   = ipm[haveSeq]
+
+parts = threebands(seqPM, start=13, end=13)
+seqPMcomp = xscat(parts$left, complement(parts$middle), parts$right)
+ispair =  (as(seqMM, "character") == as(seqPMcomp, "character" ))
+@ 
+%
+We see that out of the \Sexpr{length(ipm)} probes in odd-numbered
+rows, listed by \Robject{ipm}, most do indeed have a corresponding
+mismatch probe in the row below.
+%
+@
+<<ispair,print=TRUE>>=
+table(ispair)
+@ 
+%
+We define vectors \Robject{PMind} and \Robject{MMind} that contain the
+indices of PM/MM pairs,
+%
+<<PMind>>=
+PMind = ipm[ispair]
+MMind = PMind + nc
+@ 
+%
+and a function \Rfunction{normalizeByReferenceWithMM} that is similar
+to \Rfunction{normalizeByReference} in the \Rpackage{tilingArray}
+package, except for that for each PM probe it uses the corresponding
+MM value for the background correction rather than the background
+estimator that is used in \Rfunction{normalizeByReference}.
+%
+<<PMMMnormalize>>=
+normalizeByReferenceWithMM = function(x, reference, pm, mm, cutoffQuantile=0.05) {
+
+  refSig = 2^rowMeans(log2(exprs(reference)[pm,,drop=FALSE]))
+
+  xn = (exprs(x)[pm,] - exprs(x)[mm,]) / refSig
+  yn = exprs(vsn2(xn, lts.quantile=0.95, subsample=20000L, verbose=FALSE))
+  
+  throwOut = (refSig < quantile(refSig, probs=cutoffQuantile))
+  yn[throwOut, ] = NA
+
+  res = matrix(as.numeric(NA), nrow=nrow(x), ncol=ncol(yn))
+  res[pm, ] = yn
+  
+  return(res)
+}
+
+xwmm = normalizeByReferenceWithMM(davidTiling[,isRNA], davidTiling[,isDNA], 
+              PMind, MMind)
+@ 
+
+%----------------------------------------
+\section{Assessment}
+\subsection{Visually}
+
+We would like to visualize the data along genomic coordinates. We
+select the features that map to the ``-'' strand of chromosome 9. 
+The integer vectors \Robject{sta} and \Robject{end} contain the start
+and end coordinate of their match, \Robject{ind} their indices in the array
+\Robject{exprs(davidTiling)}.
+%
+<<stainduni>>=
+sta = probeAnno$"9.-.start"
+end = probeAnno$"9.-.end"
+ind = probeAnno$"9.-.index"
+@ 
+%
+We construct a list of vectors, each containing different versions of
+the intensity data, in order that corresponds to \Robject{sta} and
+\Robject{ind} from above.
+<<setUpDifferentNormMethods>>=
+dat = vector(mode="list", length=5)
+dat[[1]] = log2(exprs(davidTiling)[ind, which(isDNA)[1]])
+dat[[2]] = log2(exprs(davidTiling)[ind, which(isRNA)[1]])
+dat[[3]] = dat[[2]]-dat[[1]]
+dat[[4]] = exprs(xn1)[ind, 1]
+dat[[5]] = exprs(xn2)[ind, 1]
+dat[[6]] = xwmm[ind, 1]
+for(j in 3:length(dat))
+  dat[[j]] = dat[[j]] - quantile(dat[[j]], 0.05, na.rm=TRUE)
+names(dat) = letters[seq(along=dat)]
+@ 
+%
+We select a 10kB region around the highly expressed genes RPN2 and SER33
+to fit on a plot, and set the $y$-axis limits:
+<<selectRegionForPlot>>=
+sel = (sta>=216600 & end<=227000)
+ysc = sapply(dat, function(py) quantile(py, probs=c(0, 1), na.rm=TRUE))
+ysc[, 3:6] = c(-3,8)
+@ 
+%
+Now we are ready to plot:
+% A4 is 210 x 297 mm ...8.27 x 11.7 inches
+<<alongChromPlot, fig=TRUE, height=11, width=8.4, eps=TRUE, pdf=FALSE>>=
+anno = data.frame(start=c(217860, 221078),
+                  end  =c(220697, 222487),
+                  name =I(c("RPN2", "SER33")))
+ticks = c(217, 223, 224, 225, 226)
+comparisonPlot((sta+end)[sel]/2, lapply(dat, "[", sel), yscale=ysc, 
+  anno=anno, ticks=ticks, cex=0.2)
+@ 
+%
+The result is shown in Figure~\ref{assessNorm-alongChromPlot}.  
+It shows scatterplots of
+different types of signal ($y$-axis) along genomic coordinates
+($x$-axis). Each dot corresponds to a microarray feature.  Note how
+the signal distributions in panels b)-f) vary both with respect to the
+variability within transcribed and untranscribed segments, and
+in the amplitude between them.
+a) signal from one of the DNA hybridizations (logarithmic scale, base 2).  
+The $y$-coordinate of each dot is also encoded using
+a pseudo-color scheme. Dark red corresponds to features that have a 
+very weak response, dark blue to those with the strongest response.
+The same coloring is also used in panels b)-f).
+b) unnormalized intensities from one of the poly(A) RNA bybridizations
+(logarithmic scale, base 2).  
+c) Divide RNA-signal by DNA-signal then take logarithm (base 2). 
+d) Background subtraction of the RNA-signal, divide by DNA-signal, then 
+variance stabilizing normalization (vsn, glog base 2). 
+e) In addition to d), drop the 5\% weakest features in the DNA hybridization. 
+f) Similar to e), but using the MM probes for background correction instead.
+
+\myincfig{assessNorm-alongChromPlot}{0.96\textwidth}{% 
+Along-chromosome plots of the data for different normalization methods. 
+Please see text.}
+
+Now here's a bit of a hack: the plot symbols are too big if the plot is
+produced as above, and somehow the PDF and EPS drivers of R ignore the
+\Robject{cex} parameter.  However, one can open the EPS file and
+replace all occurences of the string ``3.00'' by ``1.00''.
+%
+<<repairEPS, results=hide>>=
+writeLines(sub(" 3.00", " 1.50", 
+    readLines("assessNorm-alongChromPlot.eps"), fixed=TRUE),
+ con=("assessNorm-tmp.eps"))
+system("ps2pdf assessNorm-tmp.eps assessNorm-alongChromPlot.pdf")
+@ 
+
+
+%----------------------------------------
+\subsection{Quantitatively}
+
+In order to assess to quantitatively assess the results of
+normalization, we consider a signal/noise ratio. Note that only
+looking at one or another (signal, or noise) by itself could be
+misleading. 
+
+We define a set of control regions, which correspond to either highly
+expressed transcripts (\Robject{positiveCtrls}) or untranscribed
+intergenic regions (\Robject{negativeCtrls}). The assumption is that
+the signal within a region should be constant, and deviations from
+that are ``noise'', while the difference between positve and negative
+controls should be large, and is counted as ``signal''.
+
+<<defineControls>>=
+positiveCtrls = cbind(c(217860,220697), ## RPN2
+                      c(221078,222487)) ## SER33 	.
+negativeCtrls = cbind(c(216800, 217700),
+                      c(222800, 227000)) ## SPO22
+@ 
+%
+Noise $\sigma$ is calculated as the 
+average of the differences between 97.5\% and 2.5\% quantiles of the
+data within each of the control regions. The range between the 97.5\%
+and 2.5\% quantiles contains 95\% of the data, while 5\% is outside
+the range.
+\begin{equation}
+\sigma = \frac{1}{Q^{0.975}_N-Q^{0.025}_N}
+\cdot\frac%
+{\displaystyle\sum_{r\in\{\mbs{pos},\mbs{neg}\}}Q^{0.975}_r-Q^{0.025}_r}
+{\displaystyle|\{\mbs{pos},\mbs{neg}\}|}.
+\end{equation}
+Here, the symbol $r$ counts over the different regions.
+The constant in the denominator is the differences between 95\% and
+5\% quantiles for the standard Normal distribution, hence $\sigma$ is
+equal to 1 if the data come from the standard Normal distribution.
+
+Signal $\Delta\mu$ is calculated as the difference between the 
+averages of the means of positive and negative control regions.
+\begin{equation}
+\Delta\mu =
+\frac{\displaystyle\sum_{r\in\{\mbs{pos}\}}\mu_r}{\displaystyle|\{\mbs{pos}\}|} -
+\frac{\displaystyle\sum_{r\in\{\mbs{neg}\}}\mu_r}{\displaystyle|\{\mbs{neg}\}|}.
+\end{equation}
+
+I have explored many variations of this calculation, using different
+definitions of $\sigma$, $\Delta\mu$, and of the control regions. The
+ranking (relative order) of the methods was always the same as shown
+in the following.
+%
+<<defineWithinAndBetween>>=
+fac = 2*qnorm(0.975)
+
+withinAndBetween = function(x, ...) {
+  meanAndSd = function(region, dohist=FALSE) {
+    d = x[(sta>=region[1]) & (end<=region[2]) & !is.na(x)]
+    res = c(mean(d), diff(quantile(d, c(0.025, 0.975)))/fac, length(d)) 
+    if(dohist) hist(d, 20, main=paste(signif(res, 3)), col="orange")
+    res
+  }
+  p = apply(positiveCtrls, 2, meanAndSd, ...)
+  n = apply(negativeCtrls, 2, meanAndSd, ...)
+  dmu =  sum(p[1,]*p[3,])/sum(p[3,]) - sum(n[1,]*n[3,])/sum(n[3,])
+  sig = (sum(p[2,]*p[3,])+sum(n[2,]*n[3,])) / (sum(p[3,])+sum(n[3,]))
+  return(c("S/N"=dmu/sig, "S"=dmu, "N"=sig))
+}
+@ 
+<<applyWithinAndBetween, print=TRUE>>=
+sn = sapply(dat[2:6], withinAndBetween, dohist=TRUE)
+@ 
+<<applyWithinAndBetween, eval=FALSE, echo=FALSE, fig=TRUE>>=
+par(mfcol=c(4,5))
+sn = sapply(dat[2:6], withinAndBetween, dohist=TRUE)
+sn
+@ 
+%
+%For excruciating detail, the histograms of the individual
+%distributions are also shown in Figure~\ref{assessNorm-applyWithinAndBetween}. 
+
+%\myincfig{assessNorm-applyWithinAndBetween}{\textwidth}{
+%Histograms of the probe intensity distribution for each of the 4 
+%control regions (rows) and the 5 methods b)-f) (columns).
+%}
+
+%-------------------------------------------------------------------------------------
+\subsection{Dependency of the signal on GC content before and after normalization}
+%------------------------------------------------------------------------------------
+We calculate the GC content of each probe,
+%
+<<calcBaseContent>>=
+bc = alphabetFrequency(seqPM, baseOnly=TRUE)
+nrGC = bc[,"C"]+bc[,"G"]
+rggc = c(4,18)
+sel = (nrGC>=rggc[1] & nrGC<=rggc[2])
+nrGC = nrGC[sel]
+
+myPlot = function(x, tit) {
+  maxval = quantile(x, probs=0.9999, na.rm=TRUE)
+  minval = maxval-10.5
+  mycol = colorRampPalette(brewer.pal(9, "GnBu"))(diff(rggc)+1)
+  boxplot(x[sel]~nrGC, ylim=c(minval,maxval), main="", col=mycol, outline=FALSE)
+  text(rggc[1]-5, maxval+1, tit, pos=2, font=2, xpd=NA)
+}
+@ 
+
+Remember that we defined \Robject{seqPM} in Section~\ref{sec:bgPM}.
+
+<<GCBeforeAfter, fig=TRUE, width=7, height=4>>=
+par(mfrow=c(1,2))
+dat1 = log2(exprs(davidTiling)[ipm, which(isRNA)[1]])
+dat2 = exprs(xn2)[ipm, 1] - quantile(exprs(xn2)[ipm, 1], 0.05, na.rm=TRUE)
+myPlot(dat1, "a")
+myPlot(dat2, "b")
+@ 
+%
+The result is shown in Figure~\ref{assessNorm-GCBeforeAfter}.
+%
+\myincfig{assessNorm-GCBeforeAfter}{\textwidth}{
+ECDF of $\log_2$ intensities (a) and normalized intensities (b) stratified by GC
+content.}
+
+%------------------------------------------------------------
+% sessionInfo
+%------------------------------------------------------------
+\section{Version Information}
+This vignette was generated using the following package versions:
+<<sessionInfo, results=tex, print=TRUE>>=
+toLatex(sessionInfo())
+@ 
+
+%------------------------------------------------------------
+\begin{thebibliography}{10}
+
+\bibitem{David2006} Lior David, Wolfgang Huber, Marina Granovskaia,
+Joern Toedling, Curtis J. Palm, Lee Bofkin, Ted Jones, Ronald
+W. Davis, and Lars M. Steinmetz \newblock A high-resolution map of
+transcription in the yeast genome.  \newblock \textit{PNAS}, 2006.
+
+\end{thebibliography}
+%------------------------------------------------------------
+
+
+
+
+\end{document}

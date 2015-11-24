@@ -1,0 +1,481 @@
+% To compile the .Rnw file into a .tex file and figures:
+% library("weaver");Sweave("segmentation.Rnw", driver=weaver()) 
+
+%\VignetteIndexEntry{Segmentation demo}
+%\VignetteDepends{tilingArray,davidTiling,RColorBrewer,geneplotter,grid}
+%\VignettePackage{tilingArray}
+
+\documentclass[11pt,a4wide]{article}
+\usepackage[margin=2cm,nohead]{geometry}
+\usepackage{color}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.75}
+\usepackage[%
+baseurl={http://www.bioconductor.org},%
+pdftitle={Segmentation demo},%
+pdfauthor={Wolfgang Huber},%
+pdfsubject={tilingArray},%
+pdfkeywords={Bioconductor},%
+pagebackref,bookmarks,colorlinks,linkcolor=darkblue,citecolor=darkblue,%
+pagecolor=darkblue,raiselinks,plainpages,pdftex]{hyperref}
+\usepackage{subfigure}
+
+\SweaveOpts{keep.source=TRUE,eps=FALSE,include=FALSE,width=5,height=5} 
+
+%------------------------------------------------------------
+% newcommand
+%------------------------------------------------------------
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rpackage}[1]{\textit{#1}}
+\newcommand{\Rclass}[1]{\textit{#1}}
+\newcommand{\Rfunction}[1]{{\small\texttt{#1}}}
+\newcommand{\mbs}[1]{{\mbox{\scriptsize #1}}}
+
+\newcommand{\myincfig}[3]{%
+  \begin{figure}[h!tbp]
+    \begin{center}
+      \includegraphics[width=#2]{#1}
+      \caption{\label{#1}#3}
+    \end{center}
+  \end{figure}
+}
+
+\begin{document}
+
+%------------------------------------------------------------
+\title{Segmentation demo}
+%------------------------------------------------------------
+\author{Wolfgang Huber, Joern Toedling}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+
+This vignette demonstrates how to run \Rpackage{tilingArray}'s
+segmentation function on the \Rpackage{davidTiling} data. 
+
+First we load the package \Rpackage{tilingArray}, which contains the
+algorithms, and the package \Rpackage{davidTiling}, which contains the
+data and the array annotation.
+
+<<setup, results=hide>>=
+library("tilingArray")
+library("davidTiling")
+data("davidTiling")
+data("probeAnno")
+library("RColorBrewer")
+library("geneplotter")
+library("grid")
+@ 
+
+
+%--------------------------------------------------
+\section{Normalization of the data}
+%--------------------------------------------------
+For an explanation of the following code, please see the vignette
+\emph{Normalisation with the normalizeByReference function
+in the tilingArray package} (in the file \texttt{assessNorm.Rnw}). 
+
+%
+<<normalization>>=
+isRNA = davidTiling$nucleicAcid %in% c("poly(A) RNA","total RNA")
+isDNA = davidTiling$nucleicAcid %in% "genomic DNA"
+stopifnot(sum(isRNA)==5, sum(isDNA)==3)
+xn = normalizeByReference(
+  x = davidTiling[,isRNA], 
+  reference = davidTiling[,isDNA], 
+  pm = PMindex(probeAnno), 
+  background=BGindex(probeAnno))
+pData(xn)[, 2, drop=FALSE]
+@ 
+<<errorReporting, echo=FALSE>>=
+options(error=recover, warn=0, digits=3)
+@ 
+
+
+%--------------------------------------------------
+\section{Segmentation}
+%--------------------------------------------------
+
+\subsection{Prerequisites: Avoid oversampling}
+\label{sec:sampleStep}
+
+The spacing between probe-matched positions is not completely regular, 
+as Figure~\ref{segmentation-histprobs} exemplarily shows for the probes
+mapped to the Watson strand of chromosome 1.
+In particular, repetitive regions are highly oversampled. 
+To have these repetitive, rather uninformative regions
+not dominate the segmentation algorithm,
+the probe positions are subsampled in the segmentation function
+to have a regular spacing.
+The result of this subsampling is
+shown in the comparison between Figures~\ref{segmentation-histprobs}b
+and \ref{segmentation-histprobs}c.
+
+<<avoidOversampling>>=
+chr1p.probeStarts = sort(probeAnno$"1.+.start")
+sampled.probeStarts = chr1p.probeStarts[sampleStep(chr1p.probeStarts, 7)]
+@ 
+
+<<histprobs, fig=TRUE, include=FALSE, width=7, height=8>>=
+par(mfrow=c(3,1))
+hist(chr1p.probeStarts, col="mistyrose", 100, main="(a)")
+barplot(table(diff(chr1p.probeStarts)), col="sienna", main="(b)")
+barplot(table(diff(sampled.probeStarts)), col="palegreen", main="(c)")
+@ 
+
+\myincfig{segmentation-histprobs}{0.6\textwidth}{% 
+(a): Histogram of probe midpoints along the ``+'' strand of chromosome 1.  There are some
+probe dense regions in particular around 160,000.  The sequence of
+that region is repeated multiple times in the genome, and due to the way 
+the chip was designed, there are also a lot of probes (more than necessary) for that region.
+(b): histogram of differences between probe start points (\Robject{chr1p.probeStarts}).
+The intention of the chip design was to have a regular spacing of 8 bases.
+In some cases, the spacing is wider, probably due to updates in the 
+genome sequence between when the chip was designed and 
+when probes were re-aligned. In  many cases, it is tighter with multiple 
+probes for the same target sequence, or only 1 or 2 bases offset. This occurs 
+in the regions of duplicated sequence.
+(c): histogram of differences between probe midpoints after subsampling
+(\Robject{sampled.probeStarts})
+}
+
+%--------------------------------------------------
+\subsection{Call the segmentation algorithm}
+
+The segmentation algorithm needs two parameters.  \Robject{maxk} is
+the maximum length of any individual segment.
+\Robject{nrBasesPerSegment} is used to calculate \Robject{maxseg}, the
+maximum number of segments that the algorithm is going to consider by
+dividing the length of the region to be segmented (in the current
+case, a chromosome) by \Robject{nrBasesPerSegment}.
+The \Robject{nrBasesPerSegment} does not enforce
+a minimum length restriction for individual segments.
+
+We choose \Robject{nrBasesPerSegment} to be quite low, 
+an \emph{average} length per segment of 750 bases, such that
+it corresponds to a quite high number of segments, \Robject{maxseg} .
+The algorithm will 
+calculate all optimal segmentations with $1, 2, \ldots,$
+\Robject{maxseg} segments, and we can still later choose our 
+preferred one.  
+Note that \Robject{maxk} is measured in number of data points,
+not in genomic coordinates.  Our choice of the parameter 
+\Robject{maxk} corresponds to a maximum segment length of about $7.5
+\times 3,000 = 22,500$ bases. 
+
+To demonstrate the algorithm, we run the segmentation
+on the Watson strand of chromosome 1.
+%
+<<useSegChrom, results=hide>>=
+segEnv = segChrom(xn[,xn$nucleicAcid=="poly(A) RNA"], 
+                  probeAnno=probeAnno, chr="1", strands="+",
+                  nrBasesPerSegment = 750)
+@ 
+%
+The function \Rfunction{segChrom} already contains code similar
+to that shown in Section~\ref{sec:sampleStep} to prevent oversampling,
+see the function argument \Robject{step}.  The resulting object
+\Robject{segEnv} is an environment holding the segmentation results
+for each chromosome and strand as individual objects of class
+\Rclass{segmentation}.
+%
+<<showSegEnv>>=
+ls(segEnv)
+segChr1p <- get("1.+", env=segEnv)
+segChr1p
+@ 
+
+%--------------------------------------------------
+\subsection{Calculate confidence intervals}
+
+We can compute confidence
+intervals for each segment boundary.
+This is simply a call to the \Rfunction{confint} method for the 
+\Rclass{segmentation} class.
+%
+<<confint>>=
+nseg = round(max(get("1.+.end",env=probeAnno))/1500)
+confintLevel = 0.95
+segChr1p = confint(segChr1p, parm=nseg, level=confintLevel)
+segChr1p
+@ 
+%
+Now we are ready to have a look at the result via the \Rfunction{plot} method
+of the \Rclass{segmentation} class. The plot in Figure~\ref{segmentation-plotseg}
+shows a small section of the probe levels mapped to the Watson strand of chromosome 1,
+the fitted segment borders. The confidence interval for each border is indicated
+by the parentheses around it on the bottom side. 
+%
+<<plotseg, fig=TRUE, include=FALSE, width=8, results=hide>>=
+plot(segChr1p, nseg, pch=16, cex=0.4, xlim=c(30000, 40000))
+@ 
+\myincfig{segmentation-plotseg}{0.8\textwidth}{% 
+Segmentation with confidence intervals, shown by little brackets at the bottom.
+}
+
+%--------------------------------------------------
+\subsection{Model selection.}
+%--------------------------------------------------
+The log-likelihood is
+\begin{equation}
+\log L = -\frac{n}{2}\left(\log 2\pi +1 +\log\frac{\sum_i r_i}{n}\right),
+\end{equation}
+where $r_i$ the $i$-th residual and $n$ the number of data points.
+AIC and BIC are defined as
+\begin{eqnarray}
+\mbox{AIC}&=& -2\log L + 2p\\
+\mbox{BIC}&=& -2\log L + p\log n
+\end{eqnarray}
+where $p$ is the number of parameters of the model. In our case,
+$p=2S$, since for a segmentation with $S$ segments, we estimate $S-1$
+changepoints, $S$ mean values, and 1 standard deviation. We can
+also consider the penalized likelihoods
+\begin{eqnarray}
+\log L_{\mbs{AIC}}&=& \log L - p\\
+\log L_{\mbs{BIC}}&=& \log L -\frac{p}{2}\log n
+\end{eqnarray}
+%
+We plot them as functions of $S$, see Figure~\ref{segmentation-modelSelect}.
+%
+<<modelSelect, fig=TRUE>>=
+par(mai=c(1,1,0.1,0.01))
+plotPenLL(segChr1p, 
+  extrabar =c("black"=round(segChr1p@x[length(segChr1p@x)]/1500)), 
+  type="l", lwd=2) 
+@ 
+%
+%--------------------------------------------------
+\subsection{Size of the confidence intervals as a function of $S$}
+%--------------------------------------------------
+<<confintwidthscalc>>=
+segMultiCI = confint(segChr1p, 
+  parm = c(112L, 153L, 194L, 235L, 276L),
+  level = confintLevel) 
+
+nBp = which(segMultiCI@hasConfint)
+confintwidths = lapply(segMultiCI@breakpoints[nBp], function(m) (m[,3]-m[,1]))
+@ 
+%
+\begin{figure}[t!hpb]%figure1
+\centering
+\subfigure[ ]{
+\label{segmentation-modelSelect}
+\includegraphics[width=0.45\textwidth]{segmentation-modelSelect}
+}
+\hspace{0.5cm}
+\subfigure[ ]{
+\label{segmentation-confintwidthsecdf}
+\includegraphics[width=0.45\textwidth]{segmentation-confintwidthsecdf}
+}
+\caption{{\bf (a)} Model selection: log-likelihood and two versions of penalized
+log-likelihood (AIC and BIC) as a function of the number of segments
+$S$. Vertical dashed green bar corresponds to optimal $\log L_{\mbs{BIC}}$,
+vertical dashed grey bar to our ``subjective'' choice of average segment
+length 1,500 bases.
+{\bf (b)} 
+Size of the confidence intervals as a function of $S$.
+Cumulative distribution functions (CDFs) for the distributions of confidence 
+interval widths for $S=$\Sexpr{paste(nBp, collapse=", ")}. 
+For larger $S$, the confidence intervals are wider.}
+\end{figure}
+%
+<<confintwidthsecdf, fig=TRUE, eps=FALSE, include=FALSE, width=5, height=5>>=
+par(mai=c(0.9,0.9,0.8,0.01))
+maxx = 20
+colors = brewer.pal(length(nBp), "Set1")
+multiecdf(confintwidths, xlim=c(0, maxx), 
+  main='distribution of lengths of confidence intervals', 
+  verticals=TRUE, lwd=2, col=colors)
+legend(x=0.6*maxx, y=0.5, legend=paste("S =", nBp), 
+  col=colors, lty=1, lwd=2) 
+@ 
+%
+The result is shown in Figure \ref{segmentation-confintwidthsecdf}.
+
+%------------------------------------------------------------------------
+\subsection{Computing the segmentation for both strands on 7 chromosomes}
+%------------------------------------------------------------------------
+
+Since the data in the \Rpackage{davidTiling} package are
+strand-specific, we can do the segmentation for the ``-'' strand 
+of chromosome 1 as well and produce the along-chromosome plot shown in
+Figure~\ref{segmentation-fig1}. 
+For Figures~\ref{segmentation-fig2-pnas} 
+and \ref{segmentation-fig2-bioinf}, we
+also call it on six other chromosomes. 
+
+This computation will take a couple of hours (about 18h on mine). Note
+that it could easily be parallelized if needed, since the computations
+for different chromosome strands are independent of each other.
+%
+<<computeSegmentations, results=hide, cache=TRUE>>=
+segEnv = segChrom(xn[, xn$nucleicAcid=="poly(A) RNA"], 
+           probeAnno = probeAnno, 
+           chr = c(1, 2, 5, 9, 13, 14, 15), 
+           strands = c("+","-"), 
+           nrBasesPerSegment = 1500)
+@ 
+%
+\Robject{segEnv} is an environment holding the \Sexpr{length(ls(segEnv))}
+individual segmentation results.
+%
+
+%------------------------------------------------------------------------
+\section{Visualizing segmentations with the plotAlongChrom function} 
+%------------------------------------------------------------------------
+<<prepareGFF>>=
+data("gff")
+myGff = gff[ gff$Name!="tR(UCU)E", ]
+ylim  = quantile(exprs(xn)[,1:3], probs=c(0.001, 0.999), na.rm=TRUE)
+@ 
+
+The function \Rfunction{plotAlongChrom} accepts an environment as its
+first argument, which is expected to contain objects of class
+\Rclass{segmentation} with names given by 
+\Robject{paste(chr, c("+", "-"), sep=".")}, where \Robject{chr} is the
+chromosome identifier. The output of \Rfunction{segChrom},
+the function we called above, is such an environment.
+
+%
+\myincfig{segmentation-fig1}{\textwidth}{% 
+Along-chromosome plot similar to Figure 1 of~\cite{David2006}.}
+\myincfig{segmentation-fig2-pnas}{\textwidth}{% 
+Along-chromosome plots similar to Figure 2 of~\cite{David2006}.}
+\myincfig{segmentation-fig2-bioinf}{\textwidth}{% 
+Along-chromosome plots similar to Figure 2 of~\cite{Huber2006}.}
+%
+In the following, the code to generate Figure 1 of~\cite{David2006}.
+%
+<<fig1, fig=TRUE, eps=FALSE, include=FALSE, width=16, height=6>>=
+grid.newpage()
+plotAlongChrom(segObj=segEnv, chr=1, coord = c(30, 130)*1e3, ylim=ylim, 
+               gff=myGff, showConfidenceIntervals=FALSE,
+               featureNoLabel = c("uORF", "binding_site", "TF_binding_site"),
+               doLegend=FALSE, main="")  
+@ 
+%
+The folowing code was used to generate Figure 2 of~\cite{David2006}.
+%
+<<fig2-pnas, fig=TRUE, eps=FALSE, include=FALSE, width=11, height=5.5>>=
+myPlot = function(row, col, ...) {
+  pushViewport(viewport(layout.pos.row=row, layout.pos.col=col))
+  grid.rect(x=-0.1, width=1.15, y=0.0, height=1.02, just=c("left", "bottom"),
+            default.units="npc", gp=gpar(lwd=0.2))
+  plotAlongChrom(..., segObj=segEnv, ylim=ylim,  
+                 gff=myGff,
+                 featureNoLabel = c("binding_site", "TF_binding_site"),
+                 doLegend=FALSE)  
+  popViewport()
+}
+myLegend = function(row, col, what) {
+  fc = tilingArray:::featureColors(1)
+  fc = switch(what,
+    fc[c("CDS", "CDS_dubious", "uORF", "ncRNA", "TF_binding_site"), ],
+    fc[c("CDS", "CDS_dubious", "TF_binding_site"), ])
+
+  pc = c("Watson strand probe"="#00441b", "Crick strand probe"="#081d58", 
+         "Non-unique probe"="grey")
+  sc = c("Segment boundary"="#777777")
+
+  pushViewport(dataViewport(xscale=c(0,1), yscale=c(-7,nrow(fc)+1), 
+               layout.pos.col=col, layout.pos.row=row))
+  h1  = nrow(fc):1
+  h2  = 0:(1-length(pc))
+  h3  = -length(pc)
+  
+  w   = 0.2
+  grid.rect(x=0, width=w, y=h1, height = unit(1, "native")- unit(2, "mm"), 
+            just  = c("left", "center"), default.units="native",
+            gp    = do.call("gpar", fc))
+  grid.circle(x = w/2, y=h2, r=0.2, default.units="native",
+              gp = gpar(col=pc, fill=pc))
+  grid.lines(x=w/2, y=h3+c(-.3,+.3), default.units="native", gp=gpar(col=sc))
+  grid.text(label = c(gsub("_", " ", rownames(fc)), names(pc), names(sc)), 
+            x = w*1.1, y = c(h1,h2,h3),
+            just  = c("left", "center"), default.units="native",
+            gp=gpar(cex=.7))
+  popViewport()
+}
+  
+dx = 0.20
+dy = 0.05
+grid.newpage()
+pushViewport(viewport(x=0.02, width=0.96, height=0.96, just=c("left", "center"),
+                      layout=grid.layout(3, 8,
+                        height=c(1, dy, 1),
+                        width =c(dx, 1, dx, 1, dx, 1, dx, 1))))
+         
+## A) 13:550k splicing RPS16A, RPL13B
+myPlot(1, 2, chr=13, coord = c(550044, 553360), main="a")
+## B) GCN4
+myPlot(1, 4, chr=5, coord = c(138660, 141880), main="b")
+## C) MET7, novel architecture
+myPlot(1, 6, chr=15, coord = c(784700, 790000), main="c")
+## D) overlapping transcripts
+myPlot(1, 8, chr=14, coord = c(342200, 347545), main="d")
+## E) SER3
+myPlot(3, 2, chr=5, coord = c(321900, 326100), main="e")
+## F) 2:360.5-366.5: novel isolated
+myPlot(3, 4, chr=2, coord = c(360500, 365970), main="f")
+## G) 9:221-227: novel antisense SPO22
+myPlot(3, 6, chr=9, coord = c(221000, 226500), main="g")
+
+myLegend(3, 8, 1)
+popViewport()
+@ 
+%
+In the following, the code to generate Figure 2 of~\cite{Huber2006}.
+%
+% aspect ratio: 4.3.  11/4.3 = 2.55
+%
+<<fig2-bioinf, fig=TRUE, eps=FALSE, include=FALSE, width=11, height=2.75>>=
+grid.newpage()
+pushViewport(viewport(x=0.02, width=0.96, height=0.96, just=c("left", "center"),
+                      layout=grid.layout(1, 8,
+                        height=c(1),
+                        width =c(0.05, 1, 0.15, 1, 0.15, 1, 0.15, 0.5))))
+         ## 13:550k splicing RPS16A, RPL13B
+myPlot(1, 2, chr=13, coord = c(550044, 553360), main="a")
+## MET7, novel architecture
+myPlot(1, 4, chr=15, coord = c(784700, 790000), main="b")
+## 9:221-227: novel antisense SPO22
+myPlot(1, 6, chr=9, coord = c(221000, 226500), main="c")
+myLegend(1, 8, 2)
+popViewport()
+@ 
+\clearpage
+
+%------------------------------------------------------------
+% sessionInfo
+%------------------------------------------------------------
+\section{Version information}
+This vignette was generated using the following package versions:
+<<sessionInfo, results=tex>>=
+toLatex(sessionInfo())
+@
+
+%------------------------------------------------------------
+\begin{thebibliography}{10}
+
+\bibitem{David2006}
+Lior David, Wolfgang Huber, Marina Granovskaia, Joern Toedling, Curtis J. Palm, Lee Bofkin, Ted Jones,
+Ronald W. Davis, and Lars M. Steinmetz
+\newblock A high-resolution map of transcription in the
+yeast genome.
+\newblock \textit{PNAS}, 2006.
+
+\bibitem{Huber2006}
+Wolfgang Huber, Joern Toedling and Lars M. Steinmetz
+\newblock Transcript mapping with oligonucleotide high-density tiling arrays.
+\newblock \textit{Bioinformatics}, 2006.
+
+\end{thebibliography}
+%------------------------------------------------------------
+
+\end{document}
+
+
+
+
+
+          

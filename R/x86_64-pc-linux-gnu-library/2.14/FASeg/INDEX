@@ -1,0 +1,39 @@
+FASeg-package           A Forward-Backward Fragment-Annealing method
+                        for the segmentation of array-based copy number
+                        data
+Hind.loc.100K           Genome locations of the SNPs in the 100K Hind
+                        SNP array
+Hind.ref.100K           The reference SNP-level distribution for 100K
+                        Hind SNP array data
+Nsp.loc.500K            Genome locations of the SNPs in the 500K Nsp
+                        SNP array
+Nsp.ref.500K            The reference SNP-level distribution for 500K
+                        Nsp SNP array data
+SNP.to.cn               A function that converts plain text outputs of
+                        probe level data to SNP-level copy number
+                        signal
+Sty.loc.500K            Genome locations of the SNPs in the 500K Sty
+                        SNP array
+Sty.ref.500K            The reference SNP-level distribution for 500K
+                        Sty SNP array data
+Xba.loc.100K            Genome locations of the SNPs in the 100K Xba
+                        SNP array
+Xba.ref.100K            The reference SNP-level distribution for 100K
+                        Xba SNP array data
+band.h17                Cytoband information based on hg17
+band.h18                Cytoband information based on hg18
+cgh.image               Present copy number result in color image
+faseg                   Perform Forward-Backward Fragment-Annealing
+                        segmentation
+gene.cn                 Generates gene-level copy number information
+gene.h17                Gene location based on hg17
+gene.h18                Gene location based on hg18
+present.batch           Color plot of fitted data
+present.change          Side-by-side plots of raw and fitted copy
+                        number
+present.two.enzyme      A function to compare the results of two
+                        enzymes on the same samples
+read.CNAT.plain         A function that reads CNAT plain text output
+read.CNT                A function to read affymetrix .cnt files
+sample.fitted           Sample fitted data
+sample.orig             A sample dataset

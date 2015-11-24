@@ -1,0 +1,674 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Representation and manipulation of genomic intervals</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+<h1> Representation and manipulation of genomic intervals
+<img class="toplogo" src="../../../doc/html/logo.jpg" alt="[R logo]">
+</h1>
+<hr>
+<div align="center">
+<a href="../../../doc/html/packages.html"><img src="../../../doc/html/left.jpg" alt="[Up]" width="30" height="30" border="0"></a>
+<a href="../../../doc/html/index.html"><img src="../../../doc/html/up.jpg" alt="[Top]" width="30" height="30" border="0"></a>
+</div><h2>Documentation for package &lsquo;GenomicRanges&rsquo; version 1.6.7</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">Overview of user guides and package vignettes</a>; browse <a href="../doc">directory</a>.</li>
+<li><a href="../NEWS">Package NEWS</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p align="center">
+<a href="#A">A</a>
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#E">E</a>
+<a href="#F">F</a>
+<a href="#G">G</a>
+<a href="#I">I</a>
+<a href="#K">K</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#N">N</a>
+<a href="#O">O</a>
+<a href="#P">P</a>
+<a href="#Q">Q</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#U">U</a>
+<a href="#V">V</a>
+<a href="#W">W</a>
+<a href="#misc">misc</a>
+</p>
+
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="GRanges-class.html">as.data.frame-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">as.data.frame-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">as.data.frame-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">as.data.frame-method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">assay</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">assay-method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">assay&lt;-</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">assay&lt;--method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">assays</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">assays-method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">assays&lt;-</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">assays&lt;--method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="GRanges-class.html">c-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">c-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">cigar</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">cigar-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">cigar-utils</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">cigarNarrow</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">cigarOpTable</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">cigarQNarrow</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">cigarToCigarTable</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">cigarToIRanges</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">cigarToIRangesListByAlignment</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">cigarToIRangesListByRName</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">cigarToQWidth</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">cigarToRleList</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">cigarToWidth</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">class:GappedAlignments</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">class:GenomicRanges</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GenomicRangesList-class.html">class:GenomicRangesList</a></td>
+<td>GenomicRangesList objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">class:GRanges</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">class:GRangesList</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">class:Seqinfo</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="GenomicRangesList-class.html">class:SimpleGenomicRangesList</a></td>
+<td>GenomicRangesList objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">coerce-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">coerce-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">coerce-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">coerce-method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">colData</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">colData-method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">colData&lt;-</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">colData&lt;--method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="countGenomicOverlaps-methods.html">countGenomicOverlaps</a></td>
+<td>Count Read Hits in Genomic Features</td></tr>
+<tr><td width="25%"><a href="countGenomicOverlaps-methods.html">countGenomicOverlaps-method</a></td>
+<td>Count Read Hits in Genomic Features</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">countOverlaps-method</a></td>
+<td>GRanges, GRangesList and GappedAlignments Interval Overlaps</td></tr>
+<tr><td width="25%"><a href="coverage-methods.html">coverage-method</a></td>
+<td>GRanges, GRangesList and GappedAlignments coverage</td></tr>
+<tr><td width="25%"><a href="coverage-methods.html">coverage-methods</a></td>
+<td>GRanges, GRangesList and GappedAlignments coverage</td></tr>
+</table>
+
+<h2><a name="D">-- D --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">dim-method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">dimnames-method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">dimnames&lt;--method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">disjoin-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">distance-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GenomicRanges-comparison.html">duplicated-method</a></td>
+<td>Ordering and comparing genomic ranges</td></tr>
+</table>
+
+<h2><a name="E">-- E --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="GRanges-class.html">elementMetadata-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">elementMetadata-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">elementMetadata-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">elementMetadata&lt;--method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">elementMetadata&lt;--method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">end-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">end-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">end-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">end&lt;--method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">end&lt;--method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">exptData</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">exptData-method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">exptData&lt;-</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">exptData&lt;--method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="findOverlaps-methods.html">findOverlaps-method</a></td>
+<td>GRanges, GRangesList and GappedAlignments Interval Overlaps</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">findOverlaps-methods</a></td>
+<td>GRanges, GRangesList and GappedAlignments Interval Overlaps</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">flank-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">flank-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">follow-method</a></td>
+<td>GRanges objects</td></tr>
+</table>
+
+<h2><a name="G">-- G --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="GappedAlignments-class.html">GappedAlignments</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">GappedAlignments-class</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">gaps-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">genome</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">genome-method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">genome-method</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">genome&lt;-</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">genome&lt;--method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">genome&lt;--method</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">GenomicRanges</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">GenomicRanges-class</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GenomicRanges-comparison.html">GenomicRanges-comparison</a></td>
+<td>Ordering and comparing genomic ranges</td></tr>
+<tr><td width="25%"><a href="GenomicRangesList-class.html">GenomicRangesList</a></td>
+<td>GenomicRangesList objects</td></tr>
+<tr><td width="25%"><a href="GenomicRangesList-class.html">GenomicRangesList-class</a></td>
+<td>GenomicRangesList objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">GenomicRangesORGRangesList-class</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">GenomicRangesORmissing-class</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">GRanges</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">granges</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">GRanges-class</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">granges-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">GRangesList</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">GRangesList-class</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">grg</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">grglist</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">grglist-method</a></td>
+<td>GappedAlignments objects</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="setops-methods.html">intersect-method</a></td>
+<td>Set operations on GRanges/GRangesList/GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="summarizeOverlaps-methods.html">IntersectionNotEmpty</a></td>
+<td>Count reads that map to genomic features</td></tr>
+<tr><td width="25%"><a href="summarizeOverlaps-methods.html">IntersectionStrict</a></td>
+<td>Count reads that map to genomic features</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">isCircular</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">isCircular-method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">isCircular-method</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">isCircular&lt;-</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">isCircular&lt;--method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">isCircular&lt;--method</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">isCircularWithKnownLength</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">isCircularWithKnownLength-method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">isCircularWithKnownLength-method</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">isDisjoint-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">isDisjoint-method</a></td>
+<td>GRangesList objects</td></tr>
+</table>
+
+<h2><a name="K">-- K --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="seqlevels-utils.html">keepSeqlevels</a></td>
+<td>seqlevels utility functions</td></tr>
+<tr><td width="25%"><a href="seqlevels-utils.html">keepSeqlevels-method</a></td>
+<td>seqlevels utility functions</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="GRanges-class.html">length-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">length-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">length-method</a></td>
+<td>Seqinfo objects</td></tr>
+</table>
+
+<h2><a name="M">-- M --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="GRangesList-class.html">makeGRangesListFromFeatureFragments</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">match-method</a></td>
+<td>GRanges, GRangesList and GappedAlignments Interval Overlaps</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">merge-method</a></td>
+<td>Seqinfo objects</td></tr>
+</table>
+
+<h2><a name="N">-- N --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="GRanges-class.html">names-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">names-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">names-method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">names&lt;--method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">names&lt;--method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">names&lt;--method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">narrow-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">ngap-method</a></td>
+<td>GappedAlignments objects</td></tr>
+</table>
+
+<h2><a name="O">-- O --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="GenomicRanges-comparison.html">order-method</a></td>
+<td>Ordering and comparing genomic ranges</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="setops-methods.html">pgap-method</a></td>
+<td>Set operations on GRanges/GRangesList/GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">pintersect-method</a></td>
+<td>Set operations on GRanges/GRangesList/GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">precede-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">psetdiff-method</a></td>
+<td>Set operations on GRanges/GRangesList/GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">punion-method</a></td>
+<td>Set operations on GRanges/GRangesList/GappedAlignments objects</td></tr>
+</table>
+
+<h2><a name="Q">-- Q --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="GappedAlignments-class.html">qnarrow</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">qnarrow-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">queryLoc2refLoc</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">queryLocs2refLocs</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">qwidth</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">qwidth-method</a></td>
+<td>GappedAlignments objects</td></tr>
+</table>
+
+<h2><a name="R">-- R --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="GRanges-class.html">range-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">range-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">ranges-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">ranges-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">ranges-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">ranges&lt;--method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">ranges&lt;--method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GenomicRanges-comparison.html">rank-method</a></td>
+<td>Ordering and comparing genomic ranges</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">readGappedAlignments</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">reduce-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">reduce-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="seqlevels-utils.html">renameSeqlevels</a></td>
+<td>seqlevels utility functions</td></tr>
+<tr><td width="25%"><a href="seqlevels-utils.html">renameSeqlevels-method</a></td>
+<td>seqlevels utility functions</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">resize-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">restrict-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">restrict-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">rglist</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">rglist-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">rname</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">rname-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">rname&lt;-</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">rname&lt;--method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">rowData</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">rowData-method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">rowData&lt;-</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">rowData&lt;--method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="Seqinfo-class.html">Seqinfo</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">seqinfo</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">Seqinfo-class</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">seqinfo-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">seqinfo-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">seqinfo-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">seqinfo&lt;-</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">seqinfo&lt;--method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">seqinfo&lt;--method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">seqinfo&lt;--method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">seqlengths</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">seqlengths-method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">seqlengths-method</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">seqlengths&lt;-</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">seqlengths&lt;--method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">seqlengths&lt;--method</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">seqlevels</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">seqlevels-method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">seqlevels-method</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">seqlevels&lt;-</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">seqlevels&lt;--method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">seqlevels&lt;--method</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">seqnames</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">seqnames-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">seqnames-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">seqnames-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">seqnames-method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="seqinfo.html">seqnames&lt;-</a></td>
+<td>Accessing sequence information</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">seqnames&lt;--method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">seqnames&lt;--method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">seqnames&lt;--method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">seqnames&lt;--method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">seqselect-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">seqselect&lt;--method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">setdiff-method</a></td>
+<td>Set operations on GRanges/GRangesList/GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">setops-methods</a></td>
+<td>Set operations on GRanges/GRangesList/GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">shift-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">shift-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">show-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">show-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">show-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">show-method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">show-method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="GenomicRangesList-class.html">SimpleGenomicRangesList-class</a></td>
+<td>GenomicRangesList objects</td></tr>
+<tr><td width="25%"><a href="GenomicRanges-comparison.html">sort-method</a></td>
+<td>Ordering and comparing genomic ranges</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">split-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">splitCigar</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">start-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">start-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">start-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">start&lt;--method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">start&lt;--method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="strand.html">strand</a></td>
+<td>Accessing strand information</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">strand-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">strand-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">strand-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="strand.html">strand-method</a></td>
+<td>Accessing strand information</td></tr>
+<tr><td width="25%"><a href="strand.html">strand-methods</a></td>
+<td>Accessing strand information</td></tr>
+<tr><td width="25%"><a href="strand.html">strand&lt;-</a></td>
+<td>Accessing strand information</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">strand&lt;--method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">strand&lt;--method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">strand&lt;--method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="findOverlaps-methods.html">subsetByOverlaps-method</a></td>
+<td>GRanges, GRangesList and GappedAlignments Interval Overlaps</td></tr>
+<tr><td width="25%"><a href="cigar-utils.html">summarizeCigarTable</a></td>
+<td>CIGAR utility functions</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">SummarizedExperiment</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">SummarizedExperiment-class</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">SummarizedExperiment-method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="summarizeOverlaps-methods.html">summarizeOverlaps</a></td>
+<td>Count reads that map to genomic features</td></tr>
+<tr><td width="25%"><a href="summarizeOverlaps-methods.html">summarizeOverlaps-method</a></td>
+<td>Count reads that map to genomic features</td></tr>
+</table>
+
+<h2><a name="U">-- U --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="summarizeOverlaps-methods.html">Union</a></td>
+<td>Count reads that map to genomic features</td></tr>
+<tr><td width="25%"><a href="setops-methods.html">union-method</a></td>
+<td>Set operations on GRanges/GRangesList/GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GenomicRanges-comparison.html">unique-method</a></td>
+<td>Ordering and comparing genomic ranges</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">unlist-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">updateObject-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">updateObject-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">updateObject-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">updateObject-method</a></td>
+<td>Seqinfo objects</td></tr>
+</table>
+
+<h2><a name="V">-- V --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="cigar-utils.html">validCigar</a></td>
+<td>CIGAR utility functions</td></tr>
+</table>
+
+<h2><a name="W">-- W --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="GRanges-class.html">width-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">width-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">width-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">width&lt;--method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">width&lt;--method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">window-method</a></td>
+<td>GRanges objects</td></tr>
+</table>
+
+<h2><a name="misc">-- misc --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="findOverlaps-methods.html">%in%-method</a></td>
+<td>GRanges, GRangesList and GappedAlignments Interval Overlaps</td></tr>
+<tr><td width="25%"><a href="GenomicRanges-comparison.html">&lt;-method</a></td>
+<td>Ordering and comparing genomic ranges</td></tr>
+<tr><td width="25%"><a href="GenomicRanges-comparison.html">&lt;=-method</a></td>
+<td>Ordering and comparing genomic ranges</td></tr>
+<tr><td width="25%"><a href="GenomicRanges-comparison.html">==-method</a></td>
+<td>Ordering and comparing genomic ranges</td></tr>
+<tr><td width="25%"><a href="GenomicRanges-comparison.html">&gt;-method</a></td>
+<td>Ordering and comparing genomic ranges</td></tr>
+<tr><td width="25%"><a href="GenomicRanges-comparison.html">&gt;=-method</a></td>
+<td>Ordering and comparing genomic ranges</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">[-method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">[-method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="GappedAlignments-class.html">[-method</a></td>
+<td>GappedAlignments objects</td></tr>
+<tr><td width="25%"><a href="Seqinfo-class.html">[-method</a></td>
+<td>Seqinfo objects</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">[-method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="GRanges-class.html">[&lt;--method</a></td>
+<td>GRanges objects</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">[&lt;--method</a></td>
+<td>GRangesList objects</td></tr>
+<tr><td width="25%"><a href="SummarizedExperiment-class.html">[&lt;--method</a></td>
+<td>SummarizedExperiment instances</td></tr>
+<tr><td width="25%"><a href="GRangesList-class.html">[[&lt;--method</a></td>
+<td>GRangesList objects</td></tr>
+</table>
+</body></html>

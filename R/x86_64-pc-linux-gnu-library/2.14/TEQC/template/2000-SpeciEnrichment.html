@@ -1,0 +1,49 @@
+<p> &nbsp;
+<h2>Specificity and Enrichment</h2>
+
+<p>
+  <b>Specificity</b>
+</p>
+<p>
+A measure for the capture specificity is the fraction of aligned reads that overlap with any 
+target region. A read is counted as on-target if it overlaps a target region with at least one base.
+</p>
+<pre>
+  > fr <- fraction.reads.target(reads, targets, Offset=@OFFSET@)
+</pre>
+@SPECIFICITY@
+
+<p> &nbsp;
+<p>
+  <b>Enrichment</b>
+</p>
+<p>
+With the fraction of on-target reads and the fraction of the targeted region
+within the reference genome, the enrichment can be calculated as <br />
+(# on-target reads / # aligned reads) / (target size / genome size)
+</p>
+<pre>
+  > ft <- fraction.target(targets, genome=genome, Offset=@OFFSET@)
+  > fr / ft
+</pre> 
+@ENRICHMENT@
+
+<p> &nbsp;
+<p>
+  <b>Reads and targets per chromosome barplot</b>
+</p>
+<p>
+  The barplot shows fractions of reads and targets, respectively, falling on each chromosome.
+  For the reads, this is the fraction within the total number of reads (since reads
+are usually expected to have all the same length). In contrast, for the targets,
+the fraction of targeted bases on each chromosome is calculated. Since targets
+might strongly vary in length it is reasonable to account for the actual target
+sizes instead of considering merely numbers of targets per chromosome. In this
+way you can compare directly if the amount of reads corresponds more or less
+to the amount of target on a certain chromosome.
+</p>
+<pre>
+  > chrom.barplot(reads, targets)
+</pre> 
+@CHROM_BARPLOT@
+

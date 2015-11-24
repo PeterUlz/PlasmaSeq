@@ -1,0 +1,12 @@
+exomeCopy-package	exomeCopy-package
+copyCountSegments	copyCountSegments
+countBamInGRanges	countBamInGRanges
+exomeCopy	exomeCopy
+ExomeCopy-class	ExomeCopy-class
+exomecounts	exomecounts
+negLogLike	negLogLike
+plot,ExomeCopy,missing-method	ExomeCopy-class
+plot.ExomeCopy	plot.exomeCopyObject
+show,ExomeCopy-method	ExomeCopy-class
+subdivideGRanges	subdivideGRanges
+viterbiPath	negLogLike

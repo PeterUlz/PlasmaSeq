@@ -1,0 +1,142 @@
+CHANGES IN VERSION 1.6.1
+------------------------
+
+BUG FIXES
+
+    o readBamGappedAlignments handles tags without entries
+
+    o scanTabix would omit variants overlapping range ends
+
+CHANGES IN VERSION 1.6.0
+------------------------
+
+NEW FEATURES
+
+    o TabixFile, indexTabix, scanTabix, yieldTabix index (sorted,
+    compressed) and parse tabix-indexed files
+
+    o readBamGappedReads(), bamFlagAsBitMatrix(), bamFlagAND()
+
+    o Add use.names and param args to readBamGappedAlignments(); dropped
+    which and ... args.
+
+    o PileupFiles, PileupParam, applyPileup for visiting several BAM
+    files and calculating pile-ups on each.
+
+    o Provide a zlib for Windows, as R does not currently do this
+
+    o BamFileList, BcfFileList, TabixFileList, FaFileList clases
+    extend IRanges::SimpleList, for managings lists of file references 
+
+    o razfFa creates random access compressed fasta files.
+
+    o count and scanBam support input of larger numbers of records; 
+    countBam nucleotide count is now numeric() and subject to rounding
+    error when large.
+
+    o Update to samtools 0.1.17
+
+    o asBcf and indexBcf coerces VCF files to BCF, and indexes BCF
+
+    o Update to samtools 0.1.18
+
+    o scanVcf parses VCF files; use scanVcf,connection,missing-method
+    to stream, scanVcf,TabixFile,*-method to select subsets. Use
+    unpackVcf to expand INFO and GENO fields.
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o ScanBamParam argument 'what' defaults to character(0) (nothing)
+    rather than scanBamWhat() (everything)
+
+    o bamFlag returns a user-friendly description of flags by default
+
+BUG FIXES
+
+    o scanBam (and readBamGappedAlignments) called with an invalid or
+    character(0) index no longer segfaults.
+
+    o scanBcfHeader parses values with embedded commas or =
+
+    o scanFa fails, rather than returns incorrect sequences, when file
+    is compressed and file positions are not accessed sequentially
+
+    o scanBcf parses VCF files with no genotype information.
+
+    o scanBam called with the first range having no reads returned
+    invalid results for subsequent ranges; introduced in svn r57138
+
+    o scanBamFlag isPrimaryRead changed to isNotPrimaryRead,
+    correctly reflecting the meaning of the flag.
+
+CHANGES IN VERSION 1.4.0
+------------------------
+
+NEW FEATURES
+
+    o BamFile class allows bam files to be open across calls to
+    scanBam and friends. This can be helpful when wanting to avoid
+    repeated loading of the index, for instance.
+
+    o BcfFile, scanBcf, scanBcfHeader to parse bcftools' .vcf and .bcf
+    files. Note that this implements bcftools notions of vcf and bcf,
+    and are not fully compliant with vcf-4.0.
+
+    o asBam converts SAM files to (indexed) BAM files
+
+    o FaFile, indexFa, scanIndexFa, scanFa index and parse (indexed)
+    fasta files.
+
+BUG FIXES
+
+    o scanBamFlag isValidVendorRead had reversed TRUE/FALSE logic
+
+    o Attempts to read too many records caught more gracefully.
+
+    o samtools output to fprintf() or calls to exit() are handled more
+    gracefully
+
+CHANGES IN VERSION 1.2.0
+------------------------
+
+NEW FEATURES
+
+    o Update to samtools 0.1.8
+
+    o Update to samtools svn rev 750 (Mon, 27 Sep 2010)
+
+    o sortBam sorts a BAM file
+
+BUG FIXES
+
+    o Attempts to parse non-existent local files now generate an error
+
+    o Reads whose last nucleotide overlaps the first of a range are
+    now scanned / counted.
+
+    o scanning / counting reads late in large Windows files is fast
+
+    o scanBam tag fields of type 'A' parsed correctly
+
+CHANGES IN VERSION 1.0.0
+-----------------------
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o scanBam returns minus-strand reads in the manner presented in
+    the BAM file, i.e., as though on the positive strand. This occurs
+    in revision 0.1.34
+
+    o readBamGappedAlignments replaces readBAMasGappedAlignments
+
+NEW FEATURES
+
+    o ScanBamParam() accepts 'tag' argument for parsing optional fields
+
+    o BamViews can be used with scanBam, countBam,
+    readBamGappedAlignments
+
+BUG FIXES
+
+    o No changes classified as 'bug fixes' (package under active
+    development)

@@ -1,0 +1,16 @@
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG00551/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG00641/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG00731/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG00732/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG00734/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG00736/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG00739/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG00740/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG01047/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG01048/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG01049/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG01054/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG01055/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG01066/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG01067/exome_alignment/* 
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/HG01075/exome_alignment/*

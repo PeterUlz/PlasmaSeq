@@ -1,0 +1,14 @@
+Package: bspec
+Type: Package
+Title: Bayesian Spectral Inference
+Version: 1.5
+Date: 2015-04-23
+Author: Christian Roever
+Maintainer: Christian Roever <christian.roever@med.uni-goettingen.de>
+Description: Bayesian inference on the (discrete) power spectrum of time series.
+License: GPL (>= 2)
+Packaged: 2015-04-23 09:07:43 UTC; christian
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2015-04-30 09:06:49
+Built: R 2.14.1; ; 2015-08-27 09:30:34 UTC; unix

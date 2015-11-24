@@ -1,0 +1,21 @@
+acf.bspec               Posterior autocovariances
+bspec                   Computing the spectrum's posterior distribution
+bspec-package           Bayesian Spectral Inference
+empiricalSpectrum       Compute the "empirical" spectrum of a time
+                        series.
+expectation             Expectations and variances of distributions
+likelihood              Prior, likelihood and posterior
+matchedfilter           Filter a noisy time series for a signal of
+                        given shape
+one.sided               Conversion between one- and two-sided spectra
+ppsample                Posterior predictive sampling
+quantile.bspec          Quantiles of the posterior spectrum
+sample.bspec            Posterior sampling
+snr                     Compute the signal-to-noise ratio (SNR) of a
+                        signal
+temper                  Tempering of (posterior) distributions
+temperature             Querying the tempering parameter
+tukeywindow             Compute windowing functions for spectral time
+                        series analysis.
+welchPSD                Power spectral density estimation using Welch's
+                        method.

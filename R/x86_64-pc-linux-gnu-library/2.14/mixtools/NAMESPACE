@@ -1,0 +1,26 @@
+useDynLib(mixtools)
+
+# Export all names
+exportPattern(".")
+
+# Import all packages listed as Imports or Depends
+import(
+  boot,
+  MASS,
+  segmented,
+  stats
+)
+
+# S3 methods
+S3method(density, npEM)
+S3method(density, spEM)
+S3method(plot, mixEM)
+S3method(plot, mixMCMC)
+S3method(plot, npEM)
+S3method(plot, spEM)
+S3method(plot, spEMN01)
+S3method(plotseq, npEM)
+S3method(print, npEM)
+S3method(print, summary.npEM)
+S3method(summary, mixEM)
+S3method(summary, npEM)

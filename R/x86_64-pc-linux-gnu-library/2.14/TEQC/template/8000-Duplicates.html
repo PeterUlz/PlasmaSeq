@@ -1,0 +1,25 @@
+<p> &nbsp;
+<h2>Read Duplicates</h2>
+
+<p>
+Usually, read duplicates, i.e. reads that have exact same start and end positions, are removed
+before follow-up analysis of sequencing data, since they are supposed to be PCR artifacts.
+However, in target capture experiments we expect a probably substantial amount of "real" read
+duplication due to the enrichment process. "Real" read duplicates would be
+derived from actually separate input DNA molecules that by chance were fragmented at the same position. 
+In single-end sequencing data, it is probable to lose a large number of reads by removing
+duplicates, and hence to achieve a much smaller actual coverage.
+</p>
+<p>
+The duplicates barplot shows which fraction
+of reads is present in the data in what number of copies. Read multiplicity proportions are calculated and 
+shown separately for on- and off-target
+reads. Therefore, the plot gives an impression about the amount of
+"real" duplication (expected mostly in the target regions) versus artifactual duplication (expected both on- and off-target). 
+The bar heights represent percentages, absolute numbers are given, in millions, on top of the bars.
+</p>
+<pre>
+  > duplicates.barplot(reads, targets)
+</pre>
+@DUPLICATES@
+

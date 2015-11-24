@@ -1,0 +1,14 @@
+ExomeCopy-class         Class "ExomeCopy"
+copyCountSegments       Segments of identical copy count from exomeCopy
+countBamInGRanges       Count reads from BAM file in genomic ranges
+exomeCopy               Fit the exomeCopy or exomeCopyVar model to the
+                        observed counts.
+exomeCopy-package       Detection of CNV in exome/targeted sequencing
+                        data
+exomecounts             Sample counts from 16 exome sequencing samples
+                        from 1000 Genomes Project
+negLogLike              Generalized negative log likelihood and Viterbi
+                        algorithms
+plot.ExomeCopy          Plot function for exomeCopy
+subdivideGRanges        Subdivide ranges of a GRanges object into
+                        nearly equal width ranges

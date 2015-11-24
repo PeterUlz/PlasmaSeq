@@ -1,0 +1,113 @@
+%\VignetteIndexEntry{Supplement. Calculation of the cost matrix}
+%\VignetteDepends{tilingArray}
+%\VignetteKeywords{Expression Analysis}
+%\VignettePackage{tilingArray}
+
+\documentclass[11pt]{article}
+
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rpackage}[1]{\textit{#1}}
+\newcommand{\Rfunction}[1]{\textit{#1}}
+\newcommand{\Rclass}[1]{\textit{#1}}
+
+\begin{document}
+
+%------------------------------------------------------------
+\title{Calculation of the cost matrix}
+%------------------------------------------------------------
+\author{Wolfgang Huber}
+\maketitle
+
+\section{Problem statement and definitions}
+Let $y_{nj}$ be the data value at position (genomic coordinate)
+$n=1,\ldots,N$ for replicate array $j=1,\ldots,J$. Hence we have $J$
+arrays and sequences of length $N$.  The goal of this note is to
+describe an $O(NJ)$ algorithm to calculate the cost matrix of a
+piecewise linear model for the segmentation of the $(1,\ldots,N)$ axis.
+It is implemented in the function \textit{costMatrix} in the package
+\textit{tilingArray}. The cost matrix is the input for a dynamic
+programming algorithm that finds the optimal (least squares)
+segmentation.
+
+
+The cost matrix $G_{km}$ is the sum of squared residuals for a segment
+from $m$ to $m+k-1$ (i.\,e.\ including $m+k-1$ but excluding $m+k$),
+\begin{equation}\label{eq:costFun}
+G_{km} := \sum_{j=1}^J \sum_{n=m}^{m+k-1} 
+\left(y_{nj} - \hat{\mu}_{km} \right)^2
+\end{equation}
+where $1\le m \le m+k-1\le N$ and $\hat{\mu}_{km}$ is the mean of that segment,
+\begin{equation}\label{eq:defmu}
+\hat{\mu}_{km} = \frac{1}{Jk} \sum_{j=1}^J \sum_{n=m}^{m+k-1} y_{nj}.
+\end{equation}
+
+\textit{Sidenote:} a perhaps more straightforward definition of a cost
+matrix would be $\bar{G}_{m'\,m} = G_{(m'-m)\,m}$, the sum of squared
+residuals for a segment from $m$ to $m'-1$. I use
+version~(\ref{eq:costFun}) because it makes it easier to use the
+condition of maximum segment length $(k<=k_{\mbox{\scriptsize max}})$, 
+which I need to get the algorithm from complexity $O(N^2)$ to $O(N)$.
+
+\newpage
+\section{Algebra}
+\begin{eqnarray}
+\lefteqn{G_{km} = \sum_{j=1}^J \sum_{n=m}^{m+k-1} 
+\left(y_{nj} - \hat{\mu}_{km} \right)^2} \\
+%
+&=& \sum_{n,j} y_{nj}^2 - \frac{1}{Jk} \left(\sum_{n',j'} y_{n'j'}\right)^2 \\
+%
+&=& \sum_n q_n - \frac{1}{Jk}\left(\sum_{n'} r_{n'}\right)^2 \label{Gbyqr}
+\end{eqnarray}
+with
+\begin{eqnarray}
+q_n&:=&\sum_j  y_{nj}^2 \\
+r_n&:=&\sum_j  y_{nj} 
+\end{eqnarray}
+If \texttt{y} is an $N\times J$ matrix, then the $N$-vectors \texttt{q} 
+and \texttt{r} can be obtained by
+\begin{Sinput}
+q = rowSums(y*y)
+r = rowSums(y) 
+\end{Sinput}
+Now define
+\begin{eqnarray}
+c_\nu &=& \sum_{n=1}^{\nu}r_n\\
+d_\nu &=& \sum_{n=1}^{\nu}q_n
+\end{eqnarray}
+which be obtained from
+\begin{Sinput}
+c = cumsum(r) 
+d = cumsum(q) 
+\end{Sinput}
+then (\ref{Gbyqr}) becomes
+\begin{equation}
+(d_{m+k-1}-d_{m-1}) - 
+\frac{1}{Jk}(c_{m+k-1}-c_{m-1})^2
+\end{equation}
+
+
+
+
+
+%% \begin{equation}
+%% A_{km} = \frac{1}{J}\left(\sum_{n=m}^{m+k-1}r_n\right)^2,
+%% \end{equation}
+%% then
+%% \begin{eqnarray}
+%% A_{1m} &=& \frac{r_n^2}{J} \\
+%% A_{km} &=& \frac{1}{J}\left(
+%% A_{k-1,m} + r_{m+k-1}^2 + 2 r_{m+k-1} 
+%% \underbrace{\left( \sum_{n=m}^{m+k-2}r_n\right)}_{=:\;c_{m+k-2}-c_{m-1}}
+%% \right)
+%% \end{eqnarray}
+%% where
+%% Thus we can construct a recursion for $G_{km}$, which can be used to 
+%% build it up row by row:
+%% \begin{eqnarray}
+%% G_{1m} &=& \frac{q_n}{J} - \frac{r_n^2}{J^2} \\
+%% \end{eqnarray}
+
+
+\end{document}
+
+

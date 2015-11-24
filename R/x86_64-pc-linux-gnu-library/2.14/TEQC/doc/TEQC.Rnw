@@ -1,0 +1,795 @@
+% \VignetteIndexEntry{TEQC}
+% \VignetteDepends{TEQC}
+% \VignetteKeywords{Quality Control}
+% \VignettePackage{TEQC}
+
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Rfunarg}[1]{{\textit{#1}}}
+\newcommand{\Rcode}[1]{{\texttt{#1}}}
+
+\documentclass[a4paper]{article}
+
+\usepackage{Sweave}
+\usepackage{hyperref}
+
+\title{TEQC: Target Enrichment Quality Control}
+
+\author{Manuela Hummel \and Sarah Bonnin \and Ernesto Lowy \and Guglielmo Roma}
+\date{\today}
+
+\begin{document}
+
+\maketitle \tableofcontents %\newpage
+
+\section{Introduction}
+
+With whole genome sequencing it is still rather expensive to achieve sufficient read coverage
+for example for the detection of genomic variants. Further, in some cases one might be interested
+only in some fraction rather than the whole genome, for example linkage regions or the complete
+exome. Target capture (target enrichment, targeted sequencing) experiments are a suitable
+strategy in these situations. The genomic regions of interest are selected and enriched
+previous to next-generation sequencing. A frequently used application for the enrichment
+of the target sequences is based on hybridization with pre-designed probes, either on microarrays or in solution.
+The hybridized molecules are then captured (eluted from the microarrays or pulled-down
+from the solution, respectively), amplified and sequenced.
+
+Besides quality control of the sequencing data, it is also crucial to assess whether
+the capture had been successful, i.e. if most of the sequenced reads actually fall on the target,
+if the targeted bases reach sufficient coverage, and so on. This package provides
+functionalities to address this issue. Quality measures comprise specificity and sensitivity of the
+capture, enrichment, per-target read coverage, coverage uniformity and reproducibility, and read
+duplicate analysis. The coverage can further be examined for its relation to target region length
+and GC content of the hybridization probes. The analyses can be based on either single reads or
+read pairs in case of paired-end sequence data. Results are given as values (e.g. enrichment),
+tables (e.g. per-target coverage), and several diagnostic plots.
+The package makes use of data structures and methods from the
+\Rpackage{IRanges} package, which makes dealing with large sequence data feasible.
+
+\Rpackage{TEQC} does \emph{not} include general sequencing data quality control (e.g. Phred quality plots),
+neither tools for sequence alignment. It also does not provide functionalities for
+follow-up analysis like SNP detection.
+
+%------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------
+
+\section{Automated html Report}
+
+The fastest way to run TEQC quality analysis is to launch the html report generation.
+The main arguments for \Rfunction{TEQCreport} are tables containing positions of sequenced reads and of genomic targets,
+or information about how to read the respective data files.
+There are several other options for customization of the report. In especially, you can choose
+whether or not to produce certain figures or coverage wiggle files and whether the data should be
+treated as single- or paired-end data. Calculation-intensive R objects can also be saved
+as workspace, for further usage.
+With option \Rfunarg{destDir} you
+can specify the output folder, where all results will go and where you will find the index.html page
+of the html report. The parameters \Rfunarg{sampleName}, \Rfunarg{targetsName} and \Rfunarg{referenceName}
+simply allow to include information about the sample and experiment in the report.
+For details about the different steps, options and results of a TEQC analysis, it is recommended to
+read also the following sections of this documentation. \\
+
+\noindent
+\Rcode{> library(TEQC)\\
+\\
+> exptPath <- system.file("extdata", package="TEQC")\\
+> readsfile <- file.path(exptPath, "ExampleSet\_Reads.bed")\\
+> targetsfile <- file.path(exptPath, "ExampleSet\_Targets.bed")\\
+\\
+> TEQCreport(sampleName="Test Sample", \\
++						 targetsName="Human Exome", \\
++						 referenceName="Human Genome", \\
++         	 destDir="report", \\
++         	 reads=get.reads(readsfile, skip=0, idcol=4), \\
++ 	         targets=get.targets(targetsfile, skip=0), \\
++						 genome="hg19")}
+
+%------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------
+
+\section{Load Reads and Targets Data}
+
+The (minimum) input needed for the quality control analysis are two files
+\begin{itemize}
+\item A bed file containing the genomic positions (chromosome, start, end)
+of the targeted regions, one genomic range per line. The targets might be custom designed or commercial solutions,
+e.g. for the capture of the whole human exome. The file does not have to be sorted with
+respect to genomic position.
+\item A bed or BAM
+file containing the genomic positions (chromosome, start, end)
+of sequenced reads aligned to a reference genome, one genomic range per line.
+In case of paired-end data an additional column with the read pair ID is suggested.
+The bed file format is very general and hence
+the QC analysis is not limited to any sequencing platform or alignment tool.
+The file does not have to be sorted with respect to genomic position.
+The BAM file format is now quite standard in NGS analysis. The usage of bam files has
+the advantage that reading the data is much faster (using functionality of the
+\Rpackage{ShortRead} package) than with bed files.
+\end{itemize}
+
+The package includes a small example data set. First we load the target positions.
+The input \Rfunarg{targetsfile} does not need to have a fixed format. Just three columns containing
+chromosome (as string, e.g. \verb|chr1|), start and end position of each target are required.
+The options \Rfunarg{chrcol}, \Rfunarg{startcol} and \Rfunarg{endcol} specify in which columns of
+the file the respective information is found.
+The output of \Rfunction{get.targets} is of class \Rclass{RangedData} from the \Rpackage{IRanges} package.
+Note that overlapping or adjacent targets are merged, such that the returned target regions
+are not-overlapping. Therefore, also a bed file containing information about the hybridization
+probes, which might be highly overlapping due to tiling, can be used as \Rfunarg{targetsfile}.
+
+<<load>>=
+library(TEQC)
+
+exptPath <- system.file("extdata", package="TEQC")
+targets <- get.targets(targetsfile=paste(exptPath, "ExampleSet_Targets.bed", sep="/"), chrcol=1, startcol=2, endcol=3, skip=0)
+targets
+@
+
+NOTE: We assume that genomic positions in bed files follow the
+0-based start / 1-based end coordinate system as defined by UCSC (\url{http://genome.ucsc.edu/FAQ/FAQformat}).
+In \Rpackage{TEQC} we need 1-based coordinates, so by default \Rfunction{get.targets} and
+\Rfunction{get.reads} (see later) shift all start positions forward by 1. If the coordinates in your files
+are already 1-based, set the parameter \Rfunarg{zerobased} to \Rfunarg{FALSE} in order to avoid the shifting.
+
+
+We might ask what fraction of the genome is targeted. In the function \Rfunction{fraction.target}
+the corresponding genome
+can be specified by the option \Rfunarg{genome}. At the moment only \Rfunarg{hg18} and \Rfunarg{hg19}
+are available. The corresponding genome sizes are taken from
+\url{http://genomewiki.ucsc.edu/index.php/Genome_size_statistics}. For any other case,
+you can specify the genome size manually with the option \Rfunarg{genomesize}.
+In our little example the total targeted region and hence the fraction within the genome is very small.
+
+<<fraction.target>>=
+ft <- fraction.target(targets, genome="hg19")
+ft
+@
+
+
+Next, we load the genomic positions of the aligned reads. Depending on the number of reads,
+this can be quite time and memory consuming with real data. The function \Rfunction{get.reads}
+is quite similar to \Rfunction{get.targets}. However, overlapping or identical reads are
+not merged. Furthermore, a column containing read identifiers can be specified with option
+\Rfunarg{idcol}. This is essential in case of paired-end data, when you want quality statistics
+to be done (also) on read pairs rather than on single reads. In this case the ID has to be the
+identifier of the read pair (i.e. the same unique ID for both reads of the pair). Our example data
+was derived by paired-end sequencing,
+so we keep the pair IDs in the resulting \Rclass{RangedData} object. The genomic positions in our bedfile containing
+the reads are 1-based, so we avoid coordinate shifting by setting \Rfunarg{zerobased} to \Rfunarg{FALSE}.
+
+<<reads>>=
+reads <- get.reads(paste(exptPath, "ExampleSet_Reads.bed", sep="/"), chrcol=1, startcol=2, endcol=3, idcol=4, zerobased=F, skip=0)
+reads
+@
+
+Whenever BAM files are available, it is recommended to use those instead of bed files as input for \Rfunction{get.reads},
+while setting parameter \Rfunarg{filetype} to \Rfunarg{"bam"}. In this case, \Rfunction{get.reads} makes use
+of the \Rpackage{ShortRead} function \Rfunction{scanBam}, with flag option \Rfunarg{isUnmappedQuery=FALSE}.
+All other previously described options of \Rfunction{get.reads} are ignored, since genomic positions and read
+identifiers are taken automatically from the BAM file.  \\
+
+\noindent
+\Rcode{> reads <- get.reads("myBAM.bam", filetype="bam")}\\
+
+\vspace{0.5cm}
+\noindent {\bf Paired-end data}
+
+When reads are paired, in order to perform statistics on pairs rather than on single reads,
+the read pairs have to be matched together using function \Rfunction{reads2pairs}. To run the function can be
+quite time consuming, depending on the number of reads. The output is
+a \Rclass{RangedData} object whose ranges start at the first base of the first read
+within a read pair and end at the last base of the respective second read. This is equivalent
+to the positions of the DNA molecule that was actually sequenced from both ends.
+The \Rfunarg{reads} table might also contain single reads (i.e. whose corresponding partners did
+not align to the reference). In this case a list of two \Rclass{RangedData} tables will be returned,
+the first one containing the original positions of the single reads without partners (table \Robject{singleReads}),
+and the other one containing the merged pairs positions (table \Robject{readpairs}).
+The provided reads data might also contain cases where the two reads of a pair align to different chromosomes.
+Since for such read pairs a 'merging' does not make sense, they will be returned within the
+\Robject{singleReads} table. Further, for some pairs the respective reads might align very far apart
+within the same chromosome. If you wish to remove such reads, you can specify a value for option
+\Rfunarg{max.distance}. Reads with a larger distance (from start position of first read to end
+position of second read) will be added to table \Robject{singleReads}.
+
+<<reads2pairs>>=
+readpairs <- reads2pairs(reads)
+readpairs
+@
+
+You may decide to use for all further analyses only "valid pairs", i.e. to exlude those reads that
+ended up in the \Robject{singleReads} table (in case there were any). This can be done e.g. in the following way \\
+
+\noindent
+\Rcode{> reads <- reads[!(reads\$ID \%in\% readpairs\$singleReads\$ID), , drop=TRUE]}\\
+
+Again, only for the case of paired-end data, we can visualize the read pair insert sizes,
+i.e. the distances from the start of read 1 to the end of read 2, respectively.
+For the function \Rfunction{insert.size.hist} we need the output of the previous
+call to \Rfunction{reads2pairs}.
+In our example, the alignment was done in a way that reads were only kept if the two
+reads aligned at a maximum distance of 250 bases. Therefore, the resulting histogram
+is truncated at 250, see figure \ref{insert.size}. Note that also average and median insert
+sizes displayed in the graph are based on the truncated data, and hence are not statistics for
+the true read pair distribution.
+The insert sizes for all read pairs can also be returned using option \Rfunarg{returnInserts = TRUE}. \\
+
+\noindent
+\Rcode{> insert.size.hist(readpairs, breaks=10)}
+
+\begin{figure}[htb!]
+\begin{center}
+<<insertsizehist, fig=TRUE, echo=F, eps=F>>=
+insert.size.hist(readpairs, breaks=10)
+@
+\vspace{-0.4cm}
+\caption{{\small \label{insert.size} Histogram of read pair insert sizes.}}
+\end{center}
+\end{figure}
+
+
+%------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------
+
+\section{Specificity and Enrichment}
+
+One important component of quality control in target capture experiments is to check whether
+most of the sequenced reads actually fall on target regions.
+A barplot showing the numbers of reads aligning to each chromosome can give
+a first impression on that. When providing the function \Rfunction{chrom.barplot} only with the
+reads table, the resulting barplot will show absolute counts. There is also the option to give both
+the reads and the targets table, which will show fractions of reads and targets, respectively,
+falling on each chromosome. For the reads, this is the fraction within the total \emph{number} of reads
+(since reads are usually expected to have all the same length).
+In contrast, for the targets, the fraction of targeted bases on each chromosome is calculated.
+Since targets might strongly vary in length it is reasonable to account for the actual target \emph{sizes} instead
+of considering merely numbers of targets per chromosome. In this way you can compare directly if
+the amount of reads corresponds more or less to the amount of target on a certain chromosome (see figure \ref{chrom.barplot}).\\
+%The plot is more useful when there are targets only on some of the chromosomes, for which hence a high number of reads is expected.\\
+
+\noindent
+\Rcode{> chrom.barplot(reads, targets)}\\
+
+
+\setkeys{Gin}{width=1.2\textwidth}
+\begin{figure}[htb!]
+\begin{center}
+<<chrombarplot, fig=TRUE, echo=F, eps=F, width=12, height=5>>=
+chrom.barplot(reads, targets)
+@
+\vspace{-1.2cm}
+\caption{{\small \label{chrom.barplot} Fractions of reads (green) and target (orange) per chromosome.}}
+\end{center}
+\end{figure}
+\setkeys{Gin}{width=0.8\textwidth}
+
+
+A measure for the capture specificity is the fraction of aligned reads that overlap
+with any target region. It can be calculated by function \Rfunction{fraction.reads.target}.
+The function has an option \Rfunarg{mappingReads} that can be set to \Rfunarg{TRUE} in
+order to retrieve a reduced \Robject{reads} \Rclass{RangedData} table containing only
+those reads overlapping target regions.
+
+<<fraction.reads.target>>=
+fr <- fraction.reads.target(reads, targets)
+fr
+@
+
+
+In many of the functions within \Rpackage{TEQC} you can specify an "offset" that will
+enlarge every target on each side by the specified number of bases. Since usually the captured DNA molecules are
+longer than what is actually sequenced, it is expected to have many reads that do not
+overlap, but are close to the target. Considering e.g. the actual targets plus 100 bases
+on each side, we get a higher on-target fraction:
+
+<<withoffset>>=
+fraction.reads.target(reads, targets, Offset=100)
+@
+
+
+With the fraction of on-target reads and the fraction of the targeted region within
+the reference genome, we can calculate the \emph{enrichment}
+\begin{displaymath}
+\mbox{enrichment} = \frac{\mbox{\# reads on target} / \mbox{\# aligned reads}}{\mbox{target size} / \mbox{genome size}}
+\end{displaymath}
+
+Since in our artificial example the total target size is unrealistically small, we
+achieve a huge enrichment.
+
+<<enrichment>>=
+fr / ft
+@
+
+
+Instead of considering single reads, we could also calculate the fraction of read pairs
+that are on-target. A read pair is counted as on-target if at least one of its reads
+overlaps with a target region or, in case of small targets, if the first read lies "left"
+and the second read "right" of the target and hence the corresponding sequenced molecule covered
+the target completely. For the specificity calculation the same function can be used, just the input changes
+from the table containing all reads to the table created above by \Rfunction{reads2pairs}.
+
+<<fracpairs>>=
+fraction.reads.target(readpairs, targets)
+@
+
+%------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------
+
+\section{Coverage}
+
+Besides high capture specificity, it is of course important to check the read coverage
+within target regions, since it is crucial for follow-up analyses.
+The function \Rfunction{coverage.target} calculates read coverage for each base that is sequenced
+and/or located in a target region. It returns a list with the average (list element \Robject{avgTargetCoverage}),
+standard deviation (\Robject{targetCoverageSD}) and main quantiles (\Robject{targetCoverageQuantiles})
+of the coverage over all targeted bases.
+When option \Rfunarg{perBase} is set to \Rfunarg{TRUE}, the returned list additionally has the two elements
+\Robject{coverageAll} and \Robject{coverageTarget}. The former one is a \Rclass{SimpleRleList}
+containing coverages for all bases present in the \Robject{reads} table, the latter one
+contains coverages for all targeted bases. For some \Rpackage{TEQC} functions we need either
+one or the other. When option \Rfunarg{perTarget} is set to \Rfunarg{TRUE}, the returned list
+has the additional element \Robject{targetCoverages}. This is the input \Robject{targets}
+\Rclass{RangedData} table, now including as 'values' columns the average coverage
+(column \Robject{avgCoverage}) and standard deviation (column \Robject{coverageSD}) per target region.
+Coverage calculations might take a while, depending on the numbers of reads and targets.
+
+<<coverage.target>>=
+Coverage <- coverage.target(reads, targets, perTarget=T, perBase=T)
+Coverage
+targets2 <- Coverage$targetCoverages
+@
+
+Note that coverage should {\it not} be calculated using the output of function \Rfunction{reads2pairs}
+in place of \Rfunarg{reads}, since the genomic ranges in that table span the whole region from the first
+to the second read of a pair. However, for the respective read insert there is no actual coverage,
+because only the ends of the original fragment were sequenced.\\
+
+A different measure for the per-target coverage would be to count the numbers of reads
+overlapping with each target. This can be calculated by the function \Rfunction{readsPerTarget}.
+It returns again the input \Robject{targets} table while adding a 'values' column
+that gives the respective numbers of reads per target. If we provide the table
+\Robject{targets2} from above, we will get both the average per-target coverages and
+the numbers of target-overlapping reads in the same table. In order to speed things up,
+instead of all \Robject{reads} we could also provide the \Robject{mappingReads} output
+of function \Rfunction{fraction.reads.target}, since for counting the reads per target
+it is enough to look at the reads from which we already know they are on-target. Just make sure that
+the \Rfunarg{Offset} option was set the same in both \Rfunction{fraction.reads.target} and
+\Rfunction{readsPerTarget}.
+
+<<readspertarget>>=
+targets2 <- readsPerTarget(reads, targets2)
+targets2
+@
+
+The resulting \Rclass{RangedData} table can be converted to a data frame, and as such easily be
+written to a file, e.g. by \\
+
+\noindent
+\Rcode{> write.table(as.data.frame(targets2), file="target\_coverage.txt", sep="\textbackslash t", row.names=F, quote=F)}\\
+
+
+Talking about coverage, it is interesting to ask which fraction of target bases reach a coverage of at
+least $k$ (some value relevant for further analyses, e.g. SNP calling) or which fraction of target bases
+is covered at all by any read (sensitivity of the capture). The function \Rfunction{covered.k}
+calculates such fractions based on the \Robject{coverageTarget} output of \Rfunction{coverage.target}.
+Option \Rfunarg{k} specifies the values for which to calculate the fraction of bases
+achieving the respective coverage.
+
+<<covered.k>>=
+covered.k(Coverage$coverageTarget, k=c(1, 5, 10))
+@
+
+
+With \Rfunction{coverage.hist} we can visualize the coverage distribution, see figure \ref{coverage.hist}. A line is added
+to the histogram that shows the cumulative fraction of target bases with a coverage of at least
+the corresponding x-axis value. The line represents the results of \Rfunction{covered.k} for all
+possible values of $k$. Additionally, you can highlight with dashed lines the base fraction achieving a
+coverage of at least a certain value by defining the option \Rfunarg{covthreshold}.\\
+
+\noindent
+\Rcode{> coverage.hist(Coverage\$coverageTarget, covthreshold=8)}\\
+
+\begin{figure}[htb!]
+\begin{center}
+<<coveragehist, fig=TRUE, echo=F, eps=F>>=
+coverage.hist(Coverage$coverageTarget, covthreshold=8)
+@
+\vspace{-0.4cm}
+\caption{{\small \label{coverage.hist} On-target coverage histogram. The orange line shows the
+cumulative fraction of target bases (right y-axis) with a read coverage of at least $x$. The dashed
+lines highlight the fraction of target bases covered by at least 8 reads.}}
+\end{center}
+\end{figure}
+
+
+A similar graph is the coverage uniformity plot, see figure \ref{coverage.uniformity}. It corresponds more or less to the cumulative line
+in the coverage histogram. However, \Rfunction{coverage.uniformity} calculates normalized
+coverages, i.e. the per-base coverages divided by the average coverage over all target bases.
+Normalized coverages are not dependent on the absolute quantity of sequenced reads and are
+hence better comparable between different samples or even different experiments.
+By default, the x-axis in the figure is truncated at 1, which corresponds to the average
+normalized coverage. The steeper the curve is falling, the less uniform is the coverage.\\
+
+\noindent
+\Rcode{> coverage.uniformity(Coverage)} \\
+
+\begin{figure}[htb!]
+\begin{center}
+<<coverageuniformity,  fig=TRUE, echo=F, eps=F>>=
+coverage.uniformity(Coverage)
+@
+\vspace{-0.4cm}
+\caption{{\small \label{coverage.uniformity} Fraction of targeted bases (y-axis) achieving a normalized
+    coverage of at least $x$. Dashed lines indicate the fractions of bases achieving at least the average ($=1$) or
+    at least half the average coverage ($=0.5$).}}
+\end{center}
+\end{figure}
+
+
+There are more graphical functions concerning read coverage. For example you might be interested
+in whether large targets are covered by more reads, as expected, since for larger target
+regions there should also be more hybridization capture probes ("baits").
+Or you might ask whether quite small targets have worse coverage, because the bait tiling
+might not be as good as for larger targets. Those questions can be addressed by the function
+\Rfunction{coverage.targetlength.plot}. As input a \Rclass{RangedData} targets table has
+to be given that contains the relevant information in the 'values' column(s).
+The graphs are useful for targets of very different lengths. In our example, where
+all the targets are rather small, the figures are not very informative, see figure
+\ref{coverage.targetlength.plot}.\\
+
+\noindent
+\Rcode{> par(mfrow=c(1,2))}\\
+\Rcode{> coverage.targetlength.plot(targets2, plotcolumn="nReads", pch=16, cex=1.5)}\\
+\Rcode{> coverage.targetlength.plot(targets2, plotcolumn="avgCoverage", pch=16, cex=1.5)}\\
+
+\setkeys{Gin}{width=1\textwidth}
+\begin{figure}[htb!]
+\begin{center}
+<<coveragetargetlength, fig=TRUE, echo=F, eps=F, width=10, height=5>>=
+par(mfrow=c(1,2))
+coverage.targetlength.plot(targets2, plotcolumn="nReads", pch=16, cex=1.5)
+coverage.targetlength.plot(targets2, plotcolumn="avgCoverage", pch=16, cex=1.5)
+@
+\vspace{-0.4cm}
+\caption{{\small \label{coverage.targetlength.plot} Scatter plots and smoothing splines of number of reads per target
+  (left panel) or average coverage per target (right panel) versus respective target length.}}
+\end{center}
+\end{figure}
+\setkeys{Gin}{width=0.8\textwidth}
+
+Another thing to check is the dependency between coverage and GC content of the
+hybridization capture probes ("baits"). For calculating the GC contents the bait
+sequences are needed. A file has to be created beforehand that contains the positions
+as well as the sequences of all baits. The file is loaded by function \Rfunction{get.baits}
+which is similar to \Rfunction{get.targets}, with the difference that overlapping or
+adjacent baits are not merged, and that a column \Rfunarg{seqcol} has to be specified
+that holds the bait sequences.
+Like \Rfunction{get.targets} and \Rfunction{get.reads}, also \Rfunction{get.baits} by default
+converts the bait start positions from 0-based to 1-based coordinates. If the positions given
+in your \Robject{baitsfile} are already 1-based, set option \Rfunarg{zerobased} to \Rfunarg{FALSE}.
+
+<<get.baits>>=
+baitsfile <- paste(exptPath, "ExampleSet_Baits.txt", sep="/")
+baits <- get.baits(baitsfile, chrcol=3, startcol=4, endcol=5, seqcol=2)
+@
+
+With the \Robject{baits} \Rclass{RangedData} table and the \Robject{coverageAll}
+output of \Rfunction{coverage.target} the (normalized) coverage versus GC content plot can be created.
+This can take quite some time, since GC content and average (normalized) coverage have
+to be calculated for every bait. The bait coverages can be returned by setting option
+\Rfunarg{returnBaitValues = TRUE}. You would expect the added smoothing spline to have an
+inverse U-shape, with a peak in coverage for baits with GC content around 40-50\%.
+In our small example there are not enough baits with low GC content to encounter the expected shape,
+see figure \ref{coverage.GC}.\\
+
+\noindent
+\Rcode{> coverage.GC(Coverage\$coverageAll, baits, pch=16, cex=1.5)}\\
+
+\begin{figure}[htb!]
+\begin{center}
+<<coverageGC, fig=TRUE, echo=F, eps=F>>=
+coverage.GC(Coverage$coverageAll, baits, pch=16, cex=1.5)
+@
+\vspace{-0.4cm}
+\caption{{\small \label{coverage.GC} Scatter plot and smoothing spline of normalized average
+  coverage per hybridization probe versus GC content of the respective bait.}}
+\end{center}
+\end{figure}
+
+
+There is also a function \Rfunction{coverage.plot} to visualize per-base coverages along
+chromosomal positions. The input has to be the \Robject{coverageAll} output of function
+\Rfunction{coverage.target}, since also coverages of off-target bases are needed.
+The positions of target regions, potentially extended on both sides, can be highlighted as
+well by specifying options \Rfunarg{targets} and \Rfunarg{Offset} (see figure \ref{coverage.plot}).\\
+
+\noindent
+\Rcode{> coverage.plot(Coverage\$coverageAll, targets, Offset=100, chr="chr1", Start=11157524, End=11158764)}\\
+
+\begin{figure}[htb!]
+\begin{center}
+<<coverageplot, fig=TRUE, echo=F, eps=F>>=
+coverage.plot(Coverage$coverageAll, targets, Offset=100, chr="chr1", Start=11157524, End=11158764)
+@
+\vspace{-0.4cm}
+\caption{{\small \label{coverage.plot} Per-base coverages along chromosomal positions.
+Target regions (plus addition of 100 bases on both sides) are highlighted in orange (yellow).}}
+\end{center}
+\end{figure}
+
+
+Of course, coverages can also be visualized by genome browsers. We provide the function
+\Rfunction{make.wigfiles} to create wiggle files that can then be uploaded e.g. to the
+UCSC genome browser. You can make wiggle files for all chromosomes on which there are reads
+or just for some selected chromosome(s) by specifying option \Rfunarg{chroms}.
+With option \Rfunarg{filename} the name and location where to save the files can be manipulated.
+Base positions are given as 1-based (i.e. the first base on a chromsome has position 1), as defined
+for wiggle files by UCSC (\url{http://genome.ucsc.edu/goldenPath/help/wiggle.html}).
+
+<<make.wigfiles, eval=F>>=
+make.wigfiles(Coverage$coverageAll)
+@
+
+
+%------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------
+
+\section{Read Duplicates}
+
+A crucial issue in target capture experiments is read duplication. Usually, read duplicates,
+i.e. reads that have exact same start and end positions, are removed
+before follow-up analysis of sequencing data, since they are supposed to be PCR artifacts.
+However, here we expect a probably substantial amount of "real" read duplication due
+to the enrichment process. "Real" read duplicates would be derived from actually separate
+input DNA molecules that by chance were fragmented at the same position.
+The \Rfunction{duplicates.barplot} shows which fraction of reads / read pairs is present in the data
+in what number of copies. Read multiplicity proportions are calculated and shown separately for on- and off-target
+reads / read pairs. Therefore, the plot gives an impression about the amount of "real" duplication
+(expected mostly in the target regions) versus artifactual duplication (expected both on- and off-target).
+With option \Rfunarg{returnDups = TRUE} the absolute numbers (given on top of the bars, in millions)
+and percentages (bar heights) can be returned.\\
+
+\noindent
+\Rcode{> duplicates.barplot(reads, targets)}\\
+
+\begin{figure}[htb!]
+\begin{center}
+<<duplicatesbarplot, fig=TRUE, echo=F, eps=F>>=
+duplicates.barplot(reads, targets)
+@
+\vspace{-0.4cm}
+\caption{{\small \label{duplicates.barplot} Duplicates barplot treating data as single-end.
+  It shows fractions of on- and off-target reads, respectively, that are unique, that are there
+  in two copies, three copies, etc. (x-axis). The numbers on top of the bars are absolute counts
+  in millions.}}
+\end{center}
+\end{figure}
+
+In figure \ref{duplicates.barplot} we see, firstly, that for some reads there are quite a lot
+of identical copies (x-axis up to 10). Secondly, the percentage of reads with multiple copies is much higher within
+on-target reads than within off-target reads (red bars are much higher than blue ones for
+x > 1). This suggest, as mentioned before, that there
+might be substantial amount of "real" read duplication.
+
+In the case of paired-end data, the position information of both reads of a pair can be used.
+Reads only have to be considered duplicated if the positions of both reads
+are found again in another pair. We can use \Rfunction{duplicates.barplot} with the table
+\Robject{readpairs} we created before to make the graph for read pairs instead of single reads.
+For read pairs the extent of duplication is by far not as high as for single reads, see figure
+\ref{duplicates.barplot2}.\\
+
+\noindent
+\Rcode{> duplicates.barplot(readpairs, targets, ylab="Fraction of read pairs")} \\
+
+\begin{figure}[htb!]
+\begin{center}
+<<duplicatesbarplot2, fig=TRUE, echo=F, eps=F>>=
+duplicates.barplot(readpairs, targets, ylab="Fraction of read pairs")
+@
+\vspace{-0.4cm}
+\caption{{\small \label{duplicates.barplot2} Duplicates barplot for read pairs.}}
+\end{center}
+\end{figure}
+
+
+Unfortunately, it is not possible to distinguish the artfactual duplicates from the naturally occurring ones.
+For that reason it might still be recommendable to remove duplication before further analysis
+by keeping each duplicated read position only once. (Since here we just deal with genomic positions
+and not with the actual reads that might differ in sequence and quality,
+it does not matter \emph{which} copy of a duplicated read to keep.)
+You might also decide to do all the QC analysis on the "collapsed" data. Either a bed file
+is provided that includes only unique read positions, or the tables are collapsed within \Robject{R},
+e.g. by the following code.
+
+<<collapse1>>=
+dupfun <- function(x) duplicated(x$ranges)
+params <- RDApplyParams(rangedData=reads, applyFun=dupfun)
+dups <- unlist(rdapply(params))
+reads.collapsed <- reads[!dups,,drop=T]
+@
+
+In the case of paired-end data, as said before, reads only have to be considered duplicated
+if the positions of both reads are found again in another pair.
+Removing duplicates can be done like follows, selecting
+non-duplicated reads from the \Robject{readpairs} table (and in case of duplication just keep one
+of the respective reads) and extracting those from the original \Robject{read} table.
+
+<<collapse2>>=
+params2 <- RDApplyParams(rangedData=readpairs, applyFun=dupfun)
+dups2 <- unlist(rdapply(params2))
+ID.nondups <- readpairs$ID[!dups2]
+sel <- reads$ID %in% ID.nondups
+reads.collapsed.pairs <- reads[sel,,drop=T]
+@
+
+
+In single-end data it is probable to lose a large number of reads by removing duplicates. When treating our
+example data like single-end sequences, we are left with only \Sexpr{nrow(reads.collapsed)} out
+of originally \Sexpr{nrow(reads)} reads.
+Hence, the actual coverage could decrease dramatically.
+
+<<cov1>>=
+coverage.target(reads.collapsed, targets, perBase=F, perTarget=F)
+@
+
+Before removing duplicates we calculated a coverage of \Sexpr{round(Coverage$avgTargetCoverage, 1)}.
+
+When using position information of both reads per pair, much less reads are lost, e.g.
+in the example we can keep \Sexpr{nrow(reads.collapsed.pairs)} reads. Therefore, the
+coverage will not decrease that much.
+
+<<cov2>>=
+coverage.target(reads.collapsed.pairs, targets, perBase=F, perTarget=F)
+@
+
+
+%------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------
+
+\section{Reproducibility}
+
+For any new technology, reproducibility is an important issue. Here we base the reproducibility
+check on per-target-base coverages. Especially for technical replicates we should yield similar results.
+But the following graphs might also be useful to ensure homogeneity across biological replicates.
+
+To give an example, we create an artificial new sample by removing randomly 10\% of the reads
+from our data.
+
+<<newsample>>=
+r <- sample(nrow(reads), 0.1 * nrow(reads))
+reads2 <- reads[-r,,drop=T]
+Coverage2 <- coverage.target(reads2, targets, perBase=T)
+@
+
+With function \Rfunction{coverage.density} the coverage densities of several samples can
+be compared. With option \Rfunarg{normalized} you can choose whether to plot original or
+normalized coverages. When plotting original values in the example, it is obvious that
+the second sample does not reach as high coverage for many bases as the first one, see figure \ref{coverage.density}, right panel.
+In contrast, normalized coverages are not dependent on the total amount of reads, and
+we observe a very similar coverage distribution for both samples (left panel),
+as expected since we just removed some reads randomly.\\
+
+\noindent
+\Rcode{> covlist <- list(Coverage, Coverage2)}  \\
+\Rcode{> par(mfrow=c(1,2))}      \\
+\Rcode{> coverage.density(covlist)} \\
+\Rcode{> coverage.density(covlist, normalized=F)} \\
+
+\setkeys{Gin}{width=1\textwidth}
+\begin{figure}[htb!]
+\begin{center}
+<<coveragedensity, fig=TRUE, echo=F, eps=F, width=10, height=5>>=
+covlist <- list(Coverage, Coverage2)
+par(mfrow=c(1,2))
+coverage.density(covlist)
+coverage.density(covlist, normalized=F)
+@
+\vspace{-0.4cm}
+\caption{{\small \label{coverage.density} Target coverage densities of two samples, using normalized (left)
+    or original (right) coverages.}}
+\end{center}
+\end{figure}
+\setkeys{Gin}{width=0.8\textwidth}
+
+
+Also the coverage uniformity and coverage along chromosome plots shown above (figures
+\ref{coverage.uniformity} and \ref{coverage.plot}) can be
+produced for several samples within the same graph. The functions can be called repeatedly,
+while specifying option \Rfunarg{add=TRUE} (see figures \ref{cov.uniformity.2} and \ref{coverage.plot.2}).
+As for the densities, the uniformity is almost identical for the two samples since
+normalized coverage values are used for this plot.\\
+
+\noindent
+\Rcode{> coverage.uniformity(Coverage, addlines=F)}\\
+\Rcode{> coverage.uniformity(Coverage2, addlines=F, add=T, col="blue", lty=2)} \\
+
+\begin{figure}[htb!]
+\begin{center}
+<<coverageuniformity2, fig=TRUE, echo=F, eps=F>>=
+coverage.uniformity(Coverage, addlines=F)
+coverage.uniformity(Coverage2, addlines=F, add=T, col="blue", lty=2)
+@
+\vspace{-0.4cm}
+\caption{{\small \label{cov.uniformity.2} Target coverage uniformity of two samples.}}
+\end{center}
+\end{figure}
+
+\noindent
+\Rcode{> coverage.plot(Coverage\$coverageAll, targets, Offset=100, chr="chr1", Start=11157524, End=11158764)}\\
+\Rcode{> coverage.plot(Coverage2\$coverageAll, add=T, col.line=2, chr="chr1", Start=11157524, End=11158764)} \\
+
+\begin{figure}[htb!]
+\begin{center}
+<<coverageplot2, fig=TRUE, echo=F, eps=F>>=
+coverage.plot(Coverage$coverageAll, targets, Offset=100, chr="chr1", Start=11157524, End=11158764)
+coverage.plot(Coverage2$coverageAll, add=T, col.line=2, chr="chr1", Start=11157524, End=11158764)
+@
+\vspace{-0.4cm}
+\caption{{\small \label{coverage.plot.2} Coverage along chromosome plot for two samples.}}
+\end{center}
+\end{figure}
+
+
+With function \Rfunction{coverage.correlation} we can produce scatterplots between coverage
+values of pairs of replicate samples. Since a scatterplot for all per-target-base coverages
+would be huge (e.g. as pdf graph), and moreover the difference between one million or ten million
+points in the graphic might not be visible at all, just some fraction of randomly selected values is displayed.
+The amount of points to plot can be controlled by option \Rfunarg{plotfrac}. By default, 0.1\% of
+all targeted bases are taken into account. In the example we set the fraction to 10\%, see figure \ref{covcor}.
+Scatterplots are shown in the style of a \Rfunction{pairs}
+plot. In the lower panels the corresponding Pearson correlation coefficients are shown.
+Correlation calculations are always based on all coverage values, even if \Rfunarg{plotfrac} $< 1$ is chosen.
+Like in \Rfunction{coverage.density}, by option \Rfunarg{normalized} it can be chosen whether
+to plot normalized or original coverage values.\\
+
+\noindent
+\Rcode{> coverage.correlation(covlist, plotfrac=0.1, cex.pch=4)}
+
+\begin{figure}[htb!]
+\begin{center}
+<<covcor, fig=TRUE, echo=F, eps=F>>=
+coverage.correlation(covlist, plotfrac=0.1, cex.pch=4)
+@
+\vspace{-0.4cm}
+\caption{{\small \label{covcor} Correlation plots of normalized target coverage values of two samples.}}
+\end{center}
+\end{figure}
+
+
+%------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------
+
+\section{Acknowledgement}
+
+The example data used in this manual was taken from an exome sequencing data set of Raquel Rabionet and Xavier Estivill.
+
+%------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------
+
+\section{Session Information}
+
+<<sessioninfo, results=tex>>=
+toLatex(sessionInfo())
+@
+
+%------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------
+
+\section{References}
+
+\noindent Hummel M, Bonnin S, Lowy E, Roma G. TEQC: an R-package for quality control in
+target capture experiments. Bioinformatics 2011; doi: 10.1093/bioinformatics/btr122.\\
+
+\noindent Bainbridge MN, Wang M, Burgess DL, Kovar C, Rodesch MJ, D'Ascenzo M, Kitzman J, Wu Y-Q, Newsham I, Richmond TA, Jeddeloh JA, Muzny D, Albert TJ, Gibbs RA.
+Whole exome capture in solution with 3 Gbp of data.
+Genome Biology 2010; 11:R62.\\
+
+\noindent Gnirke A, Melnikov A, Maguire J, Rogov P, LeProust EM, Brockman W, Fennell T, Giannoukos G, Fisher S, Russ C, Gabriel S, Jaffe DB, Lander ES, Nusbaum C.
+Solution hybrid selection with ultra-long oligonucleotides for massively parallel targeted sequencing. Nat Biotechnol. 2009; 27(2): 182-9. \\
+
+\noindent Tewhey R, Nakano M, Wang X, Pabon-Pena C, Novak B, Giuffre A, Lin E, Happe S, Roberts DN, LeProust EM, Topol EJ, Harismendy O, Frazer KA.
+Enrichment of sequencing targets from the human genome by solution hybridization.
+Genome Biol. 2009; 10(10): R116.
+
+\end{document}

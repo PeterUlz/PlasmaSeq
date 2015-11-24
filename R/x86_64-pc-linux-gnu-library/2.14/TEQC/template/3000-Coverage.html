@@ -1,0 +1,58 @@
+<p> &nbsp;
+<h2>Coverage</h2>
+
+<p>
+The function 'coverage.target()' calculates the read coverage for each base that is sequenced (and aligned to the reference)
+and/or located in a target region. Coverage average and standard deviation are calculated for the target as a whole and for each target region separately.
+In addition to per-base calculation of read coverage, the numbers of reads falling on each target are given as an alternative measure for target coverage. A read 
+is considered on-target, if it overlaps the target by at least one base. 
+</p>
+
+<p> &nbsp;
+<p>
+  <b>Average on-target coverage</b>
+</p>
+<pre>
+  > Coverage <- coverage.target(reads, targets, Offset=@OFFSET@)
+</pre>
+@AVGCOV@
+
+<p> &nbsp;
+<p>
+  <b>Coverage per target</b>
+</p>
+<pre>
+  > targetcov <- Coverage$targetCoverages
+  > targetcov <- readsPerTarget(reads, targets2, Offset=@OFFSET@)
+</pre> 
+@COVTARG@
+<a href="./target_coverage.txt">Full table</a>
+
+<p> &nbsp;
+<p>
+  <b>Sensitivity</b>
+</p>
+<p>
+A high sensitivity of the target capture is shown by a large fraction of target bases that are covered by at least 1, 2, 3... reads.
+</p>
+<pre>
+  > covered.k(Coverage$coverageTarget)
+</pre> 
+@SENSITIVITY@
+
+<p> &nbsp;
+<p>
+  <b>Coverage histogram</b>
+</p>
+<p>
+Target coverage can be visualized by the coverage histogram.
+A line is added that shows the cumulative fraction of target bases (right y-axis) with a coverage of at least the corresponding x-axis value. The line
+represents the results of the previously called function 'covered.k()' for all possible values of k. Additionally,
+we highlight with dashed lines the target base fraction achieving a coverage of at
+least 8, in this case. 
+</p>
+<pre>
+  > coverage.hist(Coverage$coverageTarget, covthreshold=8)
+</pre> 
+@COV_HIST@
+

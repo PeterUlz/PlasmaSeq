@@ -1,0 +1,31 @@
+Package: GenomicRanges
+Title: Representation and manipulation of genomic intervals
+Description: The ability to efficiently store genomic annotations and
+	alignments is playing a central role when it comes to analyze
+	high-throughput sequencing data (a.k.a. NGS data). The package
+	defines general purpose containers for storing genomic intervals
+	as well as more specialized containers for storing alignments
+	against a reference genome.
+Version: 1.6.7
+Author: P. Aboyoun, H. Pages and M. Lawrence
+Maintainer: Bioconductor Package Maintainer
+        <maintainer@bioconductor.org>
+biocViews: Genetics, Sequencing, HighThroughputSequencing, Annotation
+Depends: R (>= 2.8.0), methods, IRanges (>= 1.11.26)
+Imports: methods, IRanges
+LinkingTo: IRanges
+Suggests: RUnit, BSgenome, GenomicFeatures, Rsamtools (>= 1.5.66),
+        EatonEtAlChIPseq (>= 0.0.3), leeBamViews, edgeR, DESeq,
+        rtracklayer, org.Sc.sgd.db, BSgenome.Scerevisiae.UCSC.sacCer2,
+        DEXSeq, pasilla
+License: Artistic-2.0
+Collate: utils.R cigar-utils.R transcript-utils.R seqinfo.R strand.R
+        Seqinfo-class.R GenomicRanges-class.R GenomicRangesList-class.R
+        GenomicRanges-comparison.R GRanges-class.R GRangesList-class.R
+        GappedAlignments-class.R SummarizedExperiment-class.R
+        coverage-methods.R setops-methods.R findOverlaps-methods.R
+        countGenomicOverlaps-methods.R seqlevels-utils.R
+        resolveHits-methods.R summarizeOverlaps-methods.R
+        test_GenomicRanges_package.R zzz.R
+Packaged: 2012-02-07 05:59:46 UTC; biocbuild
+Built: R 2.14.1; x86_64-pc-linux-gnu; 2014-11-17 07:44:02 UTC; unix

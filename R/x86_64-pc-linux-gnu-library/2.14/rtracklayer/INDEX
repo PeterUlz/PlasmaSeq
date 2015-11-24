@@ -1,0 +1,47 @@
+BasicTrackLine-class    Class "BasicTrackLine"
+Bed15TrackLine-class    Class "Bed15TrackLine"
+BigWigFile-class        BigWigFile objects
+BigWigSelection-class   Selection of ranges and columns
+BrowserSession-class    Class "BrowserSession"
+BrowserView-class       Class "BrowserView"
+BrowserViewList-class   Lists of BrowserView
+Chain-class             Chain objects
+GRangesForUCSCGenome    GRanges for a Genome
+GenomicSelection        Genomic data selection
+GraphTrackLine-class    Class "GraphTrackLine"
+Quickload-class         Quickload Access
+QuickloadGenome-class   Quickload Genome Access
+RTLFile-class           RTLFile objects
+RangedData-methods      Data on a Genome
+RangesList-methods      Ranges on a Genome
+TrackDb-class           Track Databases
+TrackLine-class         Class "TrackLine"
+TwoBitFile-class        2bit Files
+UCSCData-class          Class "UCSCData"
+UCSCSchema-class        UCSC Schema
+UCSCSession-class       Class "UCSCSession"
+UCSCTableQuery-class    Querying UCSC Tables
+UCSCTrackModes-class    Class "UCSCTrackModes"
+UCSCView-class          Class "UCSCView"
+activeView-methods      Accessing the active view
+asBED                   Coerce to BED structure
+blocks-methods          Get blocks/exons
+browseGenome            Browse a genome
+browserSession-methods
+                        Get a genome browser session
+browserView-methods     Getting browser views
+browserViews-methods    Getting the browser views
+cpneTrack               CPNE1 SNP track
+export                  Export objects to connections
+export.gff              Export tracks
+genomeBrowsers          Get available genome browsers
+import                  Importing objects
+import.gff              Importing tracks
+liftOver                Lift intervals between genome builds
+sequence<--methods      Load a sequence
+targets                 microRNA target sites
+track<--methods         Laying tracks
+trackNames              Accessing track names
+ucscGenomes             Get available genomes on UCSC
+ucscTrackModes-methods
+                        Accessing UCSC track modes

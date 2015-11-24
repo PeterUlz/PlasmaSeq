@@ -1,0 +1,23 @@
+TEQCreport              Creates an html report
+chrom.barplot           Reads per chromosome barplot
+coverage.GC             Bait coverage versus GC content plot
+coverage.correlation    Coverage correlation plot
+coverage.density        Coverage density plot
+coverage.hist           Coverage histogram
+coverage.plot           Coverage versus base position plot
+coverage.target         Calculates read coverage
+coverage.targetlength.plot
+                        Number of reads or average coverage versus
+                        target length scatter plot
+coverage.uniformity     Coverage uniformity plot
+covered.k               Target capture sensitivity
+duplicates.barplot      Read duplicates barplot
+fraction.reads.target   Target capture specificity
+fraction.target         Fraction of the target within the genome
+get.baits               Read capture hybridization probe positions
+get.reads               Read genomic positions of sequencing data
+get.targets             Read capture target positions
+insert.size.hist        Insert sizes histogram
+make.wigfiles           Creates wiggle files with per-base coverages
+reads2pairs             Merges reads to read pairs
+readsPerTarget          Numbers of reads per target

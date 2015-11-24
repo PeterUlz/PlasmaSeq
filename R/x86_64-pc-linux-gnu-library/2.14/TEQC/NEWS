@@ -1,0 +1,36 @@
+CHANGES IN VERSION 2.0.0
+----------------------
+
+  o new function 'TEQCreport' creates an html report with standard TEQC analysis results
+  o besides bed files, now also BAM files can be used as input for 'get.reads'
+  o 'get.reads' and 'get.targets' now only read the columns required for the analysis from the respective bed files
+  o when read IDs include '#0/1' and '#0/2' (to indicate read 1 and read 2 of a pair), those characters will be removed from the IDs within 'get.reads'. The reason is that in 'reads2pairs' the two IDs of a read pair have to be identical.
+  o the package now depends on packages Rsamtools and hwriter
+  o 'chrom.barplot',' fraction.reads.target', 'insert.size.hist', and 'duplicates.barplot' now also can deal with with 'reads2pairs' output having the two elements 'singleReads' and 'readpairs'
+
+
+CHANGES IN VERSION 1.1.2
+----------------------
+
+  o bug fix in 'coverage.target' and 'coverage.GC' (in very large datasets, global coverage average and standard deviation were not calculated)
+
+
+
+CHANGES IN VERSION 1.1.0
+----------------------
+
+  o fix in 'reads2pairs': when the two reads of a read pair map to different chromosomes, they will be returned within the
+  'singleReads' element of the output (before function gave en error in case of such read pairs)
+  o added optional argument 'max.distance' to 'reads2pairs'; when the reads of a read pair are further apart than 'max.dist'
+  bases, they will be added to the 'singleReads' element of the output instead to the 'readpairs' element
+
+
+
+CHANGES IN VERSION 0.99.2
+----------------------
+
+  o added elements 'targetCoverageSD' and 'targetCoverageQuantiles' to output of function coverage.target
+  o added column 'coverageSD' to 'targetCoverages' output of function coverage.target
+  o 'chrom.barplot' can now show fractions of reads and targets per chromosome simultaneously 
+  o 'coverage.plot' can now be called repeatedly to show coverage of several samples in one graph
+  

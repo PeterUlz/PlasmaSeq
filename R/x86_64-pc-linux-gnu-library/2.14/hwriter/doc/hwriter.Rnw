@@ -1,0 +1,56 @@
+% \VignetteIndexEntry{Description of the package hwriter}
+% \VignetteKeywords{HTML, hwriter}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\clearpage
+\parindent 0in  % Left justify
+
+\newcommand{\Rpackage}[1]{\textsf{#1}}
+\newcommand{\Rfunction}[1]{\textit{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\textit{#1}}}
+\newcommand{\Rfunarg}[1]{{\textit{#1}}}
+
+\SweaveOpts{eps=FALSE}
+
+\title{The hwriter package}
+
+\author{Gregoire Pau}
+
+\begin{document}
+
+\maketitle
+
+\section{Description}
+The package \Rpackage{hwriter} is an easy-to-use package able to format and output R (from the R-project) objects in HTML format. 
+It supports advanced formatting, tables, CSS styling, images and provides a convenient mapping between R tables and HTML tables.
+
+The project page is \url{http://www.ebi.ac.uk/~gpau/hwriter}.
+
+The package provides the following functions (but most of the job is carried out by \Rfunction{hwrite}):
+\begin{itemize}
+\item \Rfunction{hwrite} outputs an R object in HTML format.
+\item \Rfunction{hwriteImage} writes an image.
+\item \Rfunction{openPage, closePage} handles HTML page/document creation.
+\item \Rfunction{hmakeTag} is a low-level HTML tag formatting function.
+\end{itemize}
+
+All the functions are documented in the manual pages. Please check them for reference.
+
+\section{Example}
+
+It is not easy to render what an HTML writing package could do in a PDF document. The following example produces a local web page
+named \Rfunction{example-hwriter.html} which contains many documented examples, all with R sources and resulting HTML outputs.
+
+%
+<<example>>=
+library('hwriter')
+example('hwriter')
+@
+%
+
+\end{document}
+

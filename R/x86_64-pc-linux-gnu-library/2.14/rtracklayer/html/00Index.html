@@ -1,0 +1,654 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: R interface to genome browsers and their annotation tracks</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+<h1> R interface to genome browsers and their annotation tracks
+<img class="toplogo" src="../../../doc/html/logo.jpg" alt="[R logo]">
+</h1>
+<hr>
+<div align="center">
+<a href="../../../doc/html/packages.html"><img src="../../../doc/html/left.jpg" alt="[Up]" width="30" height="30" border="0"></a>
+<a href="../../../doc/html/index.html"><img src="../../../doc/html/up.jpg" alt="[Top]" width="30" height="30" border="0"></a>
+</div><h2>Documentation for package &lsquo;rtracklayer&rsquo; version 1.14.4</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">Overview of user guides and package vignettes</a>; browse <a href="../doc">directory</a>.</li>
+<li><a href="../demo">Code demos</a>.  Use <a href="../../utils/help/demo">demo()</a> to run them.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p align="center">
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#E">E</a>
+<a href="#F">F</a>
+<a href="#G">G</a>
+<a href="#I">I</a>
+<a href="#L">L</a>
+<a href="#N">N</a>
+<a href="#O">O</a>
+<a href="#P">P</a>
+<a href="#Q">Q</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#T">T</a>
+<a href="#U">U</a>
+<a href="#V">V</a>
+<a href="#misc">misc</a>
+</p>
+
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="activeView-methods.html">activeView</a></td>
+<td>Accessing the active view</td></tr>
+<tr><td width="25%"><a href="activeView-methods.html">activeView-method</a></td>
+<td>Accessing the active view</td></tr>
+<tr><td width="25%"><a href="activeView-methods.html">activeView-methods</a></td>
+<td>Accessing the active view</td></tr>
+<tr><td width="25%"><a href="activeView-methods.html">activeView&lt;-</a></td>
+<td>Accessing the active view</td></tr>
+<tr><td width="25%"><a href="activeView-methods.html">activeView&lt;--methods</a></td>
+<td>Accessing the active view</td></tr>
+<tr><td width="25%"><a href="asBED.html">asBED</a></td>
+<td>Coerce to BED structure</td></tr>
+<tr><td width="25%"><a href="asBED.html">asBED-method</a></td>
+<td>Coerce to BED structure</td></tr>
+</table>
+
+<h2><a name="B">-- B --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="basicTrackLine-class.html">BasicTrackLine-class</a></td>
+<td>Class "BasicTrackLine"</td></tr>
+<tr><td width="25%"><a href="Bed15TrackLine-class.html">Bed15TrackLine-class</a></td>
+<td>Class "Bed15TrackLine"</td></tr>
+<tr><td width="25%"><a href="BigWigFile.html">BigWigFile</a></td>
+<td>BigWigFile objects</td></tr>
+<tr><td width="25%"><a href="BigWigFile.html">BigWigFile-class</a></td>
+<td>BigWigFile objects</td></tr>
+<tr><td width="25%"><a href="BigWigSelection-class.html">BigWigSelection</a></td>
+<td>Selection of ranges and columns</td></tr>
+<tr><td width="25%"><a href="BigWigSelection-class.html">BigWigSelection-class</a></td>
+<td>Selection of ranges and columns</td></tr>
+<tr><td width="25%"><a href="blocks-methods.html">blocks</a></td>
+<td>Get blocks/exons</td></tr>
+<tr><td width="25%"><a href="blocks-methods.html">blocks-method</a></td>
+<td>Get blocks/exons</td></tr>
+<tr><td width="25%"><a href="blocks-methods.html">blocks-methods</a></td>
+<td>Get blocks/exons</td></tr>
+<tr><td width="25%"><a href="browseGenome.html">browseGenome</a></td>
+<td>Browse a genome</td></tr>
+<tr><td width="25%"><a href="browseGenome.html">browseGenome-method</a></td>
+<td>Browse a genome</td></tr>
+<tr><td width="25%"><a href="browserSession-methods.html">browserSession</a></td>
+<td>Get a genome browser session</td></tr>
+<tr><td width="25%"><a href="browserSession-class.html">BrowserSession-class</a></td>
+<td>Class "BrowserSession"</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">browserSession-method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="browserSession-methods.html">browserSession-method</a></td>
+<td>Get a genome browser session</td></tr>
+<tr><td width="25%"><a href="browserSession-methods.html">browserSession-methods</a></td>
+<td>Get a genome browser session</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">browserSession&lt;-</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">browserSession&lt;--method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="browserView-methods.html">browserView</a></td>
+<td>Getting browser views</td></tr>
+<tr><td width="25%"><a href="browserView-class.html">BrowserView-class</a></td>
+<td>Class "BrowserView"</td></tr>
+<tr><td width="25%"><a href="browserView-methods.html">browserView-method</a></td>
+<td>Getting browser views</td></tr>
+<tr><td width="25%"><a href="browserView-methods.html">browserView-methods</a></td>
+<td>Getting browser views</td></tr>
+<tr><td width="25%"><a href="BrowserViewList-class.html">BrowserViewList</a></td>
+<td>Lists of BrowserView</td></tr>
+<tr><td width="25%"><a href="BrowserViewList-class.html">BrowserViewList-class</a></td>
+<td>Lists of BrowserView</td></tr>
+<tr><td width="25%"><a href="browserViews-methods.html">browserViews</a></td>
+<td>Getting the browser views</td></tr>
+<tr><td width="25%"><a href="browserViews-methods.html">browserViews-method</a></td>
+<td>Getting the browser views</td></tr>
+<tr><td width="25%"><a href="browserViews-methods.html">browserViews-methods</a></td>
+<td>Getting the browser views</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="Chain-class.html">Chain-class</a></td>
+<td>Chain objects</td></tr>
+<tr><td width="25%"><a href="Chain-class.html">ChainBlock-class</a></td>
+<td>Chain objects</td></tr>
+<tr><td width="25%"><a href="RangedData-methods.html">chrom</a></td>
+<td>Data on a Genome</td></tr>
+<tr><td width="25%"><a href="RangedData-methods.html">chrom-method</a></td>
+<td>Data on a Genome</td></tr>
+<tr><td width="25%"><a href="RangesList-methods.html">chrom-method</a></td>
+<td>Ranges on a Genome</td></tr>
+<tr><td width="25%"><a href="RangedData-methods.html">chrom&lt;-</a></td>
+<td>Data on a Genome</td></tr>
+<tr><td width="25%"><a href="RangedData-methods.html">chrom&lt;--method</a></td>
+<td>Data on a Genome</td></tr>
+<tr><td width="25%"><a href="RangesList-methods.html">chrom&lt;--method</a></td>
+<td>Ranges on a Genome</td></tr>
+<tr><td width="25%"><a href="BigWigFile.html">class:BigWigFile</a></td>
+<td>BigWigFile objects</td></tr>
+<tr><td width="25%"><a href="Chain-class.html">class:Chain</a></td>
+<td>Chain objects</td></tr>
+<tr><td width="25%"><a href="Chain-class.html">class:ChainBlock</a></td>
+<td>Chain objects</td></tr>
+<tr><td width="25%"><a href="Quickload-class.html">class:Quickload</a></td>
+<td>Quickload Access</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">class:QuickloadGenome</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="RTLFile-class.html">class:RTLFile</a></td>
+<td>RTLFile objects</td></tr>
+<tr><td width="25%"><a href="TrackDb-class.html">class:TrackDb</a></td>
+<td>Track Databases</td></tr>
+<tr><td width="25%"><a href="TwoBitFile-class.html">class:TwoBitFile</a></td>
+<td>2bit Files</td></tr>
+<tr><td width="25%"><a href="Bed15TrackLine-class.html">coerce-method</a></td>
+<td>Class "Bed15TrackLine"</td></tr>
+<tr><td width="25%"><a href="BigWigSelection-class.html">coerce-method</a></td>
+<td>Selection of ranges and columns</td></tr>
+<tr><td width="25%"><a href="Quickload-class.html">coerce-method</a></td>
+<td>Quickload Access</td></tr>
+<tr><td width="25%"><a href="UCSCData-class.html">coerce-method</a></td>
+<td>Class "UCSCData"</td></tr>
+<tr><td width="25%"><a href="basicTrackLine-class.html">coerce-method</a></td>
+<td>Class "BasicTrackLine"</td></tr>
+<tr><td width="25%"><a href="ucscTrackLine-class.html">coerce-method</a></td>
+<td>Class "TrackLine"</td></tr>
+<tr><td width="25%"><a href="wigTrackLine-class.html">coerce-method</a></td>
+<td>Class "GraphTrackLine"</td></tr>
+<tr><td width="25%"><a href="cpneTrack.html">cpneTrack</a></td>
+<td>CPNE1 SNP track</td></tr>
+</table>
+
+<h2><a name="E">-- E --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="QuickloadGenome-class.html">elementMetadata-method</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="export.html">export</a></td>
+<td>Export objects to connections</td></tr>
+<tr><td width="25%"><a href="export.html">export-method</a></td>
+<td>Export objects to connections</td></tr>
+<tr><td width="25%"><a href="TwoBitFile-class.html">export.2bit</a></td>
+<td>2bit Files</td></tr>
+<tr><td width="25%"><a href="TwoBitFile-class.html">export.2bit-method</a></td>
+<td>2bit Files</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.bed</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="UCSCData-class.html">export.bed-method</a></td>
+<td>Class "UCSCData"</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.bed-method</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.bed15</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="UCSCData-class.html">export.bed15-method</a></td>
+<td>Class "UCSCData"</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.bed15-method</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.bedGraph</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.bedGraph-method</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.bw</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.bw-method</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.gff</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="UCSCData-class.html">export.gff-method</a></td>
+<td>Class "UCSCData"</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.gff-method</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.gff1</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.gff1-method</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.gff2</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.gff2-method</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.gff3</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.gff3-method</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.ucsc</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="UCSCData-class.html">export.ucsc-method</a></td>
+<td>Class "UCSCData"</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.ucsc-method</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.wig</a></td>
+<td>Export tracks</td></tr>
+<tr><td width="25%"><a href="export.gff.html">export.wig-method</a></td>
+<td>Export tracks</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="UCSCSchema-class.html">formatDescription</a></td>
+<td>UCSC Schema</td></tr>
+<tr><td width="25%"><a href="UCSCSchema-class.html">formatDescription-method</a></td>
+<td>UCSC Schema</td></tr>
+</table>
+
+<h2><a name="G">-- G --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="Quickload-class.html">genome-method</a></td>
+<td>Quickload Access</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">genome-method</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="UCSCSchema-class.html">genome-method</a></td>
+<td>UCSC Schema</td></tr>
+<tr><td width="25%"><a href="browserSession-class.html">genome-method</a></td>
+<td>Class "BrowserSession"</td></tr>
+<tr><td width="25%"><a href="ucscSession-class.html">genome-method</a></td>
+<td>Class "UCSCSession"</td></tr>
+<tr><td width="25%"><a href="browserSession-class.html">genome&lt;--method</a></td>
+<td>Class "BrowserSession"</td></tr>
+<tr><td width="25%"><a href="ucscSession-class.html">genome&lt;--method</a></td>
+<td>Class "UCSCSession"</td></tr>
+<tr><td width="25%"><a href="genomeBrowsers.html">genomeBrowsers</a></td>
+<td>Get available genome browsers</td></tr>
+<tr><td width="25%"><a href="RangedData-methods.html">GenomicData</a></td>
+<td>Data on a Genome</td></tr>
+<tr><td width="25%"><a href="GenomicSelection.html">GenomicSelection</a></td>
+<td>Genomic data selection</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">getTable</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">getTable-method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="GRangesForUCSCGenome.html">GRangesForBSGenome</a></td>
+<td>GRanges for a Genome</td></tr>
+<tr><td width="25%"><a href="GRangesForUCSCGenome.html">GRangesForUCSCGenome</a></td>
+<td>GRanges for a Genome</td></tr>
+<tr><td width="25%"><a href="wigTrackLine-class.html">GraphTrackLine-class</a></td>
+<td>Class "GraphTrackLine"</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="import.html">import</a></td>
+<td>Importing objects</td></tr>
+<tr><td width="25%"><a href="import.html">import-method</a></td>
+<td>Importing objects</td></tr>
+<tr><td width="25%"><a href="TwoBitFile-class.html">import.2bit</a></td>
+<td>2bit Files</td></tr>
+<tr><td width="25%"><a href="TwoBitFile-class.html">import.2bit-method</a></td>
+<td>2bit Files</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.bed</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.bed-method</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.bed15</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.bed15-method</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.bedGraph</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.bedGraph-method</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.bw</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="BigWigFile.html">import.bw-method</a></td>
+<td>BigWigFile objects</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.bw-method</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="Chain-class.html">import.chain</a></td>
+<td>Chain objects</td></tr>
+<tr><td width="25%"><a href="Chain-class.html">import.chain-method</a></td>
+<td>Chain objects</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.gff</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.gff-method</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.gff1</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.gff1-method</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.gff2</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.gff2-method</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.gff3</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.gff3-method</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.ucsc</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.ucsc-method</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.wig</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="import.gff.html">import.wig-method</a></td>
+<td>Importing tracks</td></tr>
+<tr><td width="25%"><a href="UCSCData-class.html">initialize-method</a></td>
+<td>Class "UCSCData"</td></tr>
+<tr><td width="25%"><a href="ucscSession-class.html">initialize-method</a></td>
+<td>Class "UCSCSession"</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="Quickload-class.html">length-method</a></td>
+<td>Quickload Access</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">length-method</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="liftOver.html">liftOver</a></td>
+<td>Lift intervals between genome builds</td></tr>
+<tr><td width="25%"><a href="liftOver.html">liftOver-method</a></td>
+<td>Lift intervals between genome builds</td></tr>
+</table>
+
+<h2><a name="N">-- N --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="QuickloadGenome-class.html">names-method</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">names-method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="browserSession-class.html">names-method</a></td>
+<td>Class "BrowserSession"</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">names&lt;--method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCSchema-class.html">nrow-method</a></td>
+<td>UCSC Schema</td></tr>
+</table>
+
+<h2><a name="O">-- O --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="Chain-class.html">offset-method</a></td>
+<td>Chain objects</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">organism-method</a></td>
+<td>Quickload Genome Access</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="RTLFile-class.html">path</a></td>
+<td>RTLFile objects</td></tr>
+<tr><td width="25%"><a href="RTLFile-class.html">path-method</a></td>
+<td>RTLFile objects</td></tr>
+</table>
+
+<h2><a name="Q">-- Q --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="Quickload-class.html">Quickload</a></td>
+<td>Quickload Access</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">quickload</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="Quickload-class.html">Quickload-class</a></td>
+<td>Quickload Access</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">QuickloadGenome</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">QuickloadGenome-class</a></td>
+<td>Quickload Genome Access</td></tr>
+</table>
+
+<h2><a name="R">-- R --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">range-method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="browserSession-class.html">range-method</a></td>
+<td>Class "BrowserSession"</td></tr>
+<tr><td width="25%"><a href="ucscSession-class.html">range-method</a></td>
+<td>Class "UCSCSession"</td></tr>
+<tr><td width="25%"><a href="ucscView-class.html">range-method</a></td>
+<td>Class "UCSCView"</td></tr>
+<tr><td width="25%"><a href="ucscSession-class.html">range&lt;-</a></td>
+<td>Class "UCSCSession"</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">range&lt;--method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="ucscSession-class.html">range&lt;--method</a></td>
+<td>Class "UCSCSession"</td></tr>
+<tr><td width="25%"><a href="ucscView-class.html">range&lt;--method</a></td>
+<td>Class "UCSCView"</td></tr>
+<tr><td width="25%"><a href="RangedData-methods.html">RangedData-methods</a></td>
+<td>Data on a Genome</td></tr>
+<tr><td width="25%"><a href="Chain-class.html">ranges-method</a></td>
+<td>Chain objects</td></tr>
+<tr><td width="25%"><a href="RangesList-methods.html">RangesList-methods</a></td>
+<td>Ranges on a Genome</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">referenceSequence</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">referenceSequence-method</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">referenceSequence&lt;-</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">referenceSequence&lt;--method</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">releaseDate-method</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="Chain-class.html">reversed</a></td>
+<td>Chain objects</td></tr>
+<tr><td width="25%"><a href="Chain-class.html">reversed-method</a></td>
+<td>Chain objects</td></tr>
+<tr><td width="25%"><a href="RTLFile-class.html">RTLFile-class</a></td>
+<td>RTLFile objects</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="Chain-class.html">score-method</a></td>
+<td>Chain objects</td></tr>
+<tr><td width="25%"><a href="RangedData-methods.html">score-method</a></td>
+<td>Data on a Genome</td></tr>
+<tr><td width="25%"><a href="BigWigFile.html">seqinfo-method</a></td>
+<td>BigWigFile objects</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">seqinfo-method</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="RangedData-methods.html">seqinfo-method</a></td>
+<td>Data on a Genome</td></tr>
+<tr><td width="25%"><a href="RangesList-methods.html">seqinfo-method</a></td>
+<td>Ranges on a Genome</td></tr>
+<tr><td width="25%"><a href="TwoBitFile-class.html">seqinfo-method</a></td>
+<td>2bit Files</td></tr>
+<tr><td width="25%"><a href="ucscSession-class.html">seqinfo-method</a></td>
+<td>Class "UCSCSession"</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">seqinfo&lt;--method</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="RangedData-methods.html">seqinfo&lt;--method</a></td>
+<td>Data on a Genome</td></tr>
+<tr><td width="25%"><a href="RangesList-methods.html">seqinfo&lt;--method</a></td>
+<td>Ranges on a Genome</td></tr>
+<tr><td width="25%"><a href="laySequence-methods.html">sequence&lt;-</a></td>
+<td>Load a sequence</td></tr>
+<tr><td width="25%"><a href="laySequence-methods.html">sequence&lt;--methods</a></td>
+<td>Load a sequence</td></tr>
+<tr><td width="25%"><a href="Quickload-class.html">show-method</a></td>
+<td>Quickload Access</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">show-method</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="RTLFile-class.html">show-method</a></td>
+<td>RTLFile objects</td></tr>
+<tr><td width="25%"><a href="UCSCData-class.html">show-method</a></td>
+<td>Class "UCSCData"</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">show-method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="browserSession-class.html">show-method</a></td>
+<td>Class "BrowserSession"</td></tr>
+<tr><td width="25%"><a href="browserView-class.html">show-method</a></td>
+<td>Class "BrowserView"</td></tr>
+<tr><td width="25%"><a href="ucscTrackLine-class.html">show-method</a></td>
+<td>Class "TrackLine"</td></tr>
+<tr><td width="25%"><a href="Chain-class.html">space-method</a></td>
+<td>Chain objects</td></tr>
+<tr><td width="25%"><a href="BigWigFile.html">summary-method</a></td>
+<td>BigWigFile objects</td></tr>
+</table>
+
+<h2><a name="T">-- T --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">tableName</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCSchema-class.html">tableName-method</a></td>
+<td>UCSC Schema</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">tableName-method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">tableName&lt;-</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">tableName&lt;--method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">tableNames</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">tableNames-method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="targets.html">targets</a></td>
+<td>microRNA target sites</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">track</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">track-method</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">track-method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="ucscSession-class.html">track-method</a></td>
+<td>Class "UCSCSession"</td></tr>
+<tr><td width="25%"><a href="layTrack-methods.html">track&lt;-</a></td>
+<td>Laying tracks</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">track&lt;--method</a></td>
+<td>Quickload Genome Access</td></tr>
+<tr><td width="25%"><a href="TrackDb-class.html">track&lt;--method</a></td>
+<td>Track Databases</td></tr>
+<tr><td width="25%"><a href="layTrack-methods.html">track&lt;--method</a></td>
+<td>Laying tracks</td></tr>
+<tr><td width="25%"><a href="layTrack-methods.html">track&lt;--methods</a></td>
+<td>Laying tracks</td></tr>
+<tr><td width="25%"><a href="TrackDb-class.html">TrackDb-class</a></td>
+<td>Track Databases</td></tr>
+<tr><td width="25%"><a href="ucscTrackLine-class.html">TrackLine-class</a></td>
+<td>Class "TrackLine"</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">trackName</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">trackName-method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">trackName&lt;-</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">trackName&lt;--method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="tracks-methods.html">trackNames</a></td>
+<td>Accessing track names</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">trackNames-method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="browserSession-class.html">trackNames-method</a></td>
+<td>Class "BrowserSession"</td></tr>
+<tr><td width="25%"><a href="tracks-methods.html">trackNames-method</a></td>
+<td>Accessing track names</td></tr>
+<tr><td width="25%"><a href="tracks-methods.html">trackNames-methods</a></td>
+<td>Accessing track names</td></tr>
+<tr><td width="25%"><a href="tracks-methods.html">trackNames&lt;-</a></td>
+<td>Accessing track names</td></tr>
+<tr><td width="25%"><a href="tracks-methods.html">trackNames&lt;--method</a></td>
+<td>Accessing track names</td></tr>
+<tr><td width="25%"><a href="tracks-methods.html">trackNames&lt;--methods</a></td>
+<td>Accessing track names</td></tr>
+<tr><td width="25%"><a href="TwoBitFile-class.html">TwoBitFile</a></td>
+<td>2bit Files</td></tr>
+<tr><td width="25%"><a href="TwoBitFile-class.html">TwoBitFile-class</a></td>
+<td>2bit Files</td></tr>
+</table>
+
+<h2><a name="U">-- U --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="UCSCData-class.html">UCSCData-class</a></td>
+<td>Class "UCSCData"</td></tr>
+<tr><td width="25%"><a href="ucscGenomes.html">ucscGenomes</a></td>
+<td>Get available genomes on UCSC</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">ucscSchema</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCSchema-class.html">UCSCSchema-class</a></td>
+<td>UCSC Schema</td></tr>
+<tr><td width="25%"><a href="UCSCSchema-class.html">ucscSchema-method</a></td>
+<td>UCSC Schema</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">ucscSchema-method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="ucscSession-class.html">UCSCSession-class</a></td>
+<td>Class "UCSCSession"</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">ucscTableQuery</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">UCSCTableQuery-class</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="UCSCTableQuery-class.html">ucscTableQuery-method</a></td>
+<td>Querying UCSC Tables</td></tr>
+<tr><td width="25%"><a href="ucscTrackModes-methods.html">ucscTrackModes</a></td>
+<td>Accessing UCSC track modes</td></tr>
+<tr><td width="25%"><a href="ucscTrackModes-class.html">UCSCTrackModes-class</a></td>
+<td>Class "UCSCTrackModes"</td></tr>
+<tr><td width="25%"><a href="ucscTrackModes-methods.html">ucscTrackModes-method</a></td>
+<td>Accessing UCSC track modes</td></tr>
+<tr><td width="25%"><a href="ucscTrackModes-methods.html">ucscTrackModes-methods</a></td>
+<td>Accessing UCSC track modes</td></tr>
+<tr><td width="25%"><a href="ucscTrackModes-methods.html">ucscTrackModes&lt;-</a></td>
+<td>Accessing UCSC track modes</td></tr>
+<tr><td width="25%"><a href="ucscTrackModes-methods.html">ucscTrackModes&lt;--method</a></td>
+<td>Accessing UCSC track modes</td></tr>
+<tr><td width="25%"><a href="ucscTrackModes-methods.html">ucscTrackModes&lt;--methods</a></td>
+<td>Accessing UCSC track modes</td></tr>
+<tr><td width="25%"><a href="ucscView-class.html">UCSCView-class</a></td>
+<td>Class "UCSCView"</td></tr>
+<tr><td width="25%"><a href="Quickload-class.html">uri</a></td>
+<td>Quickload Access</td></tr>
+<tr><td width="25%"><a href="QuickloadGenome-class.html">uri-method</a></td>
+<td>Quickload Genome Access</td></tr>
+</table>
+
+<h2><a name="V">-- V --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="browserView-class.html">visible</a></td>
+<td>Class "BrowserView"</td></tr>
+<tr><td width="25%"><a href="browserView-class.html">visible-method</a></td>
+<td>Class "BrowserView"</td></tr>
+<tr><td width="25%"><a href="ucscView-class.html">visible-method</a></td>
+<td>Class "UCSCView"</td></tr>
+<tr><td width="25%"><a href="browserView-class.html">visible&lt;-</a></td>
+<td>Class "BrowserView"</td></tr>
+<tr><td width="25%"><a href="browserView-class.html">visible&lt;--method</a></td>
+<td>Class "BrowserView"</td></tr>
+<tr><td width="25%"><a href="ucscView-class.html">visible&lt;--method</a></td>
+<td>Class "UCSCView"</td></tr>
+</table>
+
+<h2><a name="misc">-- misc --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="Quickload-class.html">$-method</a></td>
+<td>Quickload Access</td></tr>
+<tr><td width="25%"><a href="TrackDb-class.html">$-method</a></td>
+<td>Track Databases</td></tr>
+<tr><td width="25%"><a href="TrackDb-class.html">$&lt;--method</a></td>
+<td>Track Databases</td></tr>
+<tr><td width="25%"><a href="ucscTrackModes-class.html">[-method</a></td>
+<td>Class "UCSCTrackModes"</td></tr>
+<tr><td width="25%"><a href="ucscTrackModes-class.html">[&lt;--method</a></td>
+<td>Class "UCSCTrackModes"</td></tr>
+<tr><td width="25%"><a href="Quickload-class.html">[[-method</a></td>
+<td>Quickload Access</td></tr>
+<tr><td width="25%"><a href="TrackDb-class.html">[[-method</a></td>
+<td>Track Databases</td></tr>
+<tr><td width="25%"><a href="TrackDb-class.html">[[&lt;--method</a></td>
+<td>Track Databases</td></tr>
+</table>
+</body></html>

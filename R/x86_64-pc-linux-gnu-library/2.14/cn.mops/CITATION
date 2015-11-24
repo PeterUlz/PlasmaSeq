@@ -1,0 +1,26 @@
+citHeader("To cite package 'cn.mops' in publications use:")
+
+citEntry(entry="Article",
+         title="cn.MOPS: Mixture of Poissons for Discovering Copy Number Variations in Next Generation Sequencing Data with a Low False Discovery Rate",
+         author=personList(as.person("Guenter Klambauer"),
+                           as.person("Karin Schwarzbauer"),
+                           as.person("Andreas Mayr"),
+                           as.person("Andreas Mitterecker"),
+                           as.person("Djork-Arne Clevert"),
+                           as.person("Ulrich Bodenhofer"),
+                           as.person("Sepp Hochreiter")),
+         year="2012",
+         journal="Nucleid Acids Research",
+         organization=paste("Institute of Bioinformatics",
+                            "Johannes Kepler University", sep=", "),
+         doi="10.1093/nar/gks003",
+         url="http://nar.oxfordjournals.org/content/early/2012/02/01/nar.gks003.full",
+         textVersion =
+             paste("Guenter Klambauer, Karin Schwarzbauer, Andreas Mayr, Andreas Mitterecker, ",
+              		"Djork-Arne Clevert, Ulrich Bodenhofer, Sepp Hochreiter (2012) ",
+              	    "Nucleic Acids Research. DOI: 10.1093/nar/gks003.",sep="")
+         
+         )
+                   
+citFooter("To obtain the references in BibTex format, enter",
+          "'toBibtex(citation(\"cn.mops\"))'")

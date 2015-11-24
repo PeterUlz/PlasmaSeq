@@ -1,0 +1,3 @@
+id	age	sex	stage	loc	hist	diff	gstm1	gstt1	nqo	K12	K13	MTHFR	ERCC1	bat26	bat25	D5S346	D17S250	D2S123	mi2	LOH	k12	K12AA	k13	K13AA	M677	M1298	p16	p14	mlh1	BAT26	mlh1c	mi	misum	CGHSTAT
+2	40	71	0	1	1	Adenocarcinoma	 1	1	1	1	2	2	2	2	0	0	1	1	1	>2 loci unstable, (NCI def)	negative	0	.	0	.	1	0	0	0	0	0	0	>2 loci unstable	3	Complete
+3	43	59	1	1	0	Adenocarcinoma	NA	1	1	1	2	2	2	1	0	0	0	0	0	0/1 unstable loci	negative	0	.	0	.	1	0	2	0	0	0	0	0/1 unstable loci	0	Complete

@@ -1,0 +1,50 @@
+library("CGHweb")
+
+lowess.gc <- function(jtkx, jtky) {
+        jtklow <- lowess(jtkx, log(jtky), f=0.05)
+        jtkz <- approx(jtklow$x, jtklow$y, jtkx)
+        return(exp(log(jtky) - jtkz$y))
+}
+
+cbs.segment01 <- function(indir, outdir, bad.bins, varbin.gc, varbin.data, sample.name, alt.sample.name, alpha, nperm, undo.SD, min.width, controls_file,sample.dir) {
+	gc <- read.table(varbin.gc, header=T)
+	bad <- read.table(bad.bins, header=F)
+
+	chrom.numeric <- substring(gc$bin.chrom, 4)
+	chrom.numeric[which(gc$bin.chrom == "chrX")] <- "23"
+	chrom.numeric[which(gc$bin.chrom == "chrY")] <- "24"
+	chrom.numeric <- as.numeric(chrom.numeric)
+
+	thisRatio <- read.table(paste(indir, varbin.data, sep="/"), header=F) 
+	names(thisRatio) <- c("chrom", "chrompos", "abspos", "bincount", "ratio")
+	thisRatio$chrom <- chrom.numeric
+	a <- thisRatio$bincount + 1
+	thisRatio$ratio <- a / mean(a)
+	thisRatio$gc.content <- gc$gc.content
+	thisRatio$lowratio <- lowess.gc(thisRatio$gc.content, thisRatio$ratio)
+
+	a <- quantile(gc$bin.length, 0.985)
+	thisRatioNobad <- thisRatio[which(bad[, 1] == 0), ]
+
+	write.table(thisRatio,file=paste(sample.dir,"/",sample.name, ".corrected.bincounts", sep=""), sep="\t", row.names=FALSE)
+
+        controlsRatio <- read.table(controls_file, header=F)
+        controlsRatio$ratio<-controlsRatio$V5
+        controlsRatio$ratio[which(controlsRatio$ratio == 0)] <- 0.001
+        controlsRatio$lowratio<- lowess.gc(thisRatio$gc.content, controlsRatio$ratio)
+   
+
+        thisRatio$normlowratio <- thisRatio$lowratio / controlsRatio$lowratio
+ 
+        printDataframe <- data.frame(chrom=thisRatio$chrom, pos=thisRatio$chrompos,gc=thisRatio$gc.content, ratio = thisRatio$ratio, lowratio=thisRatio$lowratio, controlRatio = controlsRatio$lowratio, normratio = thisRatio$normlowratio)     
+
+        
+  
+        #cghweb analysis
+        CGHweb_ratios<-data.frame(ProbeID=(1:length(thisRatio$chrom)),Chromosome=thisRatio$chrom,LogRatio=log(thisRatio$normlowratio, 2),Position=thisRatio$chrompos)
+       
+        runCGHAnalysis(CGHweb_ratios, BioHMM = FALSE, UseCloneDists = FALSE, Lowess = FALSE, Lwidth = 15, Wavelet = FALSE, Wlevels = 3, Runavg = FALSE,Rwidth = 5, CBS = TRUE, alpha = 0.05, Picard = FALSE, Km = 20,S = -0.5, FusedLasso = FALSE, fluv = FALSE, FDR = 0.5,rsm = FALSE, GLAD = TRUE, qlambda = 0.999,FASeg = FALSE, sig = 0.025, delta = 0.1, srange = 50, fineTune = FALSE, Quantreg = FALSE, lambda = 1,minLR = -2, maxLR = 2, Threshold = 0.2,genomeType = "HG19", tempDir = getwd(), resultDir = outdir)
+
+
+}
+
