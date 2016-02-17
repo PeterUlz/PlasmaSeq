@@ -2,6 +2,7 @@
 
 # Pipeline for CNV analysis of Plasma-Seq data
 
+#version 0.3: run R in isolation mode
 #version 0.2: incorporate nextseq support
 from subprocess import call
 import sys
@@ -23,9 +24,11 @@ parser.add_argument('-g','--gender', dest='gender',
 parser.add_argument('-o','--out-dir', dest='outdir',
                    help='Output Directory [default .]',default=".")
 parser.add_argument('-k','--keep-temp', dest='keep',
-                   help='Output Directory',action="store_true")
+                   help='Keep temporary files',action="store_true")
 parser.add_argument('-m','--machine', dest='machine',
                    help='Sequencing machine [miseq|nextseq]',required=True, choices=["miseq","nextseq"])
+parser.add_argument('-skipmerge','--skip-merge', dest='skip_merge',
+                   help='Skip merging of FastQ files for NextSeq data',action="store_true")
 parser.add_argument('-t','--threads', dest='threads',
                    help='No. threads for alignment [default: 1]',type=int,default=1)
 
@@ -43,7 +46,7 @@ proj_dir = args.outdir+"/"+args.name
 
 ########################################################################################################
 # Step 0.5 merge FastQ Files if nextseq is used
-if args.machine == "nextseq":
+if args.machine == "nextseq" and not args.skip_merge:
     if "L001_R1_001" not in args.fastq_file:
         print "Please specify FastQ File of Lane1 for NextSeq data"
         sys.exit(1)
@@ -158,8 +161,9 @@ for line in TMP_R.readlines():
     R_SCRIPT.write(line)
 TMP_R.close()
 R_SCRIPT.close()
-
-call(["R","CMD","BATCH",proj_dir+"/"+args.name+".script.R",proj_dir+"/"+args.name+".script.R.out"],stderr=ERR_LOG,stdout=OUT_LOG)
+os.environ["R_LIBS_USER"]=script_dir+"/R/x86_64-pc-linux-gnu-library/2.14"
+r_loc=script_dir+"/R/R"
+call([r_loc,"CMD","BATCH",proj_dir+"/"+args.name+".script.R",proj_dir+"/"+args.name+".script.R.out"],stderr=ERR_LOG,stdout=OUT_LOG)
 call(["gunzip",proj_dir+"/CGHResults/Table_of_aCGH_smoothed_profiles.txt.gz"],stderr=ERR_LOG,stdout=OUT_LOG)
 call(["mv",proj_dir+"/CGHResults/Table_of_aCGH_smoothed_profiles.txt",proj_dir+"/"+args.name+".segmented"],stderr=ERR_LOG,stdout=OUT_LOG)
 call([script_dir+"/scripts/get_segments.pl",proj_dir+"/"+args.name+".segmented",proj_dir+"/"+args.name+".segments"],stderr=ERR_LOG,stdout=OUT_LOG)
@@ -169,31 +173,31 @@ call([script_dir+"/scripts/get_segments.pl",proj_dir+"/"+args.name+".segmented",
 OUT_LOG.write(time.strftime("\n%d/%m/%Y:  %H:%M:%S  : Step6 Create Plots in R\n"))
 print time.strftime("%d/%m/%Y:  %H:%M:%S  : Step6 Create Plots in R")
 INFILE1 = open(script_dir+"/scripts/makeGraph.R","r")
-call(["R","--slave","--args",proj_dir+"/"+args.name+".segmented"],stdin=INFILE1,stderr=ERR_LOG,stdout=OUT_LOG)
+call([r_loc,"--slave","--args",proj_dir+"/"+args.name+".segmented"],stdin=INFILE1,stderr=ERR_LOG,stdout=OUT_LOG)
 INFILE1.close()
 
 INFILE2 = open(script_dir+"/scripts/makeGraph_each_chr.R","r")
-call(["R","--slave","--args",proj_dir+"/"+args.name+".segmented"],stdin=INFILE2,stderr=ERR_LOG,stdout=OUT_LOG)
+call([r_loc,"--slave","--args",proj_dir+"/"+args.name+".segmented"],stdin=INFILE2,stderr=ERR_LOG,stdout=OUT_LOG)
 INFILE2.close()
 
 INFILE3 = open(script_dir+"/scripts/makeGraph_segments.R","r")
-call(["R","--slave","--args",proj_dir+"/"+args.name+".segmented"],stdin=INFILE3,stderr=ERR_LOG,stdout=OUT_LOG)
+call([r_loc,"--slave","--args",proj_dir+"/"+args.name+".segmented"],stdin=INFILE3,stderr=ERR_LOG,stdout=OUT_LOG)
 INFILE3.close()
 
 INFILE4 = open(script_dir+"/scripts/makeGraph_segments_each_chr.R","r")
-call(["R","--slave","--args",proj_dir+"/"+args.name+".segmented"],stdin=INFILE4,stderr=ERR_LOG,stdout=OUT_LOG)
+call([r_loc,"--slave","--args",proj_dir+"/"+args.name+".segmented"],stdin=INFILE4,stderr=ERR_LOG,stdout=OUT_LOG)
 INFILE4.close()
 
 INFILE5 = open(script_dir+"/scripts/makeGraph_linear_chrlen_log2.R","r")
-call(["R","--slave","--args",proj_dir+"/"+args.name+".segmented"],stdin=INFILE5,stderr=ERR_LOG,stdout=OUT_LOG)
+call([r_loc,"--slave","--args",proj_dir+"/"+args.name+".segmented"],stdin=INFILE5,stderr=ERR_LOG,stdout=OUT_LOG)
 INFILE5.close()
 
 INFILE6 = open(script_dir+"/scripts/makeGraph_linear_chrlen_segments.R","r")
-call(["R","--slave","--args",proj_dir+"/"+args.name+".segmented"],stdin=INFILE6,stderr=ERR_LOG,stdout=OUT_LOG)
+call([r_loc,"--slave","--args",proj_dir+"/"+args.name+".segmented"],stdin=INFILE6,stderr=ERR_LOG,stdout=OUT_LOG)
 INFILE6.close()
 
 INFILE7 = open(script_dir+"/scripts/makeGraph_linear_chrlen_blue.R","r")
-call(["R","--slave","--args",proj_dir+"/"+args.name+".segments"],stdin=INFILE7,stderr=ERR_LOG,stdout=OUT_LOG)
+call([r_loc,"--slave","--args",proj_dir+"/"+args.name+".segments"],stdin=INFILE7,stderr=ERR_LOG,stdout=OUT_LOG)
 INFILE7.close()
 
 

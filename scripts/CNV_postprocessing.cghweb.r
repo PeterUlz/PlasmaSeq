@@ -44,7 +44,5 @@ cbs.segment01 <- function(indir, outdir, bad.bins, varbin.gc, varbin.data, sampl
         CGHweb_ratios<-data.frame(ProbeID=(1:length(thisRatio$chrom)),Chromosome=thisRatio$chrom,LogRatio=log(thisRatio$normlowratio, 2),Position=thisRatio$chrompos)
        
         runCGHAnalysis(CGHweb_ratios, BioHMM = FALSE, UseCloneDists = FALSE, Lowess = FALSE, Lwidth = 15, Wavelet = FALSE, Wlevels = 3, Runavg = FALSE,Rwidth = 5, CBS = TRUE, alpha = 0.05, Picard = FALSE, Km = 20,S = -0.5, FusedLasso = FALSE, fluv = FALSE, FDR = 0.5,rsm = FALSE, GLAD = TRUE, qlambda = 0.999,FASeg = FALSE, sig = 0.025, delta = 0.1, srange = 50, fineTune = FALSE, Quantreg = FALSE, lambda = 1,minLR = -2, maxLR = 2, Threshold = 0.2,genomeType = "HG19", tempDir = getwd(), resultDir = outdir)
-
-
 }
 
