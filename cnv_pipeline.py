@@ -2,6 +2,7 @@
 
 # Pipeline for CNV analysis of Plasma-Seq data
 
+#version 0.4: check command line arguments and allow custom normalization file
 #version 0.3: run R in isolation mode
 #version 0.2: incorporate nextseq support
 from subprocess import call
@@ -11,7 +12,20 @@ import os
 import time
 import shutil
 
+# Chcek command line arguments ###################################################################################
+def checkArgs(args):
+    if not os.path.isfile(args.fastq_file):
+        errorExit("FastQ file not found")
+    if args.custom_norm and not os.path.isfile(args.custom_norm):
+        errorExit("Custom normalization file not found")
 
+# Error and Exit ###################################################################################
+def errorExit(message):
+   print "Error"
+   print message
+   print "Exit"
+   sys.exit(1)
+   
 script_dir = os.path.dirname(os.path.realpath(__file__))
 # Parse command line arguments ###################################################################################
 parser = argparse.ArgumentParser(description='Analyze read depth in comparison to transcription end')
@@ -31,6 +45,8 @@ parser.add_argument('-skipmerge','--skip-merge', dest='skip_merge',
                    help='Skip merging of FastQ files for NextSeq data',action="store_true")
 parser.add_argument('-t','--threads', dest='threads',
                    help='No. threads for alignment [default: 1]',type=int,default=1)
+parser.add_argument('-custnorm','--custom-normalization-file', dest='custom_norm',
+                   help='Choose custom file to normalize against')
 
 args = parser.parse_args()
 print time.strftime("%d/%m/%Y:  %H:%M:%S  : Starting Analysis")
@@ -42,6 +58,7 @@ print "  Gender: ",args.gender
 if args.keep:
    print "  Keeping temporary files"
 
+checkArgs(args)
 proj_dir = args.outdir+"/"+args.name
 
 ########################################################################################################
@@ -60,6 +77,7 @@ if args.machine == "nextseq" and not args.skip_merge:
             with open(filename, 'rb') as readfile:
                 shutil.copyfileobj(readfile, outfile)
     args.fastq_file = outfilename
+
 ########################################################################################################
 # Step1 create directory and create MD5 file of input
 return_val=call(["mkdir",proj_dir])
@@ -130,7 +148,11 @@ if not args.keep:
 OUT_LOG.write(time.strftime("\n%d/%m/%Y:  %H:%M:%S  : Step5 Normalization in R (GC-correction, normalization with means of controls, etc...) and segmentation\n"))
 print time.strftime("%d/%m/%Y:  %H:%M:%S  : Step5 Normalization in R (GC-correction, normalization with means of controls, etc...) and segmentation")
 TMP_R = open(proj_dir+"/"+args.name+".tmp.R","w")
-if args.machine == "miseq":
+if args.custom_norm:
+    TMP_R.write("cbs.segment01(indir=\".\", outdir=\""+proj_dir+"/CGHResults\", bad.bins=\""+script_dir+"/ref/hg19.50k.k50.bad.bins.txt\","+
+    "varbin.gc=\""+script_dir+"/ref/hg19.new_sorted.gc_count.txt\", varbin.data=\""+proj_dir+"/"+args.name+".bincounts"+"\", sample.name=\""+args.name+"\", "+
+    "alt.sample.name=\"\", alpha=0.05, nperm=1000, undo.SD=1.0, min.width=5,controls_file=\""+args.custom_norm+"\",sample.dir=\""+proj_dir+"\")\n")
+elif args.machine == "miseq":
     if args.gender == "m":
         TMP_R.write("cbs.segment01(indir=\".\", outdir=\""+proj_dir+"/CGHResults\", bad.bins=\""+script_dir+"/ref/hg19.50k.k50.bad.bins.txt\","+
         "varbin.gc=\""+script_dir+"/ref/hg19.new_sorted.gc_count.txt\", varbin.data=\""+proj_dir+"/"+args.name+".bincounts"+"\", sample.name=\""+args.name+"\", "+
@@ -139,7 +161,7 @@ if args.machine == "miseq":
         TMP_R.write("cbs.segment01(indir=\".\", outdir=\""+proj_dir+"/CGHResults\", bad.bins=\""+script_dir+"/ref/hg19.50k.k50.bad.bins.txt\","+
         "varbin.gc=\""+script_dir+"/ref/hg19.new_sorted.gc_count.txt\", varbin.data=\""+proj_dir+"/"+args.name+".bincounts"+"\", sample.name=\""+args.name+"\", "+
         "alt.sample.name=\"\", alpha=0.05, nperm=1000, undo.SD=1.0, min.width=5,controls_file=\""+script_dir+"/ref/Kontrollen_female.bincount.txt\",sample.dir=\""+proj_dir+"\")\n")
-if args.machine == "nextseq":
+elif args.machine == "nextseq":
     if args.gender == "m":
         TMP_R.write("cbs.segment01(indir=\".\", outdir=\""+proj_dir+"/CGHResults\", bad.bins=\""+script_dir+"/ref/hg19.50k.k50.bad.bins.txt\","+
         "varbin.gc=\""+script_dir+"/ref/hg19.new_sorted.gc_count.txt\", varbin.data=\""+proj_dir+"/"+args.name+".bincounts"+"\", sample.name=\""+args.name+"\", "+
@@ -205,12 +227,15 @@ INFILE7.close()
 # Step7 Calculate Z-scores
 OUT_LOG.write(time.strftime("\n%d/%m/%Y:  %H:%M:%S  : Step7 Calculate Z-scores\n"))
 print time.strftime("%d/%m/%Y:  %H:%M:%S  : Step7 Calculate Z-scores")
-if args.machine == "miseq":
+if args.custom_norm:
+    OUT_LOG.write(time.strftime("\n%d/%m/%Y:  %H:%M:%S  : Skip Z-score calculation for custom normalization file\n"))
+    print time.strftime("%d/%m/%Y:  %H:%M:%S  : Skip Z-score calculation for custom normalization file")
+elif args.machine == "miseq":
     if args.gender=="m":
         call([script_dir+"/scripts/segmental_GC_z-scores.pl",proj_dir+"/"+args.name+".segments",proj_dir+"/"+args.name+".corrected.bincounts",proj_dir+"/"+args.name+".segmented.zscores.txt",script_dir+"/ref/GC_corrected_bincounts_male"],stderr=ERR_LOG,stdout=OUT_LOG)
     else:
         call([script_dir+"/scripts/segmental_GC_z-scores.pl",proj_dir+"/"+args.name+".segments",proj_dir+"/"+args.name+".corrected.bincounts",proj_dir+"/"+args.name+".segmented.zscores.txt",script_dir+"/ref/GC_corrected_bincounts_female"],stderr=ERR_LOG,stdout=OUT_LOG)
-if args.machine == "nextseq":
+elif args.machine == "nextseq":
     if args.gender=="m":
         call([script_dir+"/scripts/segmental_GC_z-scores.pl",proj_dir+"/"+args.name+".segments",proj_dir+"/"+args.name+".corrected.bincounts",proj_dir+"/"+args.name+".segmented.zscores.txt",script_dir+"/ref/GC_corrected_bincounts_male_nextseq"],stderr=ERR_LOG,stdout=OUT_LOG)
     else:
