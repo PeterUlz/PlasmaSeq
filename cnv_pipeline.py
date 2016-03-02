@@ -2,6 +2,8 @@
 
 # Pipeline for CNV analysis of Plasma-Seq data
 
+
+#version 0.5: allow female NextSeq samples
 #version 0.4: check command line arguments and allow custom normalization file
 #version 0.3: run R in isolation mode
 #version 0.2: incorporate nextseq support
@@ -12,6 +14,7 @@ import os
 import time
 import shutil
 
+version="0.5"
 # Chcek command line arguments ###################################################################################
 def checkArgs(args):
     if not os.path.isfile(args.fastq_file):
@@ -57,6 +60,8 @@ print "  Machine: ",args.machine
 print "  Gender: ",args.gender
 if args.keep:
    print "  Keeping temporary files"
+if args.custom_norm:
+    print "  Custom normalization: ",args.custom_norm
 
 checkArgs(args)
 proj_dir = args.outdir+"/"+args.name
@@ -87,7 +92,7 @@ if return_val != 0:
 
 ERR_LOG = open(proj_dir+"/"+args.name+".err.log","w")
 OUT_LOG = open(proj_dir+"/"+args.name+".out.log","w")
-
+OUT_LOG.write("Analysis Pipeline version: "+version)
 OUT_LOG.write(time.strftime("%d/%m/%Y:  %H:%M:%S  : Starting Analysis"))
 OUT_LOG.write("Fastq file: "+args.fastq_file+"\n")
 OUT_LOG.write("Sample name file: "+args.name+"\n")
@@ -95,8 +100,11 @@ OUT_LOG.write("Output Directory: "+args.outdir+"\n")
 OUT_LOG.write("Machine: "+args.machine+"\n")
 OUT_LOG.write("Gender: "+args.gender+"\n")
 if args.keep:
-   OUT_LOG.write("Keeping temporary files"+"\n")
+    OUT_LOG.write("Keeping temporary files"+"\n")
+if args.custom_norm:
+    OUT_LOG.write("Custom normalization: "+args.custom_norm+"\n")
 OUT_LOG.write(time.strftime("\n%d/%m/%Y:  %H:%M:%S  : Step1 create directory and create MD5 file of input\n"))
+OUT_LOG.flush()
 print time.strftime("%d/%m/%Y:  %H:%M:%S  : Step1 create directory and create MD5 file of input")
 
 MD5_OUTPUT = open(proj_dir +"/"+args.name+".md5","w")
@@ -167,10 +175,9 @@ elif args.machine == "nextseq":
         "varbin.gc=\""+script_dir+"/ref/hg19.new_sorted.gc_count.txt\", varbin.data=\""+proj_dir+"/"+args.name+".bincounts"+"\", sample.name=\""+args.name+"\", "+
         "alt.sample.name=\"\", alpha=0.05, nperm=1000, undo.SD=1.0, min.width=5,controls_file=\""+script_dir+"/ref/Kontrollen_male.bincount_nextseq.txt\",sample.dir=\""+proj_dir+"\")\n")
     else:
-    # TODO: edit to include nextseq female controls
         TMP_R.write("cbs.segment01(indir=\".\", outdir=\""+proj_dir+"/CGHResults\", bad.bins=\""+script_dir+"/ref/hg19.50k.k50.bad.bins.txt\","+
         "varbin.gc=\""+script_dir+"/ref/hg19.new_sorted.gc_count.txt\", varbin.data=\""+proj_dir+"/"+args.name+".bincounts"+"\", sample.name=\""+args.name+"\", "+
-        "alt.sample.name=\"\", alpha=0.05, nperm=1000, undo.SD=1.0, min.width=5,controls_file=\""+script_dir+"/ref/Kontrollen_female.bincount.txt\",sample.dir=\""+proj_dir+"\")\n")
+        "alt.sample.name=\"\", alpha=0.05, nperm=1000, undo.SD=1.0, min.width=5,controls_file=\""+script_dir+"/ref/Kontrollen_female.bincount_nextseq.txt\",sample.dir=\""+proj_dir+"\")\n")
 TMP_R.close()
 
 R_SCRIPT = open(proj_dir+"/"+args.name+".script.R","w")
@@ -239,8 +246,7 @@ elif args.machine == "nextseq":
     if args.gender=="m":
         call([script_dir+"/scripts/segmental_GC_z-scores.pl",proj_dir+"/"+args.name+".segments",proj_dir+"/"+args.name+".corrected.bincounts",proj_dir+"/"+args.name+".segmented.zscores.txt",script_dir+"/ref/GC_corrected_bincounts_male_nextseq"],stderr=ERR_LOG,stdout=OUT_LOG)
     else:
-    #TODO: update command when female controls are finished analyzing
-        call([script_dir+"/scripts/segmental_GC_z-scores.pl",proj_dir+"/"+args.name+".segments",proj_dir+"/"+args.name+".corrected.bincounts",proj_dir+"/"+args.name+".segmented.zscores.txt",script_dir+"/ref/GC_corrected_bincounts_female"],stderr=ERR_LOG,stdout=OUT_LOG)
+        call([script_dir+"/scripts/segmental_GC_z-scores.pl",proj_dir+"/"+args.name+".segments",proj_dir+"/"+args.name+".corrected.bincounts",proj_dir+"/"+args.name+".segmented.zscores.txt",script_dir+"/ref/GC_corrected_bincounts_female_nextseq"],stderr=ERR_LOG,stdout=OUT_LOG)
 
 
 ######################################################################################################## 
